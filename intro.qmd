@@ -1,0 +1,49 @@
+---
+title: "Introducción"
+format:
+  html:
+    code-fold: false
+engine: julia
+---
+
+Primeramente debemos entender qué es Julia. [Julia](https://julialang.org/) es un lenguaje de programación que pretende romper la barrera de los dos lenguajes.
+
+![Logo Julia](https://julialang.org/assets/infra/logo.svg){width=20%}
+
+Es habitual que los científicos de datos desarrollen sus modelos en Python y una vez conformes con su rendimiento delegen la _puesta en producción_ en ingenieros que deben transformar estos programas en código productivo. Suele requerir incorporar cuestiones no contempladas hasta el momento como logs de cara a depurar errores, bloques de seguridad y autenticación, sanitización[^1] del código para evitar problemas de seguridad y rendimiento, etc.
+
+## Instalar Julia
+
+_pendiente_
+
+## Crear un projecto
+
+```{julia}
+#| output: false
+import Pkg;
+Pkg.activate(".")
+```
+
+Importar dependencias.
+
+```{julia}
+#| output: false
+
+Pkg.add("Plots")
+```
+
+```{julia}
+#| label: fig-parametric
+#| fig-cap: "Parametric Plots"
+
+using Plots
+
+plot(sin, 
+     x->sin(2x), 
+     0, 
+     2π, 
+     leg=false, 
+     fill=(0,:lavender))
+```
+
+[^1]: Proceso de revisar y limpiar el código fuente de un programa para eliminar errores, mejorar su calidad y asegurar que cumpla con estándares de seguridad y eficiencia.
