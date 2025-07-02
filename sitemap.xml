@@ -2,14 +2,18 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://iraitzm.github.io/ciencia-datos-julia/index.html</loc>
-    <lastmod>2025-07-02T06:33:13.257Z</lastmod>
+    <lastmod>2025-07-02T11:13:31.179Z</lastmod>
   </url>
   <url>
     <loc>https://iraitzm.github.io/ciencia-datos-julia/intro.html</loc>
-    <lastmod>2025-07-02T06:33:13.257Z</lastmod>
+    <lastmod>2025-07-02T11:13:31.179Z</lastmod>
+  </url>
+  <url>
+    <loc>https://iraitzm.github.io/ciencia-datos-julia/parts/firststeps/basics.html</loc>
+    <lastmod>2025-07-02T11:13:31.179Z</lastmod>
   </url>
   <url>
     <loc>https://iraitzm.github.io/ciencia-datos-julia/references.html</loc>
-    <lastmod>2025-07-02T06:33:13.257Z</lastmod>
+    <lastmod>2025-07-02T11:13:31.180Z</lastmod>
   </url>
 </urlset>

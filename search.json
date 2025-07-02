@@ -4,9 +4,9 @@
     "href": "index.html",
     "title": "Ciencia de datos con Julia",
     "section": "",
-    "text": "Prefacio\nEste projecto lo inicio por haber querido emplear Julia en el ámbito profesional y no haber podido. Es mucho más habitual en mi entorno, por familiaridad y conveniencia, que los proyectos de ciencia de datos se realicen en otros lenguajes de programación. Sin embargo, quiero romper una lanza a favor de Julia como el lenguaje a emplear en ciencia de datos por su rendimiento y proximidad al dominio científico. Existen guía excepcionales en inglés:\nPero este es mi intento de acercarlo al público hispanohablante. Teniendo referencias en el idioma de uno es más fácil poder adoptar algo y crear una comunidad con contribuya tanto como lo hace la comunidad de Python.\nCon suerte este libro ayuda a más de uno a perder el miedo y enfrentarse a este lenguaje que no deja de ser uno de los motivos por los que nuestros amados notebooks son notebooks de Jupyter (Julia, python y R).",
+    "text": "Prólogo\nEste projecto lo inicio por haber querido emplear Julia en el ámbito profesional y no haber podido. Es mucho más habitual en mi entorno, por familiaridad y conveniencia, que los proyectos de ciencia de datos se realicen en otros lenguajes de programación. Sin embargo, quiero romper una lanza a favor de Julia como el lenguaje a emplear en ciencia de datos por su rendimiento y proximidad al dominio científico. Existen guía excepcionales en inglés:\nPero este es mi intento de acercarlo al público hispanohablante. Teniendo referencias en el idioma de uno es más fácil poder adoptar algo y crear una comunidad con contribuya tanto como lo hace la comunidad de Python.\nCon suerte este libro ayuda a más de uno a perder el miedo y enfrentarse a este lenguaje que no deja de ser uno de los motivos por los que nuestros amados notebooks son notebooks de Jupyter (Julia, python y R).",
     "crumbs": [
-      "Prefacio"
+      "Prólogo"
     ]
   },
   {
@@ -14,9 +14,9 @@
     "href": "index.html#sobre-mi",
     "title": "Ciencia de datos con Julia",
     "section": "Sobre mi",
-    "text": "Sobre mi\nMi nombre es Iraitz Montalbán y llevo… algo de tiempo en esto de la ciencia de datos e inteligencia artificial. Puedes contactar directamente conmigo en iraitz.info.",
+    "text": "Sobre mi\nMi nombre es Iraitz Montalbán y llevo… algo de tiempo en esto de la ciencia de datos e inteligencia artificial. Puedes contactar directamente conmigo en iraitz.info.\n\n\n\n\nStoropoli, Jose, Rik Huijzer, and Lazaro Alonso. 2021. Julia Data Science. https://juliadatascience.io.",
     "crumbs": [
-      "Prefacio"
+      "Prólogo"
     ]
   },
   {
@@ -24,17 +24,37 @@
     "href": "intro.html",
     "title": "1  Introducción",
     "section": "",
-    "text": "1.1 Instalar Julia\nPrimeramente debemos entender qué es Julia. Julia es un lenguaje de programación que pretende romper la barrera de los dos lenguajes.\nEs habitual que los científicos de datos desarrollen sus modelos en Python y una vez conformes con su rendimiento delegen la puesta en producción en ingenieros que deben transformar estos programas en código productivo. Suele requerir incorporar cuestiones no contempladas hasta el momento como logs de cara a depurar errores, bloques de seguridad y autenticación, sanitización1 del código para evitar problemas de seguridad y rendimiento, etc.\npendiente",
+    "text": "1.1 Instalar Julia\nPrimeramente debemos entender qué es Julia (Bezanson et al. 2017). Julia es un lenguaje de reciente creación (2012) de programación que pretende romper la barrera de los dos lenguajes. Es decir, ser rápido en ejecución pero cómodo en el uso, incluyendo el uso interactivo tan común en el trabajo exploratorio de la ciencia de datos. Está muy ligado al mundo de la computación científica y es común en centros de investigación o entes ligados a la computación de altas prestaciones (High Performance Computing). De hecho, Julia es parte del selecto club del petaflop. Está basado en el compilador LLVM (Lattner and Adve 2004) y de ahí que muestra una velocidad similar a la de otros lenguajes empleados en ambientes productivos (C/C++, Rust o Go).\nEs habitual que los científicos de datos desarrollen sus modelos en Python y una vez conformes con su rendimiento delegen la puesta en producción en ingenieros que deben transformar estos programas en código productivo. Suele requerir incorporar cuestiones no contempladas hasta el momento como logs de cara a depurar errores, bloques de seguridad y autenticación, sanitización1 del código para evitar problemas de seguridad y rendimiento, etc.\nJulia no podría ser más sencillo de instalar.",
     "crumbs": [
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introducción</span>"
     ]
   },
   {
-    "objectID": "intro.html#crear-un-projecto",
-    "href": "intro.html#crear-un-projecto",
+    "objectID": "intro.html#instalar-julia",
+    "href": "intro.html#instalar-julia",
     "title": "1  Introducción",
-    "section": "1.2 Crear un projecto",
-    "text": "1.2 Crear un projecto\n\nimport Pkg;\nPkg.activate(\".\")\n\nImportar dependencias.\n\nPkg.add(\"Plots\")\n\n\nusing Plots\n\nplot(sin, \n     x-&gt;sin(2x), \n     0, \n     2π, \n     leg=false, \n     fill=(0,:lavender))\n\n\n\n\n\n\n  \n    \n  \n\n\n\n  \n    \n  \n\n\n\n  \n    \n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFigure 1.1: Parametric Plots",
+    "section": "",
+    "text": "Linux/Mac\nSimplemente ejecuta el comando\ncurl -fsSL https://install.julialang.org | sh\ny se encargará de instalar el intérprete de Julia así como su gestor de versiones juliaup.\n\n\nWindows\nDeberemos instalarlo desde la Microsoft Store pero también podemos ejecutarlo desde una shell.\nwinget install --name Julia --id 9NJNWW8PVKMN -e -s msstore\nUna vez instalado podemos hacer una pequeña prueba, levantar un terminal y ejecutar julia. Debería mostrarnos algo como\n\n\n\nJulia en el terminal\n\n\nAhora ya solo nos queda empezar a trabajar.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introducción</span>"
+    ]
+  },
+  {
+    "objectID": "intro.html#crear-un-proyecto",
+    "href": "intro.html#crear-un-proyecto",
+    "title": "1  Introducción",
+    "section": "1.2 Crear un proyecto",
+    "text": "1.2 Crear un proyecto\nJulia trae por defecto un gestor de paquetes propio. Esto nos ayuda a indicar las dependencias de nuestro código para que pueda ejecutarse en otros entornos de manera correcta.\nPodemos crear un primer proyecto indicando la activación del mismo.\n\nimport Pkg;\nPkg.activate(\".\")\n\nEsto generará dos ficheros esenciales para el correcto funcionamiento de nuestro código:\n\nProject.toml: Donde se listan las dependencias de nuestro proyecto.\nManifest.toml: Donde se indican las versiones de nuestro intérprete de Julia a utilizar, además de los hash de las versiones de los paquetes compatibles.\n\nPodemos ver las distintas opciones en la documentación oficial. Podemos añadir una dependencia mediante la función .add()\n\nPkg.add(\"Plots\")\n\nY esta se sumará a nuestros ficheros TOML. El comando .status() nos informará de las dependencias actuales.\n\nPkg.status()\n\n\nStatus `~/work/ciencia-datos-julia/ciencia-datos-julia/Project.toml`\n  [91a5bcdd] Plots v1.40.15\n\n\n\n\nDe forma que podemos hacer uso de esas librerías o paquetes en nuestro código.\n\nusing Plots\n\nplot(sin, \n     x-&gt;sin(2x), \n     0, \n     2π, \n     leg=false, \n     fill=(0,:lavender))\n\n\n\n\n\n\n  \n    \n  \n\n\n\n  \n    \n  \n\n\n\n  \n    \n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFigure 1.1: Gráfico paramétrico, mostrando un ejemplo de uso de librería/paquete\n\n\n\n\nEste es un aspecto clave ya que, tal y como sucede en Python, mucho de nuestro trabajo dependerá de los paquetes existentes y así no tendremos que reinventar la rueda una y otra vez.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introducción</span>"
+    ]
+  },
+  {
+    "objectID": "intro.html#paquetes-habituales",
+    "href": "intro.html#paquetes-habituales",
+    "title": "1  Introducción",
+    "section": "1.3 Paquetes habituales",
+    "text": "1.3 Paquetes habituales\nLas librerías que emplearemos en líneas generales son:\n\nManipulación de datos: DataFrames.jl\nVisualización: Mackie.jl y Plots.jl\n\nTodos estos paquetes y más están disponibles en https://juliapackages.com/.\n\n\n\n\nBezanson, Jeff, Alan Edelman, Stefan Karpinski, and Viral B Shah. 2017. “Julia: A Fresh Approach to Numerical Computing.” SIAM Review 59 (1): 65–98.\n\n\nLattner, Chris, and Vikram Adve. 2004. “LLVM: A Compilation Framework for Lifelong Program Analysis & Transformation.” In International Symposium on Code Generation and Optimization, 2004. CGO 2004., 75–86. IEEE. https://llvm.org/pubs/2004-01-30-CGO-LLVM.pdf.",
     "crumbs": [
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introducción</span>"
     ]
@@ -47,6 +67,49 @@
     "text": "Proceso de revisar y limpiar el código fuente de un programa para eliminar errores, mejorar su calidad y asegurar que cumpla con estándares de seguridad y eficiencia.↩︎",
     "crumbs": [
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introducción</span>"
+    ]
+  },
+  {
+    "objectID": "parts/firststeps/basics.html",
+    "href": "parts/firststeps/basics.html",
+    "title": "2  Básicos de Julia",
+    "section": "",
+    "text": "2.1 Variables\nEn estos primeros ejemplos veremos los rudimentos de la sintaxis de Julia. Y empezaremos con los básicos.\nVeamos con una de las primeras acciones que será la definición de variables.\nx = 2\n\n2\nComo vemos Julia tiene tipado dinámico, no tenemos por qué definir el tipo de datos asociado al valor que hemos introducido.\ntypeof(x)\n\nInt64\nPodemos hacer lo mismo con múltiples tipos\nx = 2 + 1im\ntypeof(x)\n\nComplex{Int64}\nAunque podemos incluir el tipado si fuera necesario.\ny::Float16 = 120\ntypeof(y)\n\nFloat16\nEsto impedirá que hagamos cosas como\ncon un error MethodError: Cannot convert an object of type String to an object of type Float16 en nuestro caso, ya que el tipo declarado de la variable y el valor a asociar no coinciden. Trabajaremos principalmente con los tipos habituales\nPodemos crear tipos específicos para nuestras necesidades basado en esos tipos básicos.\nstruct Usuario\n    nombre::String\n    apellido::String\n    anio_nacimiento::Int64\nend\n\nUsuario(\"Iraitz\",\"Montalbán\", 1984)\n\nUsuario(\"Iraitz\", \"Montalbán\", 1984)\nComo vemos , Julia tiene por costumbre imprimir el valor de la última línea ejecutada. Por definición son estructuras inmutables, por lo que si queremos variar sus datos una vez inicializados deberemos indicarlo expresamente.\nmutable struct UsuarioMutable\n    nombre::String\n    apellido::String\n    anio_nacimiento::Int64\nend\n\niraitz = UsuarioMutable(\"Iraitz\",\"Montalban\", 1984)\niraitz.apellido = \"Montalbán\"\n\n\"Montalbán\"\nLas variables booleanas nos permiten operaciones lógicas:\n!true\n\nfalse\ntrue && false\n\nfalse\nO de pertenencia a un grupo o tipo, igualdad == y desigualdad !=, &lt;, etc.\n6 isa Real\n\ntrue",
+    "crumbs": [
+      "Primeros pasos",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Básicos de Julia</span>"
+    ]
+  },
+  {
+    "objectID": "parts/firststeps/basics.html#variables",
+    "href": "parts/firststeps/basics.html#variables",
+    "title": "2  Básicos de Julia",
+    "section": "",
+    "text": "y = \"hola\"\n\n\nEnteros: Int64\nNúmeros reales: Float64\nBinarios (verdadero o falso): Bool\nCadenas de caracteres: String\n\n\n\n\n\n\n\n!: NOT\n&&: AND\n||: OR",
+    "crumbs": [
+      "Primeros pasos",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Básicos de Julia</span>"
+    ]
+  },
+  {
+    "objectID": "parts/firststeps/basics.html#funciones",
+    "href": "parts/firststeps/basics.html#funciones",
+    "title": "2  Básicos de Julia",
+    "section": "2.2 Funciones",
+    "text": "2.2 Funciones\nOtro aspecto clave son las funciones. La lógica de nuestro programa que toma variables y devuelve variables basado en operaciones lógicas.\nfunction funcion(arg1, arg2)\n    resultado = hacemos cosas con arg1 && arg2\n    return resultado\nend",
+    "crumbs": [
+      "Primeros pasos",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Básicos de Julia</span>"
+    ]
+  },
+  {
+    "objectID": "references.html",
+    "href": "references.html",
+    "title": "Referencias",
+    "section": "",
+    "text": "Bezanson, Jeff, Alan Edelman, Stefan Karpinski, and Viral B Shah. 2017.\n“Julia: A Fresh Approach to Numerical Computing.” SIAM\nReview 59 (1): 65–98.\n\n\nLattner, Chris, and Vikram Adve. 2004. “LLVM: A Compilation\nFramework for Lifelong Program Analysis & Transformation.” In\nInternational Symposium on Code Generation and Optimization, 2004.\nCGO 2004., 75–86. IEEE. https://llvm.org/pubs/2004-01-30-CGO-LLVM.pdf.\n\n\nStoropoli, Jose, Rik Huijzer, and Lazaro Alonso. 2021. Julia Data\nScience. https://juliadatascience.io.",
+    "crumbs": [
+      "Referencias"
     ]
   }
 ]
