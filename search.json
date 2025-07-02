@@ -1,0 +1,52 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Ciencia de datos con Julia",
+    "section": "",
+    "text": "Prefacio\nEste projecto lo inicio por haber querido emplear Julia en el ámbito profesional y no haber podido. Es mucho más habitual en mi entorno, por familiaridad y conveniencia, que los proyectos de ciencia de datos se realicen en otros lenguajes de programación. Sin embargo, quiero romper una lanza a favor de Julia como el lenguaje a emplear en ciencia de datos por su rendimiento y proximidad al dominio científico. Existen guía excepcionales en inglés:\nPero este es mi intento de acercarlo al público hispanohablante. Teniendo referencias en el idioma de uno es más fácil poder adoptar algo y crear una comunidad con contribuya tanto como lo hace la comunidad de Python.\nCon suerte este libro ayuda a más de uno a perder el miedo y enfrentarse a este lenguaje que no deja de ser uno de los motivos por los que nuestros amados notebooks son notebooks de Jupyter (Julia, python y R).",
+    "crumbs": [
+      "Prefacio"
+    ]
+  },
+  {
+    "objectID": "index.html#sobre-mi",
+    "href": "index.html#sobre-mi",
+    "title": "Ciencia de datos con Julia",
+    "section": "Sobre mi",
+    "text": "Sobre mi\nMi nombre es Iraitz Montalbán y llevo… algo de tiempo en esto de la ciencia de datos e inteligencia artificial. Puedes contactar directamente conmigo en iraitz.info.",
+    "crumbs": [
+      "Prefacio"
+    ]
+  },
+  {
+    "objectID": "intro.html",
+    "href": "intro.html",
+    "title": "1  Introducción",
+    "section": "",
+    "text": "1.1 Instalar Julia\nPrimeramente debemos entender qué es Julia. Julia es un lenguaje de programación que pretende romper la barrera de los dos lenguajes.\nEs habitual que los científicos de datos desarrollen sus modelos en Python y una vez conformes con su rendimiento delegen la puesta en producción en ingenieros que deben transformar estos programas en código productivo. Suele requerir incorporar cuestiones no contempladas hasta el momento como logs de cara a depurar errores, bloques de seguridad y autenticación, sanitización1 del código para evitar problemas de seguridad y rendimiento, etc.\npendiente",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introducción</span>"
+    ]
+  },
+  {
+    "objectID": "intro.html#crear-un-projecto",
+    "href": "intro.html#crear-un-projecto",
+    "title": "1  Introducción",
+    "section": "1.2 Crear un projecto",
+    "text": "1.2 Crear un projecto\n\nimport Pkg;\nPkg.activate(\".\")\n\nImportar dependencias.\n\nPkg.add(\"Plots\")\n\n\nusing Plots\n\nplot(sin, \n     x-&gt;sin(2x), \n     0, \n     2π, \n     leg=false, \n     fill=(0,:lavender))\n\n\n\n\n\n\n  \n    \n  \n\n\n\n  \n    \n  \n\n\n\n  \n    \n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFigure 1.1: Parametric Plots",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introducción</span>"
+    ]
+  },
+  {
+    "objectID": "intro.html#footnotes",
+    "href": "intro.html#footnotes",
+    "title": "1  Introducción",
+    "section": "",
+    "text": "Proceso de revisar y limpiar el código fuente de un programa para eliminar errores, mejorar su calidad y asegurar que cumpla con estándares de seguridad y eficiencia.↩︎",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introducción</span>"
+    ]
+  }
+]

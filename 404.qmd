@@ -1,7 +1,0 @@
----
-title: Página no encontrada
----
-
-Esta página no existe.
-
-[Home](index.qmd)
