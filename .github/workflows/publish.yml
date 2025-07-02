@@ -20,7 +20,7 @@ jobs:
       - name: Install Julia
         uses: julia-actions/setup-julia@v1
         with:
-            version: '1.10.10'
+            version: '1.9.4'
 
       - name: Render and Publish
         uses: quarto-dev/quarto-actions/publish@v2
