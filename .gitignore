@@ -1,6 +1,7 @@
 # Quarto
 /.quarto/
 /_book/
+/_freeze/
 
 # Rednering 
 .venv

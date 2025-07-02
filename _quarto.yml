@@ -1,12 +1,15 @@
 project:
   type: book
 
+execute:
+  freeze: auto
+
 book:
   title: "Ciencia de datos con Julia"
   author: "Iraitz Montalbán"
   date: today
-  cover-image: cover.png
-  favicon: cover.png
+  cover-image: images/cover.png
+  favicon: images/cover.png
   site-url: https://iraitzm.github.io/ciencia-datos-julia
   repo-url: https://github.com/IraitzM/ciencia-datos-julia
   page-navigation: true
@@ -30,6 +33,10 @@ book:
   chapters:
     - index.qmd
     - intro.qmd
+    - part: "Primeros pasos"
+      chapters:
+      - parts/firststeps/basics.qmd
+
     - references.qmd
 
 bibliography: references.bib

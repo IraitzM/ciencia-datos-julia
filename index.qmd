@@ -1,8 +1,8 @@
-# Prefacio {.unnumbered}
+# Prólogo {.unnumbered}
 
 Este projecto lo inicio por haber querido emplear Julia en el ámbito profesional y no haber podido. Es mucho más habitual en mi entorno, por familiaridad y conveniencia, que los proyectos de ciencia de datos se realicen en otros lenguajes de programación. Sin embargo, quiero romper una lanza a favor de Julia como el lenguaje a emplear en ciencia de datos por su rendimiento y proximidad al dominio científico. Existen guía excepcionales en inglés:
 
-* [Julia Data Science](https://juliadatascience.io/)
+* [Julia Data Science](https://juliadatascience.io/) [@storopolihuijzeralonso2021juliadatascience]
 * [Julia for Data Science](https://www.juliafordatascience.com/)
 * La documentación de [DataScienceTutorials.jl](https://juliaai.github.io/DataScienceTutorials.jl/)
 

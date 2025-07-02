@@ -1,0 +1,102 @@
+---
+title: "Básicos de Julia"
+format:
+  html:
+    code-fold: false
+engine: julia
+---
+
+En estos primeros ejemplos veremos los rudimentos de la sintaxis de Julia. Y empezaremos con los básicos.
+
+## Variables
+
+Veamos con una de las primeras acciones que será la definición de variables.
+
+```{julia}
+x = 2
+```
+
+Como vemos Julia tiene tipado dinámico, no tenemos por qué definir el tipo de datos asociado al valor que hemos introducido.
+
+```{julia}
+typeof(x)
+```
+
+Podemos hacer lo mismo con múltiples tipos
+```{julia}
+x = 2 + 1im
+typeof(x)
+```
+
+Aunque podemos incluir el tipado si fuera necesario.
+
+```{julia}
+y::Float16 = 120
+typeof(y)
+```
+
+Esto impedirá que hagamos cosas como 
+
+```
+y = "hola"
+```
+con un error _MethodError: Cannot `convert` an object of type String to an object of type Float16_ en nuestro caso, ya que el tipo declarado de la variable y el valor a asociar no coinciden. Trabajaremos principalmente con los tipos habituales 
+
+* Enteros: `Int64`
+* Números reales: `Float64`
+* Binarios (verdadero o falso): `Bool`
+* Cadenas de caracteres: `String`
+
+Podemos crear tipos específicos para nuestras necesidades basado en esos tipos básicos.
+```{julia}
+struct Usuario
+    nombre::String
+    apellido::String
+    anio_nacimiento::Int64
+end
+
+Usuario("Iraitz","Montalbán", 1984)
+```
+
+Como vemos , Julia tiene por costumbre imprimir el valor de la última línea ejecutada. Por definición son estructuras inmutables, por lo que si queremos variar sus datos una vez inicializados deberemos indicarlo expresamente.
+
+```{julia}
+mutable struct UsuarioMutable
+    nombre::String
+    apellido::String
+    anio_nacimiento::Int64
+end
+
+iraitz = UsuarioMutable("Iraitz","Montalban", 1984)
+iraitz.apellido = "Montalbán"
+```
+
+Las variables booleanas nos permiten operaciones lógicas:
+
+* !: NOT
+* &&: AND
+* ||: OR
+
+```{julia}
+!true
+```
+
+```{julia}
+true && false
+```
+
+O de pertenencia a un grupo o tipo, igualdad `==` y desigualdad `!=`, `<`, etc.
+```{julia}
+6 isa Real
+```
+
+## Funciones
+
+Otro aspecto clave son las funciones. La lógica de nuestro programa que toma variables y devuelve variables basado en operaciones lógicas.
+
+```julia
+function funcion(arg1, arg2)
+    resultado = hacemos cosas con arg1 && arg2
+    return resultado
+end
+```

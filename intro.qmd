@@ -6,17 +6,54 @@ format:
 engine: julia
 ---
 
-Primeramente debemos entender qué es Julia. [Julia](https://julialang.org/) es un lenguaje de programación que pretende romper la barrera de los dos lenguajes.
-
 ![Logo Julia](https://julialang.org/assets/infra/logo.svg){width=20%}
+
+Primeramente debemos entender qué es Julia [@bezanson2017julia]. [Julia](https://julialang.org/) es un lenguaje de reciente creación (2012) de programación que pretende romper la barrera de los dos lenguajes. Es decir, ser **rápido** en ejecución pero **cómodo** en el uso, incluyendo el uso interactivo tan común en el trabajo exploratorio de la ciencia de datos. Está muy ligado al mundo de la computación científica y es común en centros de investigación o entes ligados a la computación de altas prestaciones (High Performance Computing). De hecho, Julia es parte del selecto club del [petaflop](https://www.hpcwire.com/off-the-wire/julia-joins-petaflop-club/). Está basado en el compilador LLVM [@lattner2004llvm] y de ahí que muestra una velocidad similar a la de otros lenguajes empleados en ambientes productivos (C/C++, Rust o Go).
+
+![Comparativa en https://julialang.org/benchmarks/](https://julialang.org/assets/images/benchmarks.svg)
 
 Es habitual que los científicos de datos desarrollen sus modelos en Python y una vez conformes con su rendimiento delegen la _puesta en producción_ en ingenieros que deben transformar estos programas en código productivo. Suele requerir incorporar cuestiones no contempladas hasta el momento como logs de cara a depurar errores, bloques de seguridad y autenticación, sanitización[^1] del código para evitar problemas de seguridad y rendimiento, etc.
 
+::: {.callout-tip collapse=true}
+## TEDx MIT
+
+Os dejo esta charla de uno de sus creadores Alan Edelman que puede ayudar a entender la motivación de crear este lenguaje
+
+{{< video https://www.youtube.com/watch?v=qGW0GT1rCvs >}}
+:::
+
 ## Instalar Julia
 
-_pendiente_
+Julia no podría ser más sencillo de instalar.
 
-## Crear un projecto
+### Linux/Mac
+
+Simplemente ejecuta el comando
+
+```sh
+curl -fsSL https://install.julialang.org | sh
+```
+y se encargará de instalar el intérprete de Julia así como su gestor de versiones `juliaup`.
+
+### Windows
+
+Deberemos instalarlo desde la Microsoft Store pero también podemos ejecutarlo desde una shell.
+
+```sh
+winget install --name Julia --id 9NJNWW8PVKMN -e -s msstore
+```
+
+Una vez instalado podemos hacer una pequeña prueba, levantar un terminal y ejecutar **julia**. Debería mostrarnos algo como
+
+![Julia en el terminal](images/julia.png)
+
+Ahora ya solo nos queda empezar a trabajar.
+
+## Crear un proyecto
+
+Julia trae por defecto un gestor de paquetes propio. Esto nos ayuda a indicar las dependencias de nuestro código para que pueda ejecutarse en otros entornos de manera correcta.
+
+Podemos crear un primer proyecto indicando la activación del mismo.
 
 ```{julia}
 #| output: false
@@ -24,7 +61,12 @@ import Pkg;
 Pkg.activate(".")
 ```
 
-Importar dependencias.
+Esto generará dos ficheros esenciales para el correcto funcionamiento de nuestro código:
+
+* Project.toml: Donde se listan las dependencias de nuestro proyecto.
+* Manifest.toml: Donde se indican las versiones de nuestro intérprete de Julia a utilizar, además de los _hash_ de las versiones de los paquetes compatibles.
+
+Podemos ver las distintas opciones en la [documentación oficial](https://pkgdocs.julialang.org/v1/toml-files/). Podemos añadir una dependencia mediante la función `.add()`
 
 ```{julia}
 #| output: false
@@ -32,9 +74,19 @@ Importar dependencias.
 Pkg.add("Plots")
 ```
 
+Y esta se sumará a nuestros ficheros TOML. El comando `.status()` nos informará de las dependencias actuales. 
+
+```{julia}
+#| output: true
+
+Pkg.status()
+```
+
+De forma que podemos hacer uso de esas librerías o paquetes en nuestro código.
+
 ```{julia}
 #| label: fig-parametric
-#| fig-cap: "Parametric Plots"
+#| fig-cap: "Gráfico paramétrico, mostrando un ejemplo de uso de librería/paquete"
 
 using Plots
 
@@ -45,5 +97,16 @@ plot(sin,
      leg=false, 
      fill=(0,:lavender))
 ```
+
+Este es un aspecto clave ya que, tal y como sucede en Python, mucho de nuestro trabajo dependerá de los paquetes existentes y así no tendremos que reinventar la rueda una y otra vez.
+
+## Paquetes habituales
+
+Las librerías que emplearemos en líneas generales son:
+
+* **Manipulación de datos**: [DataFrames.jl](https://dataframes.juliadata.org/stable/)
+* **Visualización**: [Mackie.jl](https://docs.makie.org/stable/) y [Plots.jl](https://docs.juliaplots.org/stable/)
+
+Todos estos paquetes y más están disponibles en https://juliapackages.com/. 
 
 [^1]: Proceso de revisar y limpiar el código fuente de un programa para eliminar errores, mejorar su calidad y asegurar que cumpla con estándares de seguridad y eficiencia.
