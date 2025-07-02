@@ -18,7 +18,7 @@ jobs:
         uses: quarto-dev/quarto-actions/setup@v2
 
       - name: Install Julia
-      - uses: julia-actions/setup-julia@v1
+        uses: julia-actions/setup-julia@v1
         with:
             version: '1.10.10'
 
