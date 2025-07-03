@@ -74,7 +74,7 @@
     "href": "parts/firststeps/basics.html",
     "title": "2  Básicos de Julia",
     "section": "",
-    "text": "2.1 Variables\nEn estos primeros ejemplos veremos los rudimentos de la sintaxis de Julia. Y empezaremos con los básicos.\nVeamos con una de las primeras acciones que será la definición de variables.\nx = 2\n\n2\nComo vemos Julia tiene tipado dinámico, no tenemos por qué definir el tipo de datos asociado al valor que hemos introducido.\ntypeof(x)\n\nInt64\nPodemos hacer lo mismo con múltiples tipos\nx = 2 + 1im\ntypeof(x)\n\nComplex{Int64}\nAunque podemos incluir el tipado si fuera necesario.\ny::Float16 = 120\ntypeof(y)\n\nFloat16\nEsto impedirá que hagamos cosas como\ncon un error MethodError: Cannot convert an object of type String to an object of type Float16 en nuestro caso, ya que el tipo declarado de la variable y el valor a asociar no coinciden. Trabajaremos principalmente con los tipos habituales\nPodemos crear tipos específicos para nuestras necesidades basado en esos tipos básicos.\nstruct Usuario\n    nombre::String\n    apellido::String\n    anio_nacimiento::Int64\nend\n\nUsuario(\"Iraitz\",\"Montalbán\", 1984)\n\nUsuario(\"Iraitz\", \"Montalbán\", 1984)\nComo vemos , Julia tiene por costumbre imprimir el valor de la última línea ejecutada. Por definición son estructuras inmutables, por lo que si queremos variar sus datos una vez inicializados deberemos indicarlo expresamente.\nmutable struct UsuarioMutable\n    nombre::String\n    apellido::String\n    anio_nacimiento::Int64\nend\n\niraitz = UsuarioMutable(\"Iraitz\",\"Montalban\", 1984)\niraitz.apellido = \"Montalbán\"\n\n\"Montalbán\"\nLas variables booleanas nos permiten operaciones lógicas:\n!true\n\nfalse\ntrue && false\n\nfalse\nO de pertenencia a un grupo o tipo, igualdad == y desigualdad !=, &lt;, etc.\n6 isa Real\n\ntrue",
+    "text": "2.1 Variables\nEn estos primeros ejemplos veremos los rudimentos de la sintaxis de Julia. Y empezaremos con los básicos aunque dado que existen amplias coincidencias entre Julia y Python, asumiendo que el lector conoce las estructuras base de Python (listas, diccionarios, etc..) nos centraremos en las grandes diferencias.\nVeamos con una de las primeras acciones que será la definición de variables.\nx = 2\n\n2\nComo vemos Julia tiene tipado dinámico, no tenemos por qué definir el tipo de datos asociado al valor que hemos introducido.\ntypeof(x)\n\nInt64\nPodemos hacer lo mismo con múltiples tipos\nx = 2 + 1im\ntypeof(x)\n\nComplex{Int64}\nAunque podemos incluir el tipado si fuera necesario.\ny::Float16 = 120\ntypeof(y)\n\nFloat16\nEsto impedirá que hagamos cosas como\ncon un error MethodError: Cannot convert an object of type String to an object of type Float16 en nuestro caso, ya que el tipo declarado de la variable y el valor a asociar no coinciden. Trabajaremos principalmente con los tipos habituales\nPodemos crear tipos específicos para nuestras necesidades basado en esos tipos básicos.\nstruct Usuario\n    nombre::String\n    apellido::String\n    anio_nacimiento::Int64\nend\n\nUsuario(\"Iraitz\",\"Montalbán\", 1984)\n\nUsuario(\"Iraitz\", \"Montalbán\", 1984)\nComo vemos , Julia tiene por costumbre imprimir el valor de la última línea ejecutada. Por definición son estructuras inmutables, por lo que si queremos variar sus datos una vez inicializados deberemos indicarlo expresamente.\nmutable struct UsuarioMutable\n    nombre::String\n    apellido::String\n    anio_nacimiento::Int64\nend\n\niraitz = UsuarioMutable(\"Iraitz\",\"Montalban\", 1984)\niraitz.apellido = \"Montalbán\"\n\n\"Montalbán\"\nLas variables booleanas nos permiten operaciones lógicas:\n!true\n\nfalse\ntrue && false\n\nfalse\nO de pertenencia a un grupo o tipo, igualdad == y desigualdad !=, &lt;, etc.\n6 isa Real\n\ntrue",
     "crumbs": [
       "Primeros pasos",
       "<span class='chapter-number'>2</span>  <span class='chapter-title'>Básicos de Julia</span>"
@@ -96,10 +96,43 @@
     "href": "parts/firststeps/basics.html#funciones",
     "title": "2  Básicos de Julia",
     "section": "2.2 Funciones",
-    "text": "2.2 Funciones\nOtro aspecto clave son las funciones. La lógica de nuestro programa que toma variables y devuelve variables basado en operaciones lógicas.\nfunction funcion(arg1, arg2)\n    resultado = hacemos cosas con arg1 && arg2\n    return resultado\nend",
+    "text": "2.2 Funciones\nOtro aspecto clave son las funciones. La lógica de nuestro programa que toma variables y devuelve variables basado en operaciones lógicas.\nfunction nombre_funcion(arg1, arg2)\n    resultado = hacemos cosas con arg1 y arg2\n    return resultado\nend\nTambién permite la definición mediate asignación, a modo de función lambda f_name(arg1, arg2) = hacemos cosas con arg1 y arg2 aunque por claridad emplearemos el modelo anterior.\nJulia permite especificar el tipo de argumentos haciendo que dos funciones con el mismo nombre apliquen distinta lógica en base a los argumentos de entrada y su tipo.\n\nfunction redondeo(x::Int64)\n    print(\"Es un entero\")\n    return x\nend\n\nfunction redondeo(x::Float64)\n    print(\"Es un número con decimales\")\n    return round(x)\nend\n\nmethods(redondeo)\n\n# 2 methods for generic function redondeo from \u001b[35mMain.Notebook\u001b[39m: redondeo(x::Float64) in Main.Notebook at /home/runner/work/ciencia-datos-julia/ciencia-datos-julia/parts/firststeps/basics.qmd:114  redondeo(x::Int64) in Main.Notebook at /home/runner/work/ciencia-datos-julia/ciencia-datos-julia/parts/firststeps/basics.qmd:109 \n\n\nEsto nos permite invocar a uno u otro únicamente en base al tipado.\n\nx = Float64(18)\n\nredondeo(x)\n\nEs un número con decimales\n\n\n18.0\n\n\nEn estos casos, si el tipado no coincide con ninguna de las definiciones de la función, Julia nos alertará con un error.\nPodemos también definir valores por defecto en los argumentos de entrada y devolver más de un elemento.\n\nfunction suma_y_multiplica(x::Int64, y::Int64 = 10)\n    suma = x + y\n    mult = x * y\n    return suma, mult\nend\n\nsuma_y_multiplica(5)\n\n(15, 50)\n\n\n\nsuma_y_multiplica(5, 5)\n\n(10, 25)\n\n\nEn caso de querer utilizar argumentos clave (keyword) estos se separan mediante el carácter ; y siempre deben disponer de un valor por defecto.\n\nfunction suma_y_multiplica(x::Int64; y::Int64 = 10)\n    suma = x + y\n    mult = x * y\n    return suma, mult\nend\n\nsuma_y_multiplica(5, y=7)\n\n(12, 35)\n\n\nPor último, en Julia existe la convención de añadir el carácter ! en caso de que la función altere o modifique alguno de sus argumentos.\n\nfunction suma_uno!(V)\n    for i in eachindex(V)\n        V[i] += 1\n    end\n    return nothing\nend\n\nsuma_uno! (generic function with 1 method)\n\n\nNo devolvemos nada pero si evaluamos el contenido de nuestro dato inicial, veremos que ha sido modificado.\n\ndatos = [1, 2, 3]\n\nsuma_uno!(datos)\n\ndatos\n\n3-element Vector{Int64}:\n 2\n 3\n 4",
     "crumbs": [
       "Primeros pasos",
       "<span class='chapter-number'>2</span>  <span class='chapter-title'>Básicos de Julia</span>"
+    ]
+  },
+  {
+    "objectID": "parts/firststeps/flujos.html",
+    "href": "parts/firststeps/flujos.html",
+    "title": "3  Flujos en Julia",
+    "section": "",
+    "text": "3.1 Condición (if)\nUna vez controlamos las estructuras base podremos aplicar distintas lógicas de flujo a la hora de evaluar nuestro código.\nLos flujos if muestran un funcionamiento similar a otros lenguajes de programación.\nLa sentencia debe iniciar con if y terminar con end. Internamente podemos evaluar condiciones adicionales con elseif o condiciones no contempladas con else.",
+    "crumbs": [
+      "Primeros pasos",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Flujos en Julia</span>"
+    ]
+  },
+  {
+    "objectID": "parts/firststeps/flujos.html#condición-if",
+    "href": "parts/firststeps/flujos.html#condición-if",
+    "title": "3  Flujos en Julia",
+    "section": "",
+    "text": "a = 1\nb = 2\n\nif a &lt; b\n    \"a &lt; b\"\nelseif a &gt; b\n    \"a &gt; b\"\nelse\n    \"a == b\"\nend",
+    "crumbs": [
+      "Primeros pasos",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Flujos en Julia</span>"
+    ]
+  },
+  {
+    "objectID": "parts/firststeps/flujos.html#iteración-forwhile",
+    "href": "parts/firststeps/flujos.html#iteración-forwhile",
+    "title": "3  Flujos en Julia",
+    "section": "3.2 Iteración (for/while)",
+    "text": "3.2 Iteración (for/while)\nLos bucles nos permiten iterar durante un número definido de veces\nfor i in 1:3\n    # Hacer algo\nend\no bien, hasta que se cumpla una condición concreta. En este caso debemos indicar que i se trata de una variable global de forma que es accesible desde fuera del flujo (es decir, no local al bucle en curso).\ni = 0\n\nwhile i &lt; 3\n    # Hacer algo\n\n    # Esto es necesario para que salga del bucle\n    global i += 1\nend\nTambién podemos condicionar el bucle parando break o continuando a la siguiente iteración continue.\ni = 1;\n\nwhile true\n    println(i)\n    if i &gt;= 3\n        break\n    end\n    global i += 1\nend\nfor i = 1:10\n    if i % 3 != 0\n        continue\n    end\n    println(i)\nend\nMás detalle en Control flows.",
+    "crumbs": [
+      "Primeros pasos",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Flujos en Julia</span>"
     ]
   },
   {
