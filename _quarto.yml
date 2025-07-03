@@ -36,6 +36,7 @@ book:
     - part: "Primeros pasos"
       chapters:
       - parts/firststeps/basics.qmd
+      - parts/firststeps/flujos.md
 
     - references.qmd
 

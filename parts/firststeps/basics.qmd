@@ -6,7 +6,7 @@ format:
 engine: julia
 ---
 
-En estos primeros ejemplos veremos los rudimentos de la sintaxis de Julia. Y empezaremos con los básicos.
+En estos primeros ejemplos veremos los rudimentos de la sintaxis de Julia. Y empezaremos con los básicos aunque dado que existen amplias coincidencias entre Julia y Python, asumiendo que el lector conoce las estructuras base de Python (listas, diccionarios, etc..) nos centraremos en las grandes diferencias.
 
 ## Variables
 
@@ -40,7 +40,7 @@ Esto impedirá que hagamos cosas como
 ```
 y = "hola"
 ```
-con un error _MethodError: Cannot `convert` an object of type String to an object of type Float16_ en nuestro caso, ya que el tipo declarado de la variable y el valor a asociar no coinciden. Trabajaremos principalmente con los tipos habituales 
+con un error <span style="color:red">_MethodError: Cannot convert an object of type String to an object of type Float16_</span> en nuestro caso, ya que el tipo declarado de la variable y el valor a asociar no coinciden. Trabajaremos principalmente con los tipos habituales 
 
 * Enteros: `Int64`
 * Números reales: `Float64`
@@ -95,8 +95,85 @@ O de pertenencia a un grupo o tipo, igualdad `==` y desigualdad `!=`, `<`, etc.
 Otro aspecto clave son las funciones. La lógica de nuestro programa que toma variables y devuelve variables basado en operaciones lógicas.
 
 ```julia
-function funcion(arg1, arg2)
-    resultado = hacemos cosas con arg1 && arg2
+function nombre_funcion(arg1, arg2)
+    resultado = hacemos cosas con arg1 y arg2
     return resultado
 end
+```
+
+También permite la definición mediate asignación, a modo de [función lambda](https://ellibrodepython.com/lambda-python) `f_name(arg1, arg2) = hacemos cosas con arg1 y arg2` aunque por claridad emplearemos el modelo anterior.
+
+Julia permite especificar el tipo de argumentos haciendo que dos funciones con el mismo nombre apliquen distinta lógica en base a los argumentos de entrada y su tipo.
+
+```{julia}
+function redondeo(x::Int64)
+    print("Es un entero")
+    return x
+end
+
+function redondeo(x::Float64)
+    print("Es un número con decimales")
+    return round(x)
+end
+
+methods(redondeo)
+```
+
+Esto nos permite invocar a uno u otro únicamente en base al tipado.
+
+```{julia}
+x = Float64(18)
+
+redondeo(x)
+```
+
+En estos casos, si el tipado no coincide con ninguna de las definiciones de la función, Julia nos alertará con un <span style="color:red">error</span>.
+
+Podemos también definir valores por defecto en los argumentos de entrada y devolver más de un elemento.
+
+```{julia}
+function suma_y_multiplica(x::Int64, y::Int64 = 10)
+    suma = x + y
+    mult = x * y
+    return suma, mult
+end
+
+suma_y_multiplica(5)
+```
+
+```{julia}
+suma_y_multiplica(5, 5)
+```
+
+En caso de querer utilizar argumentos clave (**keyword**) estos se separan mediante el carácter `;` y siempre deben disponer de un valor por defecto.
+
+```{julia}
+function suma_y_multiplica(x::Int64; y::Int64 = 10)
+    suma = x + y
+    mult = x * y
+    return suma, mult
+end
+
+suma_y_multiplica(5, y=7)
+```
+
+Por último, en Julia existe la convención de añadir el carácter `!` en caso de que la función altere o modifique alguno de sus argumentos.
+
+```{julia}
+function suma_uno!(V)
+    for i in eachindex(V)
+        V[i] += 1
+    end
+    return nothing
+end
+```
+
+No devolvemos nada pero si evaluamos el contenido de nuestro dato inicial, veremos que ha sido modificado.
+
+```{julia}
+datos = [1, 2, 3]
+
+suma_uno!(datos)
+
+datos
 ```
