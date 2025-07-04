@@ -100,13 +100,4 @@ plot(sin,
 
 Este es un aspecto clave ya que, tal y como sucede en Python, mucho de nuestro trabajo dependerá de los paquetes existentes y así no tendremos que reinventar la rueda una y otra vez.
 
-## Paquetes habituales
-
-Las librerías que emplearemos en líneas generales son:
-
-* **Manipulación de datos**: [DataFrames.jl](https://dataframes.juliadata.org/stable/)
-* **Visualización**: [Mackie.jl](https://docs.makie.org/stable/) y [Plots.jl](https://docs.juliaplots.org/stable/)
-
-Todos estos paquetes y más están disponibles en https://juliapackages.com/. 
-
 [^1]: Proceso de revisar y limpiar el código fuente de un programa para eliminar errores, mejorar su calidad y asegurar que cumpla con estándares de seguridad y eficiencia.

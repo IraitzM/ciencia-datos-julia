@@ -37,6 +37,12 @@ book:
       chapters:
       - parts/firststeps/basics.qmd
       - parts/firststeps/flujos.md
+      - parts/firststeps/librerias.qmd
+      - parts/firststeps/sistemaficheros.qmd
+
+    - part: "Carga y exploración"
+      chapters:
+      - parts/dataframes/basics.qmd
 
     - references.qmd
 

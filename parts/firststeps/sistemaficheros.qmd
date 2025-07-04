@@ -1,0 +1,52 @@
+---
+title: "Sistema de ficheros"
+format:
+  html:
+    code-fold: false
+engine: julia
+---
+
+Como en todo lenguaje de programación, deberemos gestionar la lectura y escritura de ficheros. El sistema de ficheros lo gestiona el sistema operativo de nuestra máquina con lo que se trata más bien de interactuar con este al menos de cara a conocer por ejemplo, dónde estamos ubicados.
+
+```{julia}
+dirname(@__FILE__)
+```
+
+Podemos crear carpetas de forma programática pero en la mayoría de casos se tratará de leer y escribir ficheros en rutas concretas. Para ello nos será útil la función `joinpath` que nos ayuda a conformar rutas tal y como el sistema de ficheros requiere.
+
+```{julia}
+root = dirname(@__FILE__)
+joinpath(root, "ejemplo.txt")
+```
+
+Y como vimos anteriormente, usar la función `readlines()` para leer su contenido.
+
+```{julia}
+fichero = joinpath(root, "ejemplo.txt")
+readline(fichero)
+```
+
+Imaginemos por tanto que queremos descargarnos un CSV (Comma Separated Value) con información sobre los pasajeros del [Titanic](https://www.kaggle.com/datasets/yasserh/titanic-dataset)
+
+```{julia}
+using Downloads
+
+fichero_url = "https://raw.githubusercontent.com/datasciencedojo/datasets/refs/heads/master/titanic.csv"
+fichero = Downloads.download(fichero_url)
+readlines(fichero)[:20]
+```
+
+Si queremos conservar el fichero para más adelante podemos recurrir a la función `write()` y guardarlo donde nosotros queramos.
+
+```{julia}
+write("../../data/titanic.csv", read(fichero))
+```
+
+Y podemos revisar el contenido iterando sobre `walkdir()` que recorre los elementos de un directorio.
+
+```{julia}
+itr = walkdir("../../data/")
+(root, dirs, files) = first(itr)
+```
+
+Disponemos de los comandos más usuales a la hora de crear un directorio (`mkdir()`) o adentrarnos en él (`cd()`). Tenéis más detalle sobre los comandos disponibles [aquí](https://docs.julialang.org/en/v1/base/file/).

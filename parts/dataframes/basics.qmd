@@ -1,0 +1,31 @@
+---
+title: "Cargando datos"
+format:
+  html:
+    code-fold: false
+engine: julia
+---
+
+Ya conocemos las bases de Julia y ahora toca empezar a ver cómo hacer uso de los recursos más comunes en ciencia de datos. Dado que en el [ejemplo anterior](../firststeps/sistemaficheros.qmd) ya hemos creado un fichero con datos del Titanic, veamos si podemos cargarlo.
+
+## CSV
+
+Quizás uno de los formatos más comunes en el mundo empresarial es el fichero de texto con extensión CSV (Comma Separated Value). Extraído habitualmente de ficheros Excel o bien de exportaciones de sistemas gestores de base de datos, veremos que presenta un formato tabular donde cada celda viene separado por un carácter (siendo `,` o `;` los más habituales); y el salto de línea marca el inicio de una nueva fila.
+
+Dado que leer y trabajar con estos ficheros puede ser tedioso, recurriremos a uno de las primeras librerías que nos serán de ayuda en nuestra tarea.Dos en realidad, `CSV` que sabe como tratar estos ficheros y `DataFrames` que nos ofrece todas las funcionalidades de las estructuras tabulares.
+
+```{julia}
+#| output: false
+
+using Pkg;
+Pkg.add("CSV")
+Pkg.add("DataFrames")
+```
+
+```{julia}
+using CSV, DataFrames
+
+df = CSV.read("../../data/titanic.csv", DataFrame)
+first(df)
+```
+

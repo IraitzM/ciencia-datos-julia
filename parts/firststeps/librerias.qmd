@@ -1,0 +1,108 @@
+---
+title: "Módulos y librerías"
+format:
+  html:
+    code-fold: false
+engine: julia
+---
+
+Un aspecto clave en los lenguajes de programación para ciencia de datos es el uso de librerías. Estas nos permiten atajar retos que otros ya han enfrentado y hacer uso de funciones ya creadas para el objeto.
+
+La carga de módulos se hace mediante el comando `using`
+
+```julia
+using Modulo
+```
+
+Veremos algunos módulos base que nos ayudarán con ciertas structuras de datos complejas de manejar.
+
+## Fechas
+
+Para poder gestionar fechas deberemos importar un módulo específico
+
+```{julia}
+using Dates
+```
+
+Existen dos tipos de fecha que deberemos manejar. `Date` para fechas sin tiempo informado
+
+```{julia}
+Date(2025, 7, 3) # año, mes, dia
+```
+
+Y `DateTime` para fechas en las que dispongamos de hora.
+
+```{julia}
+DateTime(2025, 7, 3, 12, 0) # año, mes, dia, hora, minutos
+```
+
+Podremos también indicarlos basado en formato, como segundo argumento de nuestros dos tipos base.
+
+```{julia}
+format = DateFormat("yyyymmdd")
+Date("19870913", format)
+```
+
+#### Intervalos
+
+Como siempre con las fechas, podremos acceder a intervalos temporales (o periodos).
+
+```{julia}
+fecha = Date(2025, 7, 1) 
+periodo = today() - fecha
+```
+
+Podemos ver que tipo soporta nuestra variable resultante.
+
+```{julia}
+typeof(periodo)
+```
+
+La función `today()` nos devuelve un `Day` por lo que si queremos más precisión, deberemos convertirlo a `DateTime` y usar `now()` en nuestra comparativa para que la resta sea entre los mismos tipos.
+
+```{julia}
+fecha_hora_ms = DateTime(2025, 7, 1, 12, 1, 3, 120) # precisión de microsegundos 
+lapso = now() - fecha_hora_ms
+```
+
+```{julia}
+typeof(lapso)
+```
+
+## Descargas
+
+Existe otro módulo que nos vendrá muy bien a la hora de descargarnos ficheros.
+
+```{julia}
+using Downloads
+```
+
+Podremos indicarle a la función `Downloads.download()` la dirección desde la que descargar nuestro conjunto de datos.
+
+```{julia}
+url = "https://raw.githubusercontent.com/IraitzM/ciencia-datos-julia/refs/heads/main/Project.toml"
+fichero_proyecto = Downloads.download(url) # creamos un fichero temporal
+```
+
+Y con funciones como `readlines` leer su contenido.
+```{julia}
+readlines(fichero_proyecto)
+```
+
+## Paquetes habituales
+
+En el caso de tratarse de módulos no disponibles como parte de la librería standard, deberemos recurrir al gestor de paquetes e instalarlas.
+
+```julia
+using Pkg;
+Pkg.add("Libreria.jl")
+```
+
+Tal y como veíamos en la [introducción](../../intro.qmd#crear-un-proyecto) estos paquetes serán añadidos a los dos ficheros clave que nos permiten reproducir nuestro entorno en otra máquina.
+
+Las librerías que emplearemos en líneas generales son:
+
+* **Manipulación de datos**: [DataFrames.jl](https://dataframes.juliadata.org/stable/)
+* **Visualización**: [Mackie.jl](https://docs.makie.org/stable/) y [Plots.jl](https://docs.juliaplots.org/stable/)
+
+Todos estos paquetes y más están disponibles en https://juliapackages.com/. 
