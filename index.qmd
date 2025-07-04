@@ -10,7 +10,7 @@ Pero este es mi intento de acercarlo al público hispanohablante. Teniendo refer
 
 Con suerte este libro ayuda a más de uno a perder el miedo y enfrentarse a este lenguaje que no deja de ser uno de los motivos por los que nuestros amados notebooks son notebooks de Jupyter (**Ju**lia, **pyt**hon y **R**).
 
-## Sobre mi
+## Sobre mí
 
 Mi nombre es Iraitz Montalbán y llevo... algo de tiempo en esto de la ciencia de datos e inteligencia artificial. Puedes contactar directamente conmigo en [iraitz.info](https://iraitz.info/).
 
