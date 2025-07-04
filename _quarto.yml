@@ -7,6 +7,7 @@ execute:
 book:
   title: "Ciencia de datos con Julia"
   author: "Iraitz Montalbán"
+  description: "Tutoriales y guías de ciencia de datos utilizando el lenguaje Julia."
   date: today
   cover-image: images/cover.png
   favicon: images/cover.png
@@ -55,6 +56,20 @@ format:
      - cosmo
      - style.scss
     code-link: true
+
+# Some SEO
+metadata:
+  lang: es
+  author: "Iraitz Montalbán"
+  keywords: [Julia, Ciencia de Datos, Visualización, Machine Learning]
+  twitter-card: false
+  open-graph: true
+  image: images/cover.png
+
+google-analytics : "G-MXHDHE1HP5"
+
+resources:
+  - robots.txt
 
 
 
