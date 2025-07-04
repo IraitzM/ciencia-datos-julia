@@ -1,1 +1,3 @@
+User-agent: *
+Allow: /
 Sitemap: https://iraitzm.github.io/ciencia-datos-julia/sitemap.xml
