@@ -2,7 +2,7 @@ project:
   type: book
 
 execute:
-  freeze: auto
+  freeze: false
 
 book:
   title: "Ciencia de datos con Julia"

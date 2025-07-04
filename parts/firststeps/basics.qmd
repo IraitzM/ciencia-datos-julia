@@ -177,3 +177,7 @@ suma_uno!(datos)
 
 datos
 ```
+
+Existen toda una serie de funciones que podemos emplear directamente desde la consola. Tenemos operadores básicos como suma o multiplicación, y otras funcionalidades no tan básicas como la selección de los primeros o últimos elementos de un vector, la creación de números aleatorios o el poder fijar una semilla para dicha generación aleatoria. 
+
+Más que listar todas estas operaciones y estructuras disponibles, iremos viendo con ejemplos las más usuales según avancemos en los materiales.

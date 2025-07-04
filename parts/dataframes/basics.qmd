@@ -29,3 +29,174 @@ df = CSV.read("../../data/titanic.csv", DataFrame)
 first(df)
 ```
 
+Podemos extender este uso sobre la carga de datos tabulares a otros formatos comunes como Excel gracias a librerías como [XLSX.jl](https://felipenoris.github.io/XLSX.jl/stable/tutorial/#Read-Tabular-Data)
+
+## JSON
+
+Otro formato habitual, particularmente cuando trabajamos contra [API](https://es.wikipedia.org/wiki/API)s es [JSON](https://es.wikipedia.org/wiki/JSON). Necesitaremos entender las estructuras de estos documentos de cara a darles el formato tabular adecuado.
+```{julia}
+#| output: true
+
+readlines("../../data/titanic.json")
+```
+
+Podemos ver que en este caso disponemos de una lista de objetos con un único nivel de datos que podemos trasladar directamente a un DataFrame.
+
+```{julia}
+#| output: false
+
+using Pkg;
+Pkg.add("JSON")
+```
+
+```{julia}
+using JSON, DataFrames
+
+# Leemos las lineas y las juntamos en una cadena única
+data = join(readlines("../../data/titanic.json"))
+
+df = DataFrame(JSON.parse(data))
+first(df)
+```
+
+Es importante prestar atención a la estructura del JSON ya que si dispone de múltiples anidamientos y objetos complejos será difícil disponer de una estructura tabular plana directamente sin necesitar trabajo de preprocesado y aplanado previo.
+
+## Parquet
+
+Si hay un formato omnipresente desde que fue creado allá por 2013 es [Parquet](https://parquet.apache.org/). Formato columnar y comprimido por defecto, permite trabajar con estructuras de datos tabulares de forma eficiente para los procesos analíticos, con una huella de almacenamiento mínima y compatible con multitud de las herramientas de stack de ciencia de datos. De hecho, es la base para estructuras de almacenamiento más complejas que ofrecen capacidades [ACID](https://es.wikipedia.org/wiki/ACID) como [Iceberg](https://iceberg.apache.org/) o [Delta Lake](https://delta.io/).
+
+```{julia}
+#| output: false
+
+using Pkg;
+Pkg.add("Parquet")
+```
+
+```{julia}
+using Parquet
+
+read_parquet("../../data/titanic.parquet")
+```
+
+Podemos cargar el contenido directamente como DataFrame gracias a la compatibilidad entre estas dos librerías.
+
+```julia
+using Parquet, DataFrames
+
+df = DataFrame(read_parquet("../../data/titanic.parquet"))
+first(df)
+```
+
+Existen otras dos grandes fuentes con las que será necesario interactuar para formar nuestro elenco de opciones.
+
+## APIs
+
+Interactuar con APIs requiere realizar consultas siguiendo el protocolo HTTP y obtener los datos de respuesta en un formato compatible. En nuestro caso, al haber visto como el formato JSON es manejable gracias a la librería de Julia, simplemente deberemos añadir librerías de manejo del protocolo en concreto.
+
+```{julia}
+#| output: false
+
+using Pkg;
+Pkg.add("HTTP")
+```
+
+```{julia}
+using HTTP
+using JSON
+
+# Dirección para el echo de postman
+url="https://postman-echo.com/get?foo1=bar1&foo2=bar2"
+
+respuesta = HTTP.get(url)
+texto_respuesta = String(respuesta.body)
+JSON.parse(texto_respuesta)["args"]
+```
+
+Podéis probar con otras APIs donde poder cargar los datos directamente en un DataFrame. Tomemos como ejemplo la [PokeAPI](https://pokeapi.co)
+
+```{julia}
+using HTTP
+using JSON
+
+# Dirección para el echo de postman
+url="https://pokeapi.co/api/v2/pokemon?limit=10"
+
+respuesta = HTTP.get(url)
+texto_respuesta = String(respuesta.body)
+
+df = DataFrame(JSON.parse(texto_respuesta)["results"])
+first(df, 5)
+```
+
+## Sistemas gestores de Base de Datos
+
+Los sistemas gestores de base de datos son un recurso habitual donde deberemos de encontrar el modo de poder enviar nuestras consultas (empleando [SQL](https://es.wikipedia.org/wiki/SQL)) y obtener una estructura que encaje en nuestros DataFrames.
+
+Para la mayoría de casos deberemos encontrar la librería compatible con nuestra base de datos dado que la especificación de cada una puede variar y requeriremos cierta librería en cada caso. 
+
+* [SQLite](https://juliapackages.com/p/sqlite)
+* [DuckDB](https://juliapackages.com/p/duckdb)
+* [MySQL](https://juliapackages.com/p/mysql)
+* [PostgreSQL](https://juliapackages.com/p/postgres)
+
+Y más que podéis encontrar en [https://juliapackages.com/c/database](https://juliapackages.com/c/database).
+
+```{julia}
+#| output: false
+
+using Pkg;
+Pkg.add("DuckDB")
+```
+
+```{julia}
+using DuckDB
+
+con_duckdb = DBInterface.connect(DuckDB.DB, "bd.duckdb")
+```
+
+Una vez conectados podemos leer de los datos del entorno.
+
+```{julia}
+# Creamos una serie de datos aleatorios
+len = 10_000
+datos = (a = collect(1:len), b = rand(1:100, len))
+
+# Create la tabla
+create_query = map((k,v)->"$k INT NOT NULL,", keys(datos), datos) |>
+    x->join(x, "\r\n")[1:end-1] |>
+    x->"CREATE TABLE IF NOT EXISTS data(\r\n$x\r\n);"
+print(create_query)
+DBInterface.execute(con_duckdb, create_query);
+```
+
+Insertamos los datos de prueba.
+
+:::{.callout-tip}
+Con `@time` podemos ver el tiempo que le toma realizar la tarea en cuestión.
+:::
+
+```{julia}
+# Escribimos los datos
+str = join(repeat('?', length(datos)), ',')
+write_query = DBInterface.prepare(con_duckdb, "INSERT INTO data VALUES($str)")
+@time DBInterface.executemany(write_query, datos)
+```
+
+Y podemos proceder a leer parte de estos.
+
+```{julia}
+@time table_rd = DBInterface.execute(con_duckdb, "SELECT * FROM data") 
+```
+
+La lectura puede realizarse directamente formando el DataFrame resultante a utilizar ya que las bases de datos relacionales siempre nos retornan estructuras tabulares.
+
+```{julia}
+df = DataFrame(DBInterface.execute(con_duckdb, "SELECT * FROM data"))
+first(df, 5)
+```
+
+Siempre deberemos de acordarnos de cerrar la conexión una vez que hayamos obtenido los datos de la fuente.
+
+```{julia}
+DBInterface.close!(con_duckdb)
+```

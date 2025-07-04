@@ -80,13 +80,27 @@ using Downloads
 Podremos indicarle a la función `Downloads.download()` la dirección desde la que descargar nuestro conjunto de datos.
 
 ```{julia}
-url = "https://raw.githubusercontent.com/IraitzM/ciencia-datos-julia/refs/heads/main/Project.toml"
+url = "https://raw.githubusercontent.com/IraitzM/ciencia-datos-julia/refs/heads/main/parts/firststeps/ejemplo.txt"
+
 fichero_proyecto = Downloads.download(url) # creamos un fichero temporal
 ```
 
 Y con funciones como `readlines` leer su contenido.
 ```{julia}
 readlines(fichero_proyecto)
+```
+
+Vemos que devuelve una estructura de [Vector](https://docs.julialang.org/en/v1/base/arrays/#Base.Vector) con cadenas de texto ([String](https://docs.julialang.org/en/v1/base/strings/#Base.string)) con el contenido del fichero.
+
+## Aleatorios
+
+Trabajar con números aleatorios es habitual en ciencia de datos, y para ello podemos recurrir al módulo `Random`
+
+```{julia}
+using Random
+
+Random.seed!(1234)
+Random.randn()
 ```
 
 ## Paquetes habituales

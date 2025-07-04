@@ -5,3 +5,7 @@
 
 # Rednering 
 .venv
+
+# DuckDB
+*.duckdb
+*.wal
