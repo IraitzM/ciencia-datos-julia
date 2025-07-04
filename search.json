@@ -44,17 +44,7 @@
     "href": "intro.html#crear-un-proyecto",
     "title": "1  Introducción",
     "section": "1.2 Crear un proyecto",
-    "text": "1.2 Crear un proyecto\nJulia trae por defecto un gestor de paquetes propio. Esto nos ayuda a indicar las dependencias de nuestro código para que pueda ejecutarse en otros entornos de manera correcta.\nPodemos crear un primer proyecto indicando la activación del mismo.\n\nimport Pkg;\nPkg.activate(\".\")\n\nEsto generará dos ficheros esenciales para el correcto funcionamiento de nuestro código:\n\nProject.toml: Donde se listan las dependencias de nuestro proyecto.\nManifest.toml: Donde se indican las versiones de nuestro intérprete de Julia a utilizar, además de los hash de las versiones de los paquetes compatibles.\n\nPodemos ver las distintas opciones en la documentación oficial. Podemos añadir una dependencia mediante la función .add()\n\nPkg.add(\"Plots\")\n\nY esta se sumará a nuestros ficheros TOML. El comando .status() nos informará de las dependencias actuales.\n\nPkg.status()\n\n\nStatus `~/work/ciencia-datos-julia/ciencia-datos-julia/Project.toml`\n  [91a5bcdd] Plots v1.40.15\n\n\n\n\nDe forma que podemos hacer uso de esas librerías o paquetes en nuestro código.\n\nusing Plots\n\nplot(sin, \n     x-&gt;sin(2x), \n     0, \n     2π, \n     leg=false, \n     fill=(0,:lavender))\n\n\n\n\n\n\n  \n    \n  \n\n\n\n  \n    \n  \n\n\n\n  \n    \n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFigure 1.1: Gráfico paramétrico, mostrando un ejemplo de uso de librería/paquete\n\n\n\n\nEste es un aspecto clave ya que, tal y como sucede en Python, mucho de nuestro trabajo dependerá de los paquetes existentes y así no tendremos que reinventar la rueda una y otra vez.",
-    "crumbs": [
-      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introducción</span>"
-    ]
-  },
-  {
-    "objectID": "intro.html#paquetes-habituales",
-    "href": "intro.html#paquetes-habituales",
-    "title": "1  Introducción",
-    "section": "1.3 Paquetes habituales",
-    "text": "1.3 Paquetes habituales\nLas librerías que emplearemos en líneas generales son:\n\nManipulación de datos: DataFrames.jl\nVisualización: Mackie.jl y Plots.jl\n\nTodos estos paquetes y más están disponibles en https://juliapackages.com/.\n\n\n\n\nBezanson, Jeff, Alan Edelman, Stefan Karpinski, and Viral B Shah. 2017. “Julia: A Fresh Approach to Numerical Computing.” SIAM Review 59 (1): 65–98.\n\n\nLattner, Chris, and Vikram Adve. 2004. “LLVM: A Compilation Framework for Lifelong Program Analysis & Transformation.” In International Symposium on Code Generation and Optimization, 2004. CGO 2004., 75–86. IEEE. https://llvm.org/pubs/2004-01-30-CGO-LLVM.pdf.",
+    "text": "1.2 Crear un proyecto\nJulia trae por defecto un gestor de paquetes propio. Esto nos ayuda a indicar las dependencias de nuestro código para que pueda ejecutarse en otros entornos de manera correcta.\nPodemos crear un primer proyecto indicando la activación del mismo.\n\nimport Pkg;\nPkg.activate(\".\")\n\nEsto generará dos ficheros esenciales para el correcto funcionamiento de nuestro código:\n\nProject.toml: Donde se listan las dependencias de nuestro proyecto.\nManifest.toml: Donde se indican las versiones de nuestro intérprete de Julia a utilizar, además de los hash de las versiones de los paquetes compatibles.\n\nPodemos ver las distintas opciones en la documentación oficial. Podemos añadir una dependencia mediante la función .add()\n\nPkg.add(\"Plots\")\n\nY esta se sumará a nuestros ficheros TOML. El comando .status() nos informará de las dependencias actuales.\n\nPkg.status()\n\n\nStatus `~/work/ciencia-datos-julia/ciencia-datos-julia/Project.toml`\n  [336ed68f] CSV v0.10.15\n  [a93c6f00] DataFrames v1.7.0\n⌃ [91a5bcdd] Plots v1.40.15\nInfo Packages marked with ⌃ have new versions available and may be upgradable.\n\n\n\n\nDe forma que podemos hacer uso de esas librerías o paquetes en nuestro código.\n\nusing Plots\n\nplot(sin, \n     x-&gt;sin(2x), \n     0, \n     2π, \n     leg=false, \n     fill=(0,:lavender))\n\n\n\n\n\n\n  \n    \n  \n\n\n\n  \n    \n  \n\n\n\n  \n    \n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFigure 1.1: Gráfico paramétrico, mostrando un ejemplo de uso de librería/paquete\n\n\n\n\nEste es un aspecto clave ya que, tal y como sucede en Python, mucho de nuestro trabajo dependerá de los paquetes existentes y así no tendremos que reinventar la rueda una y otra vez.\n\n\n\n\nBezanson, Jeff, Alan Edelman, Stefan Karpinski, and Viral B Shah. 2017. “Julia: A Fresh Approach to Numerical Computing.” SIAM Review 59 (1): 65–98.\n\n\nLattner, Chris, and Vikram Adve. 2004. “LLVM: A Compilation Framework for Lifelong Program Analysis & Transformation.” In International Symposium on Code Generation and Optimization, 2004. CGO 2004., 75–86. IEEE. https://llvm.org/pubs/2004-01-30-CGO-LLVM.pdf.",
     "crumbs": [
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introducción</span>"
     ]
@@ -133,6 +123,72 @@
     "crumbs": [
       "Primeros pasos",
       "<span class='chapter-number'>3</span>  <span class='chapter-title'>Flujos en Julia</span>"
+    ]
+  },
+  {
+    "objectID": "parts/firststeps/librerias.html",
+    "href": "parts/firststeps/librerias.html",
+    "title": "4  Módulos y librerías",
+    "section": "",
+    "text": "4.1 Fechas\nUn aspecto clave en los lenguajes de programación para ciencia de datos es el uso de librerías. Estas nos permiten atajar retos que otros ya han enfrentado y hacer uso de funciones ya creadas para el objeto.\nLa carga de módulos se hace mediante el comando using\nVeremos algunos módulos base que nos ayudarán con ciertas structuras de datos complejas de manejar.\nPara poder gestionar fechas deberemos importar un módulo específico\nusing Dates\nExisten dos tipos de fecha que deberemos manejar. Date para fechas sin tiempo informado\nDate(2025, 7, 3) # año, mes, dia\n\n2025-07-03\nY DateTime para fechas en las que dispongamos de hora.\nDateTime(2025, 7, 3, 12, 0) # año, mes, dia, hora, minutos\n\n2025-07-03T12:00:00\nPodremos también indicarlos basado en formato, como segundo argumento de nuestros dos tipos base.\nformat = DateFormat(\"yyyymmdd\")\nDate(\"19870913\", format)\n\n1987-09-13",
+    "crumbs": [
+      "Primeros pasos",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Módulos y librerías</span>"
+    ]
+  },
+  {
+    "objectID": "parts/firststeps/librerias.html#fechas",
+    "href": "parts/firststeps/librerias.html#fechas",
+    "title": "4  Módulos y librerías",
+    "section": "",
+    "text": "Intervalos\nComo siempre con las fechas, podremos acceder a intervalos temporales (o periodos).\n\nfecha = Date(2025, 7, 1) \nperiodo = today() - fecha\n\n3 days\n\n\nPodemos ver que tipo soporta nuestra variable resultante.\n\ntypeof(periodo)\n\nDay\n\n\nLa función today() nos devuelve un Day por lo que si queremos más precisión, deberemos convertirlo a DateTime y usar now() en nuestra comparativa para que la resta sea entre los mismos tipos.\n\nfecha_hora_ms = DateTime(2025, 7, 1, 12, 1, 3, 120) # precisión de microsegundos \nlapso = now() - fecha_hora_ms\n\n248132966 milliseconds\n\n\n\ntypeof(lapso)\n\nMillisecond",
+    "crumbs": [
+      "Primeros pasos",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Módulos y librerías</span>"
+    ]
+  },
+  {
+    "objectID": "parts/firststeps/librerias.html#descargas",
+    "href": "parts/firststeps/librerias.html#descargas",
+    "title": "4  Módulos y librerías",
+    "section": "4.2 Descargas",
+    "text": "4.2 Descargas\nExiste otro módulo que nos vendrá muy bien a la hora de descargarnos ficheros.\n\nusing Downloads\n\nPodremos indicarle a la función Downloads.download() la dirección desde la que descargar nuestro conjunto de datos.\n\nurl = \"https://raw.githubusercontent.com/IraitzM/ciencia-datos-julia/refs/heads/main/Project.toml\"\nfichero_proyecto = Downloads.download(url) # creamos un fichero temporal\n\n\"/tmp/jl_3E1sjuLm92\"\n\n\nY con funciones como readlines leer su contenido.\n\nreadlines(fichero_proyecto)\n\n4-element Vector{String}:\n \"[deps]\"\n \"CSV = \\\"336ed68f-0bac-5ca0-87d4-7b16caf5d00b\\\"\"\n \"DataFrames = \\\"a93c6f00-e57d-5684-b7b6-d8193f3e46c0\\\"\"\n \"Plots = \\\"91a5bcdd-55d7-5caf-9e0b-520d859cae80\\\"\"",
+    "crumbs": [
+      "Primeros pasos",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Módulos y librerías</span>"
+    ]
+  },
+  {
+    "objectID": "parts/firststeps/librerias.html#paquetes-habituales",
+    "href": "parts/firststeps/librerias.html#paquetes-habituales",
+    "title": "4  Módulos y librerías",
+    "section": "4.3 Paquetes habituales",
+    "text": "4.3 Paquetes habituales\nEn el caso de tratarse de módulos no disponibles como parte de la librería standard, deberemos recurrir al gestor de paquetes e instalarlas.\nusing Pkg;\nPkg.add(\"Libreria.jl\")\nTal y como veíamos en la introducción estos paquetes serán añadidos a los dos ficheros clave que nos permiten reproducir nuestro entorno en otra máquina.\nLas librerías que emplearemos en líneas generales son:\n\nManipulación de datos: DataFrames.jl\nVisualización: Mackie.jl y Plots.jl\n\nTodos estos paquetes y más están disponibles en https://juliapackages.com/.",
+    "crumbs": [
+      "Primeros pasos",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Módulos y librerías</span>"
+    ]
+  },
+  {
+    "objectID": "parts/firststeps/sistemaficheros.html",
+    "href": "parts/firststeps/sistemaficheros.html",
+    "title": "5  Sistema de ficheros",
+    "section": "",
+    "text": "Como en todo lenguaje de programación, deberemos gestionar la lectura y escritura de ficheros. El sistema de ficheros lo gestiona el sistema operativo de nuestra máquina con lo que se trata más bien de interactuar con este al menos de cara a conocer por ejemplo, dónde estamos ubicados.\n\ndirname(@__FILE__)\n\n\"/home/runner/work/ciencia-datos-julia/ciencia-datos-julia/parts/firststeps\"\n\n\nPodemos crear carpetas de forma programática pero en la mayoría de casos se tratará de leer y escribir ficheros en rutas concretas. Para ello nos será útil la función joinpath que nos ayuda a conformar rutas tal y como el sistema de ficheros requiere.\n\nroot = dirname(@__FILE__)\njoinpath(root, \"ejemplo.txt\")\n\n\"/home/runner/work/ciencia-datos-julia/ciencia-datos-julia/parts/firststeps/ejemplo.txt\"\n\n\nY como vimos anteriormente, usar la función readlines() para leer su contenido.\n\nfichero = joinpath(root, \"ejemplo.txt\")\nreadline(fichero)\n\n\"Hola desde un fichero!\"\n\n\nImaginemos por tanto que queremos descargarnos un CSV (Comma Separated Value) con información sobre los pasajeros del Titanic\n\nusing Downloads\n\nfichero_url = \"https://raw.githubusercontent.com/datasciencedojo/datasets/refs/heads/master/titanic.csv\"\nfichero = Downloads.download(fichero_url)\nreadlines(fichero)[:20]\n\n\"19,0,3,\\\"Vander Planke, Mrs. Julius (Emelia Maria Vandemoortele)\\\",female,31,1,0,345763,18,,S\"\n\n\nSi queremos conservar el fichero para más adelante podemos recurrir a la función write() y guardarlo donde nosotros queramos.\n\nwrite(\"../../data/titanic.csv\", read(fichero))\n\n60302\n\n\nY podemos revisar el contenido iterando sobre walkdir() que recorre los elementos de un directorio.\n\nitr = walkdir(\"../../data/\")\n(root, dirs, files) = first(itr)\n\n(\"../../data/\", String[], [\".gitkeep\", \"titanic.csv\"])\n\n\nDisponemos de los comandos más usuales a la hora de crear un directorio (mkdir()) o adentrarnos en él (cd()). Tenéis más detalle sobre los comandos disponibles aquí.",
+    "crumbs": [
+      "Primeros pasos",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Sistema de ficheros</span>"
+    ]
+  },
+  {
+    "objectID": "parts/dataframes/basics.html",
+    "href": "parts/dataframes/basics.html",
+    "title": "6  Cargando datos",
+    "section": "",
+    "text": "6.1 CSV\nYa conocemos las bases de Julia y ahora toca empezar a ver cómo hacer uso de los recursos más comunes en ciencia de datos. Dado que en el ejemplo anterior ya hemos creado un fichero con datos del Titanic, veamos si podemos cargarlo.\nQuizás uno de los formatos más comunes en el mundo empresarial es el fichero de texto con extensión CSV (Comma Separated Value). Extraído habitualmente de ficheros Excel o bien de exportaciones de sistemas gestores de base de datos, veremos que presenta un formato tabular donde cada celda viene separado por un carácter (siendo , o ; los más habituales); y el salto de línea marca el inicio de una nueva fila.\nDado que leer y trabajar con estos ficheros puede ser tedioso, recurriremos a uno de las primeras librerías que nos serán de ayuda en nuestra tarea.Dos en realidad, CSV que sabe como tratar estos ficheros y DataFrames que nos ofrece todas las funcionalidades de las estructuras tabulares.\nusing Pkg;\nPkg.add(\"CSV\")\nPkg.add(\"DataFrames\")\nusing CSV, DataFrames\n\ndf = CSV.read(\"../../data/titanic.csv\", DataFrame)\nfirst(df)\n\nDataFrameRow (12 columns)\n\n\n\nRow\nPassengerId\nSurvived\nPclass\nName\nSex\nAge\nSibSp\nParch\nTicket\nFare\nCabin\nEmbarked\n\n\n\nInt64\nInt64\nInt64\nString\nString7\nFloat64?\nInt64\nInt64\nString31\nFloat64\nString15?\nString1?\n\n\n\n\n1\n1\n0\n3\nBraund, Mr. Owen Harris\nmale\n22.0\n1\n0\nA/5 21171\n7.25\nmissing\nS",
+    "crumbs": [
+      "Carga y exploración",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Cargando datos</span>"
     ]
   },
   {
