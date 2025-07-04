@@ -231,6 +231,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#csv" id="toc-csv" class="nav-link active" data-scroll-target="#csv"><span class="header-section-number">6.1</span> CSV</a></li>
+  <li><a href="#json" id="toc-json" class="nav-link" data-scroll-target="#json"><span class="header-section-number">6.2</span> JSON</a></li>
+  <li><a href="#parquet" id="toc-parquet" class="nav-link" data-scroll-target="#parquet"><span class="header-section-number">6.3</span> Parquet</a></li>
+  <li><a href="#apis" id="toc-apis" class="nav-link" data-scroll-target="#apis"><span class="header-section-number">6.4</span> APIs</a></li>
+  <li><a href="#sistemas-gestores-de-base-de-datos" id="toc-sistemas-gestores-de-base-de-datos" class="nav-link" data-scroll-target="#sistemas-gestores-de-base-de-datos"><span class="header-section-number">6.5</span> Sistemas gestores de Base de Datos</a></li>
   </ul>
 </nav>
     </div>
@@ -326,6 +330,348 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 </div>
 </div>
+</div>
+<p>Podemos extender este uso sobre la carga de datos tabulares a otros formatos comunes como Excel gracias a librerías como <a href="https://felipenoris.github.io/XLSX.jl/stable/tutorial/#Read-Tabular-Data">XLSX.jl</a></p>
+</section>
+<section id="json" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="json"><span class="header-section-number">6.2</span> JSON</h2>
+<p>Otro formato habitual, particularmente cuando trabajamos contra <a href="https://es.wikipedia.org/wiki/API">API</a>s es <a href="https://es.wikipedia.org/wiki/JSON">JSON</a>. Necesitaremos entender las estructuras de estos documentos de cara a darles el formato tabular adecuado.</p>
+<div id="6" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">readlines</span>(<span class="st">"../../data/titanic.json"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>20946-element Vector{String}:
+ "["
+ "  {"
+ "    \"pclass\": 1,"
+ "    \"survived\": 1,"
+ "    \"name\": \"Allen, Miss. Elisabeth Walton\","
+ "    \"sex\": \"female\","
+ "    \"age\": 29,"
+ "    \"sibsp\": 0,"
+ "    \"parch\": 0,"
+ "    \"ticket\": 24160,"
+ ⋮
+ "    \"ticket\": 315082,"
+ "    \"fare\": 7.875,"
+ "    \"cabin\": \"\","
+ "    \"embarked\": \"S\","
+ "    \"boat\": \"\","
+ "    \"body\": \"\","
+ "    \"home.dest\": \"\""
+ "  }"
+ "]"</code></pre>
+</div>
+</div>
+<p>Podemos ver que en este caso disponemos de una lista de objetos con un único nivel de datos que podemos trasladar directamente a un DataFrame.</p>
+<div id="8" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Pkg;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">add</span>(<span class="st">"JSON"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="10" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">JSON</span>, <span class="bu">DataFrames</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Leemos las lineas y las juntamos en una cadena única</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> <span class="fu">join</span>(<span class="fu">readlines</span>(<span class="st">"../../data/titanic.json"</span>))</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> <span class="fu">DataFrame</span>(JSON.<span class="fu">parse</span>(data))</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="fu">first</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<div><div style="float: left;"><span>DataFrameRow (14 columns)</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
+<table class="data-frame caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th class="rowLabel" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;">Row</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">age</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">parch</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">boat</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">name</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">home.dest</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">cabin</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">fare</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">embarked</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">body</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">sibsp</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">pclass</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">survived</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">ticket</th>
+</tr>
+<tr class="subheader headerLastRow even">
+<th class="rowLabel" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="String">String</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Any">Any</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Int64">Int64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Any">Any</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="String">String</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="String">String</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="String">String</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Any">Any</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="String">String</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Any">Any</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Int64">Int64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Int64">Int64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Int64">Int64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Any">Any</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td class="rowLabel" style="text-align: right; font-weight: bold;">1</td>
+<td style="text-align: left;">female</td>
+<td style="text-align: left;">29.0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">2</td>
+<td style="text-align: left;">Allen, Miss. Elisabeth Walton</td>
+<td style="text-align: left;">St Louis, MO</td>
+<td style="text-align: left;">B5</td>
+<td style="text-align: left;">211.338</td>
+<td style="text-align: left;">S</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">24160</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>Es importante prestar atención a la estructura del JSON ya que si dispone de múltiples anidamientos y objetos complejos será difícil disponer de una estructura tabular plana directamente sin necesitar trabajo de preprocesado y aplanado previo.</p>
+</section>
+<section id="parquet" class="level2" data-number="6.3">
+<h2 data-number="6.3" class="anchored" data-anchor-id="parquet"><span class="header-section-number">6.3</span> Parquet</h2>
+<p>Si hay un formato omnipresente desde que fue creado allá por 2013 es <a href="https://parquet.apache.org/">Parquet</a>. Formato columnar y comprimido por defecto, permite trabajar con estructuras de datos tabulares de forma eficiente para los procesos analíticos, con una huella de almacenamiento mínima y compatible con multitud de las herramientas de stack de ciencia de datos. De hecho, es la base para estructuras de almacenamiento más complejas que ofrecen capacidades <a href="https://es.wikipedia.org/wiki/ACID">ACID</a> como <a href="https://iceberg.apache.org/">Iceberg</a> o <a href="https://delta.io/">Delta Lake</a>.</p>
+<div id="12" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Pkg;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">add</span>(<span class="st">"Parquet"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="14" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Parquet</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">read_parquet</span>(<span class="st">"../../data/titanic.parquet"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>Parquet.Table("../../data/titanic.parquet")</code></pre>
+</div>
+</div>
+<p>Podemos cargar el contenido directamente como DataFrame gracias a la compatibilidad entre estas dos librerías.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Parquet</span>, <span class="bu">DataFrames</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> <span class="fu">DataFrame</span>(<span class="fu">read_parquet</span>(<span class="st">"../../data/titanic.parquet"</span>))</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="fu">first</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Existen otras dos grandes fuentes con las que será necesario interactuar para formar nuestro elenco de opciones.</p>
+</section>
+<section id="apis" class="level2" data-number="6.4">
+<h2 data-number="6.4" class="anchored" data-anchor-id="apis"><span class="header-section-number">6.4</span> APIs</h2>
+<p>Interactuar con APIs requiere realizar consultas siguiendo el protocolo HTTP y obtener los datos de respuesta en un formato compatible. En nuestro caso, al haber visto como el formato JSON es manejable gracias a la librería de Julia, simplemente deberemos añadir librerías de manejo del protocolo en concreto.</p>
+<div id="16" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Pkg;</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">add</span>(<span class="st">"HTTP"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="18" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">HTTP</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">JSON</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Dirección para el echo de postman</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>url<span class="op">=</span><span class="st">"https://postman-echo.com/get?foo1=bar1&amp;foo2=bar2"</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>respuesta <span class="op">=</span> HTTP.<span class="fu">get</span>(url)</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>texto_respuesta <span class="op">=</span> <span class="fu">String</span>(respuesta.body)</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>JSON.<span class="fu">parse</span>(texto_respuesta)[<span class="st">"args"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>Dict{String, Any} with 2 entries:
+  "foo1" =&gt; "bar1"
+  "foo2" =&gt; "bar2"</code></pre>
+</div>
+</div>
+<p>Podéis probar con otras APIs donde poder cargar los datos directamente en un DataFrame. Tomemos como ejemplo la <a href="https://pokeapi.co">PokeAPI</a></p>
+<div id="20" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">HTTP</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">JSON</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Dirección para el echo de postman</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>url<span class="op">=</span><span class="st">"https://pokeapi.co/api/v2/pokemon?limit=10"</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>respuesta <span class="op">=</span> HTTP.<span class="fu">get</span>(url)</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>texto_respuesta <span class="op">=</span> <span class="fu">String</span>(respuesta.body)</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> <span class="fu">DataFrame</span>(JSON.<span class="fu">parse</span>(texto_respuesta)[<span class="st">"results"</span>])</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="fu">first</span>(df, <span class="fl">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<div><div style="float: left;"><span>5×2 DataFrame</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
+<table class="data-frame caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;">Row</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">name</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">url</th>
+</tr>
+<tr class="subheader headerLastRow even">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="String">String</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="String">String</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">1</td>
+<td style="text-align: left;">bulbasaur</td>
+<td style="text-align: left;">https://pokeapi.co/api/v2/pokemon/1/</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">2</td>
+<td style="text-align: left;">ivysaur</td>
+<td style="text-align: left;">https://pokeapi.co/api/v2/pokemon/2/</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">3</td>
+<td style="text-align: left;">venusaur</td>
+<td style="text-align: left;">https://pokeapi.co/api/v2/pokemon/3/</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">4</td>
+<td style="text-align: left;">charmander</td>
+<td style="text-align: left;">https://pokeapi.co/api/v2/pokemon/4/</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">5</td>
+<td style="text-align: left;">charmeleon</td>
+<td style="text-align: left;">https://pokeapi.co/api/v2/pokemon/5/</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+<section id="sistemas-gestores-de-base-de-datos" class="level2" data-number="6.5">
+<h2 data-number="6.5" class="anchored" data-anchor-id="sistemas-gestores-de-base-de-datos"><span class="header-section-number">6.5</span> Sistemas gestores de Base de Datos</h2>
+<p>Los sistemas gestores de base de datos son un recurso habitual donde deberemos de encontrar el modo de poder enviar nuestras consultas (empleando <a href="https://es.wikipedia.org/wiki/SQL">SQL</a>) y obtener una estructura que encaje en nuestros DataFrames.</p>
+<p>Para la mayoría de casos deberemos encontrar la librería compatible con nuestra base de datos dado que la especificación de cada una puede variar y requeriremos cierta librería en cada caso.</p>
+<ul>
+<li><a href="https://juliapackages.com/p/sqlite">SQLite</a></li>
+<li><a href="https://juliapackages.com/p/duckdb">DuckDB</a></li>
+<li><a href="https://juliapackages.com/p/mysql">MySQL</a></li>
+<li><a href="https://juliapackages.com/p/postgres">PostgreSQL</a></li>
+</ul>
+<p>Y más que podéis encontrar en <a href="https://juliapackages.com/c/database">https://juliapackages.com/c/database</a>.</p>
+<div id="22" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Pkg;</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">add</span>(<span class="st">"DuckDB"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="24" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">DuckDB</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>con_duckdb <span class="op">=</span> DBInterface.<span class="fu">connect</span>(DuckDB.DB, <span class="st">"bd.duckdb"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>DuckDB.DB("bd.duckdb")</code></pre>
+</div>
+</div>
+<p>Una vez conectados podemos leer de los datos del entorno.</p>
+<div id="26" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Creamos una serie de datos aleatorios</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>len <span class="op">=</span> <span class="fl">10_000</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>datos <span class="op">=</span> (a <span class="op">=</span> <span class="fu">collect</span>(<span class="fl">1</span><span class="op">:</span>len), b <span class="op">=</span> <span class="fu">rand</span>(<span class="fl">1</span><span class="op">:</span><span class="fl">100</span>, len))</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Create la tabla</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>create_query <span class="op">=</span> <span class="fu">map</span>((k,v)<span class="op">-&gt;</span><span class="st">"</span><span class="sc">$</span>k<span class="st"> INT NOT NULL,"</span>, <span class="fu">keys</span>(datos), datos) <span class="op">|&gt;</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">x-&gt;join</span>(x, <span class="st">"</span><span class="sc">\r\n</span><span class="st">"</span>)[<span class="fl">1</span><span class="op">:</span><span class="kw">end</span><span class="op">-</span><span class="fl">1</span>] <span class="op">|&gt;</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    x<span class="op">-&gt;</span><span class="st">"CREATE TABLE IF NOT EXISTS data(</span><span class="sc">\r\n$</span>x<span class="sc">\r\n</span><span class="st">);"</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(create_query)</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>DBInterface.<span class="fu">execute</span>(con_duckdb, create_query);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>CREATE TABLE IF NOT EXISTS data(
+a INT NOT NULL,
+b INT NOT NULL
+);</code></pre>
+</div>
+</div>
+<p>Insertamos los datos de prueba.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Con <code>@time</code> podemos ver el tiempo que le toma realizar la tarea en cuestión.</p>
+</div>
+</div>
+<div id="28" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Escribimos los datos</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>str <span class="op">=</span> <span class="fu">join</span>(<span class="fu">repeat</span>(<span class="ch">'?'</span>, <span class="fu">length</span>(datos)), <span class="ch">','</span>)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>write_query <span class="op">=</span> DBInterface.<span class="fu">prepare</span>(con_duckdb, <span class="st">"INSERT INTO data VALUES(</span><span class="sc">$</span>str<span class="st">)"</span>)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@time</span> DBInterface.<span class="fu">executemany</span>(write_query, datos)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  2.333770 seconds (184.96 k allocations: 7.961 MiB, 0.87% gc time, 3.50% compilation time)</code></pre>
+</div>
+</div>
+<p>Y podemos proceder a leer parte de estos.</p>
+<div id="30" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@time</span> table_rd <span class="op">=</span> DBInterface.<span class="fu">execute</span>(con_duckdb, <span class="st">"SELECT * FROM data"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  0.000699 seconds (18 allocations: 640 bytes)</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>(a = Int32[1, 2, 3, 4, 5, 6, 7, 8, 9, 10  …  9991, 9992, 9993, 9994, 9995, 9996, 9997, 9998, 9999, 10000], b = Int32[59, 15, 56, 24, 22, 90, 11, 48, 63, 82  …  3, 30, 65, 85, 70, 48, 83, 88, 49, 78])</code></pre>
+</div>
+</div>
+<p>La lectura puede realizarse directamente formando el DataFrame resultante a utilizar ya que las bases de datos relacionales siempre nos retornan estructuras tabulares.</p>
+<div id="32" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> <span class="fu">DataFrame</span>(DBInterface.<span class="fu">execute</span>(con_duckdb, <span class="st">"SELECT * FROM data"</span>))</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">first</span>(df, <span class="fl">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<div><div style="float: left;"><span>5×2 DataFrame</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
+<table class="data-frame caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;">Row</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">a</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">b</th>
+</tr>
+<tr class="subheader headerLastRow even">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Int32">Int32</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Int32">Int32</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">59</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">15</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">3</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">56</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">4</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">24</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">5</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">22</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>Siempre deberemos de acordarnos de cerrar la conexión una vez que hayamos obtenido los datos de la fuente.</p>
+<div id="34" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>DBInterface.<span class="fu">close!</span>(con_duckdb)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 

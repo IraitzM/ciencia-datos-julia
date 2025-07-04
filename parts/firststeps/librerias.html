@@ -229,7 +229,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#fechas" id="toc-fechas" class="nav-link active" data-scroll-target="#fechas"><span class="header-section-number">4.1</span> Fechas</a></li>
   <li><a href="#descargas" id="toc-descargas" class="nav-link" data-scroll-target="#descargas"><span class="header-section-number">4.2</span> Descargas</a></li>
-  <li><a href="#paquetes-habituales" id="toc-paquetes-habituales" class="nav-link" data-scroll-target="#paquetes-habituales"><span class="header-section-number">4.3</span> Paquetes habituales</a></li>
+  <li><a href="#aleatorios" id="toc-aleatorios" class="nav-link" data-scroll-target="#aleatorios"><span class="header-section-number">4.3</span> Aleatorios</a></li>
+  <li><a href="#paquetes-habituales" id="toc-paquetes-habituales" class="nav-link" data-scroll-target="#paquetes-habituales"><span class="header-section-number">4.4</span> Paquetes habituales</a></li>
   </ul>
 </nav>
     </div>
@@ -309,7 +310,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>fecha_hora_ms <span class="op">=</span> <span class="fu">DateTime</span>(<span class="fl">2025</span>, <span class="fl">7</span>, <span class="fl">1</span>, <span class="fl">12</span>, <span class="fl">1</span>, <span class="fl">3</span>, <span class="fl">120</span>) <span class="co"># precisión de microsegundos </span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>lapso <span class="op">=</span> <span class="fu">now</span>() <span class="op">-</span> fecha_hora_ms</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>248132966 milliseconds</code></pre>
+<pre><code>257005325 milliseconds</code></pre>
 </div>
 </div>
 <div id="16" class="cell" data-execution_count="1">
@@ -328,29 +329,41 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Podremos indicarle a la función <code>Downloads.download()</code> la dirección desde la que descargar nuestro conjunto de datos.</p>
 <div id="20" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/IraitzM/ciencia-datos-julia/refs/heads/main/Project.toml"</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>fichero_proyecto <span class="op">=</span> <span class="bu">Downloads</span>.<span class="fu">download</span>(url) <span class="co"># creamos un fichero temporal</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/IraitzM/ciencia-datos-julia/refs/heads/main/parts/firststeps/ejemplo.txt"</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>fichero_proyecto <span class="op">=</span> <span class="bu">Downloads</span>.<span class="fu">download</span>(url) <span class="co"># creamos un fichero temporal</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>"/tmp/jl_3E1sjuLm92"</code></pre>
+<pre><code>"/tmp/jl_hexAtIVcR8"</code></pre>
 </div>
 </div>
 <p>Y con funciones como <code>readlines</code> leer su contenido.</p>
 <div id="22" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">readlines</span>(fichero_proyecto)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>4-element Vector{String}:
- "[deps]"
- "CSV = \"336ed68f-0bac-5ca0-87d4-7b16caf5d00b\""
- "DataFrames = \"a93c6f00-e57d-5684-b7b6-d8193f3e46c0\""
- "Plots = \"91a5bcdd-55d7-5caf-9e0b-520d859cae80\""</code></pre>
+<pre><code>1-element Vector{String}:
+ "Hola desde un fichero!"</code></pre>
+</div>
+</div>
+<p>Vemos que devuelve una estructura de <a href="https://docs.julialang.org/en/v1/base/arrays/#Base.Vector">Vector</a> con cadenas de texto (<a href="https://docs.julialang.org/en/v1/base/strings/#Base.string">String</a>) con el contenido del fichero.</p>
+</section>
+<section id="aleatorios" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="aleatorios"><span class="header-section-number">4.3</span> Aleatorios</h2>
+<p>Trabajar con números aleatorios es habitual en ciencia de datos, y para ello podemos recurrir al módulo <code>Random</code></p>
+<div id="24" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Random</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="bu">Random</span>.<span class="fu">seed!</span>(<span class="fl">1234</span>)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="bu">Random</span>.<span class="fu">randn</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>-0.3597289068234817</code></pre>
 </div>
 </div>
 </section>
-<section id="paquetes-habituales" class="level2" data-number="4.3">
-<h2 data-number="4.3" class="anchored" data-anchor-id="paquetes-habituales"><span class="header-section-number">4.3</span> Paquetes habituales</h2>
+<section id="paquetes-habituales" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="paquetes-habituales"><span class="header-section-number">4.4</span> Paquetes habituales</h2>
 <p>En el caso de tratarse de módulos no disponibles como parte de la librería standard, deberemos recurrir al gestor de paquetes e instalarlas.</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Pkg;</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">add</span>(<span class="st">"Libreria.jl"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Pkg;</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">add</span>(<span class="st">"Libreria.jl"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Tal y como veíamos en la <a href="../../intro.html#crear-un-proyecto">introducción</a> estos paquetes serán añadidos a los dos ficheros clave que nos permiten reproducir nuestro entorno en otra máquina.</p>
 <p>Las librerías que emplearemos en líneas generales son:</p>
 <ul>
