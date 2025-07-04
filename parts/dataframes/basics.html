@@ -7,7 +7,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Iraitz Montalbán">
-<meta name="keywords" content="Julia, Ciencia de Datos, Visualización, Machine Learning">
 <meta name="description" content="Tutoriales y guías de ciencia de datos utilizando el lenguaje Julia.">
 
 <title>6&nbsp; Cargando datos – Ciencia de datos con Julia</title>
@@ -108,6 +107,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Buscar"
   }
 }</script>
+<!-- Google tag (gtag.js) -->
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-MXHDHE1HP5"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-MXHDHE1HP5');
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
 
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
@@ -271,12 +279,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
   
 
-<div>
-  <div class="keywords">
-    <div class="block-title">Palabras clave</div>
-    <p>Julia, Ciencia de Datos, Visualización, Machine Learning</p>
-  </div>
-</div>
 
 </header>
 
@@ -627,17 +629,17 @@ Tip
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>write_query <span class="op">=</span> DBInterface.<span class="fu">prepare</span>(con_duckdb, <span class="st">"INSERT INTO data VALUES(</span><span class="sc">$</span>str<span class="st">)"</span>)</span>
 <span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@time</span> DBInterface.<span class="fu">executemany</span>(write_query, datos)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  2.177907 seconds (183.12 k allocations: 7.878 MiB, 2.32% compilation time)</code></pre>
+<pre><code>  2.288473 seconds (183.12 k allocations: 7.878 MiB, 2.27% compilation time)</code></pre>
 </div>
 </div>
 <p>Y podemos proceder a leer parte de estos.</p>
 <div id="30" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@time</span> table_rd <span class="op">=</span> DBInterface.<span class="fu">execute</span>(con_duckdb, <span class="st">"SELECT * FROM data"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  0.000617 seconds (18 allocations: 640 bytes)</code></pre>
+<pre><code>  0.000773 seconds (18 allocations: 640 bytes)</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>(a = Int32[1, 2, 3, 4, 5, 6, 7, 8, 9, 10  …  9991, 9992, 9993, 9994, 9995, 9996, 9997, 9998, 9999, 10000], b = Int32[61, 9, 53, 100, 88, 95, 38, 22, 92, 25  …  43, 20, 83, 16, 24, 84, 5, 57, 63, 42])</code></pre>
+<pre><code>(a = Int32[1, 2, 3, 4, 5, 6, 7, 8, 9, 10  …  9991, 9992, 9993, 9994, 9995, 9996, 9997, 9998, 9999, 10000], b = Int32[14, 59, 87, 7, 25, 17, 20, 22, 32, 61  …  96, 96, 1, 57, 53, 24, 58, 51, 82, 76])</code></pre>
 </div>
 </div>
 <p>La lectura puede realizarse directamente formando el DataFrame resultante a utilizar ya que las bases de datos relacionales siempre nos retornan estructuras tabulares.</p>
@@ -663,27 +665,27 @@ Tip
 <tr class="odd">
 <td class="rowNumber" style="text-align: right; font-weight: bold;">1</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">61</td>
+<td style="text-align: right;">14</td>
 </tr>
 <tr class="even">
 <td class="rowNumber" style="text-align: right; font-weight: bold;">2</td>
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">9</td>
+<td style="text-align: right;">59</td>
 </tr>
 <tr class="odd">
 <td class="rowNumber" style="text-align: right; font-weight: bold;">3</td>
 <td style="text-align: right;">3</td>
-<td style="text-align: right;">53</td>
+<td style="text-align: right;">87</td>
 </tr>
 <tr class="even">
 <td class="rowNumber" style="text-align: right; font-weight: bold;">4</td>
 <td style="text-align: right;">4</td>
-<td style="text-align: right;">100</td>
+<td style="text-align: right;">7</td>
 </tr>
 <tr class="odd">
 <td class="rowNumber" style="text-align: right; font-weight: bold;">5</td>
 <td style="text-align: right;">5</td>
-<td style="text-align: right;">88</td>
+<td style="text-align: right;">25</td>
 </tr>
 </tbody>
 </table>
