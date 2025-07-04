@@ -606,17 +606,17 @@ Tip
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>write_query <span class="op">=</span> DBInterface.<span class="fu">prepare</span>(con_duckdb, <span class="st">"INSERT INTO data VALUES(</span><span class="sc">$</span>str<span class="st">)"</span>)</span>
 <span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@time</span> DBInterface.<span class="fu">executemany</span>(write_query, datos)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  2.333770 seconds (184.96 k allocations: 7.961 MiB, 0.87% gc time, 3.50% compilation time)</code></pre>
+<pre><code>  2.197161 seconds (183.12 k allocations: 7.878 MiB, 2.28% compilation time)</code></pre>
 </div>
 </div>
 <p>Y podemos proceder a leer parte de estos.</p>
 <div id="30" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@time</span> table_rd <span class="op">=</span> DBInterface.<span class="fu">execute</span>(con_duckdb, <span class="st">"SELECT * FROM data"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  0.000699 seconds (18 allocations: 640 bytes)</code></pre>
+<pre><code>  0.000686 seconds (18 allocations: 640 bytes)</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>(a = Int32[1, 2, 3, 4, 5, 6, 7, 8, 9, 10  …  9991, 9992, 9993, 9994, 9995, 9996, 9997, 9998, 9999, 10000], b = Int32[59, 15, 56, 24, 22, 90, 11, 48, 63, 82  …  3, 30, 65, 85, 70, 48, 83, 88, 49, 78])</code></pre>
+<pre><code>(a = Int32[1, 2, 3, 4, 5, 6, 7, 8, 9, 10  …  9991, 9992, 9993, 9994, 9995, 9996, 9997, 9998, 9999, 10000], b = Int32[80, 9, 77, 43, 5, 86, 96, 22, 87, 76  …  100, 29, 75, 79, 60, 30, 92, 82, 64, 33])</code></pre>
 </div>
 </div>
 <p>La lectura puede realizarse directamente formando el DataFrame resultante a utilizar ya que las bases de datos relacionales siempre nos retornan estructuras tabulares.</p>
@@ -642,27 +642,27 @@ Tip
 <tr class="odd">
 <td class="rowNumber" style="text-align: right; font-weight: bold;">1</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">59</td>
+<td style="text-align: right;">80</td>
 </tr>
 <tr class="even">
 <td class="rowNumber" style="text-align: right; font-weight: bold;">2</td>
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">15</td>
+<td style="text-align: right;">9</td>
 </tr>
 <tr class="odd">
 <td class="rowNumber" style="text-align: right; font-weight: bold;">3</td>
 <td style="text-align: right;">3</td>
-<td style="text-align: right;">56</td>
+<td style="text-align: right;">77</td>
 </tr>
 <tr class="even">
 <td class="rowNumber" style="text-align: right; font-weight: bold;">4</td>
 <td style="text-align: right;">4</td>
-<td style="text-align: right;">24</td>
+<td style="text-align: right;">43</td>
 </tr>
 <tr class="odd">
 <td class="rowNumber" style="text-align: right; font-weight: bold;">5</td>
 <td style="text-align: right;">5</td>
-<td style="text-align: right;">22</td>
+<td style="text-align: right;">5</td>
 </tr>
 </tbody>
 </table>
