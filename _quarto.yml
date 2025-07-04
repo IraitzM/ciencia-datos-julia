@@ -51,6 +51,8 @@ bibliography: references.bib
 
 format:
   html:
+    include-in-header: static/gtm_code_head.html
+    #include-before-body: gtm_code_body.html
     number-depth: 2
     theme: 
      - cosmo
@@ -61,12 +63,9 @@ format:
 metadata:
   lang: es
   author: "Iraitz Montalbán"
-  keywords: [Julia, Ciencia de Datos, Visualización, Machine Learning]
   twitter-card: false
   open-graph: true
   image: images/cover.png
-
-google-analytics : "G-MXHDHE1HP5"
 
 resources:
   - robots.txt
