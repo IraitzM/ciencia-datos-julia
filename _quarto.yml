@@ -51,7 +51,7 @@ bibliography: references.bib
 
 format:
   html:
-    include-in-header: static/gtm_code_head.html
+    include-in-header: static/code_head.html
     #include-before-body: gtm_code_body.html
     number-depth: 2
     theme: 
