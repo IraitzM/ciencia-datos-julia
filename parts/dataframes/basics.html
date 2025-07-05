@@ -122,7 +122,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-TB454V6Z');</script>
+})(window,document,'script','dataLayer','GTM-PLKHBRCG');</script>
 <!-- End Google Tag Manager -->
 
 <meta name="keywords" content="Julia, Ciencia de Datos, Visualización, Machine Learning">
@@ -268,7 +268,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <!-- main -->
 <main class="content" id="quarto-document-content">
 <!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TB454V6Z" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PLKHBRCG" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 
 <header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../parts/dataframes/basics.html">Carga y exploración</a></li><li class="breadcrumb-item"><a href="../../parts/dataframes/basics.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Cargando datos</span></a></li></ol></nav>
@@ -642,17 +642,17 @@ Tip
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>write_query <span class="op">=</span> DBInterface.<span class="fu">prepare</span>(con_duckdb, <span class="st">"INSERT INTO data VALUES(</span><span class="sc">$</span>str<span class="st">)"</span>)</span>
 <span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@time</span> DBInterface.<span class="fu">executemany</span>(write_query, datos)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  2.397946 seconds (184.96 k allocations: 7.961 MiB, 0.86% gc time, 3.55% compilation time)</code></pre>
+<pre><code>  2.188461 seconds (184.96 k allocations: 7.961 MiB, 0.96% gc time, 3.70% compilation time)</code></pre>
 </div>
 </div>
 <p>Y podemos proceder a leer parte de estos.</p>
 <div id="30" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@time</span> table_rd <span class="op">=</span> DBInterface.<span class="fu">execute</span>(con_duckdb, <span class="st">"SELECT * FROM data"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  0.000775 seconds (18 allocations: 640 bytes)</code></pre>
+<pre><code>  0.000626 seconds (18 allocations: 640 bytes)</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>(a = Int32[1, 2, 3, 4, 5, 6, 7, 8, 9, 10  …  9991, 9992, 9993, 9994, 9995, 9996, 9997, 9998, 9999, 10000], b = Int32[19, 48, 94, 72, 17, 10, 63, 3, 46, 70  …  21, 91, 6, 3, 7, 48, 15, 2, 24, 41])</code></pre>
+<pre><code>(a = Int32[1, 2, 3, 4, 5, 6, 7, 8, 9, 10  …  9991, 9992, 9993, 9994, 9995, 9996, 9997, 9998, 9999, 10000], b = Int32[63, 40, 55, 89, 68, 90, 87, 13, 5, 34  …  6, 87, 20, 75, 47, 42, 12, 58, 24, 49])</code></pre>
 </div>
 </div>
 <p>La lectura puede realizarse directamente formando el DataFrame resultante a utilizar ya que las bases de datos relacionales siempre nos retornan estructuras tabulares.</p>
@@ -678,27 +678,27 @@ Tip
 <tr class="odd">
 <td class="rowNumber" style="text-align: right; font-weight: bold;">1</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">19</td>
+<td style="text-align: right;">63</td>
 </tr>
 <tr class="even">
 <td class="rowNumber" style="text-align: right; font-weight: bold;">2</td>
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">48</td>
+<td style="text-align: right;">40</td>
 </tr>
 <tr class="odd">
 <td class="rowNumber" style="text-align: right; font-weight: bold;">3</td>
 <td style="text-align: right;">3</td>
-<td style="text-align: right;">94</td>
+<td style="text-align: right;">55</td>
 </tr>
 <tr class="even">
 <td class="rowNumber" style="text-align: right; font-weight: bold;">4</td>
 <td style="text-align: right;">4</td>
-<td style="text-align: right;">72</td>
+<td style="text-align: right;">89</td>
 </tr>
 <tr class="odd">
 <td class="rowNumber" style="text-align: right; font-weight: bold;">5</td>
 <td style="text-align: right;">5</td>
-<td style="text-align: right;">17</td>
+<td style="text-align: right;">68</td>
 </tr>
 </tbody>
 </table>
