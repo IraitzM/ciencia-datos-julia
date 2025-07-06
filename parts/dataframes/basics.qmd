@@ -162,10 +162,11 @@ len = 10_000
 datos = (a = collect(1:len), b = rand(1:100, len))
 
 # Create la tabla
-create_query = map((k,v)->"$k INT NOT NULL,", keys(datos), datos) |>
-    x->join(x, "\r\n")[1:end-1] |>
-    x->"CREATE TABLE IF NOT EXISTS data(\r\n$x\r\n);"
-print(create_query)
+create_query = "
+CREATE TABLE IF NOT EXISTS data(
+  a INT NOT NULL,
+  b INT NOT NULL
+);"
 DBInterface.execute(con_duckdb, create_query);
 ```
 

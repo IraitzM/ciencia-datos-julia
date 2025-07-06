@@ -90,6 +90,49 @@ O de pertenencia a un grupo o tipo, igualdad `==` y desigualdad `!=`, `<`, etc.
 6 isa Real
 ```
 
+## Arrays
+
+Las listas de datos funcionan de forma muy similar a las listas en Python.
+
+```{julia}
+a = [1, 2, 3]
+```
+
+Vemos que el tipo por defecto se llama `Vector{}` y en corchetes marca nuestro tipo para los elementos. Esto implica que si un elemento requiere un tipado mayor, este se les asignará también al resto, siendo `Any` (cualquiera) la opción más general. 
+
+```{julia}
+a = [1, 2, "hola"]
+```
+
+Podemos separar en filas nuestros elementos y así generar un vector de dos dimensiones o matriz.
+
+```{julia}
+a = [1 2 3; 4 5 6]
+```
+
+Y podemos así extender a las dimensiones que necesitemos nuestros elementos multidimensionales. El acceso a los datos se realiza por índices o rangos, teniendo en cuenta el número de índices de nuestro vector. Quizás una de las cuestiones más relevantes viniendo de lenguajes como Python es que Julia cuenta lso elementos **iniciando en 1 en lugar de 0**. Por lo tanto pedir el elemento `a[0]` nos dará un <span style="color:red">error</span>.
+
+```{julia}
+a[1]
+```
+
+```{julia}
+a[1:2]
+```
+```{julia}
+a[:, 1:2]
+```
+
+```{julia}
+a[2, 2]
+```
+
+Tampoco funcionarán los índices negativos ya que deberemos usar la palabra reservada `end`.
+```{julia}
+a[end, end]
+```
+
+
 ## Funciones
 
 Otro aspecto clave son las funciones. La lógica de nuestro programa que toma variables y devuelve variables basado en operaciones lógicas.

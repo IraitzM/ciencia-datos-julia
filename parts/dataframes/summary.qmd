@@ -1,0 +1,130 @@
+---
+title: "Análisis preliminar"
+format:
+  html:
+    code-fold: false
+engine: julia
+---
+
+Partimos de nuestros datos ya cargados, y deberemos ver la estructura base de nuestro dataframe. La función `describe` nos ofrece una primera revisión de los datos indicando nombre de las columnas, estadísticas de la distribución de datos, valores faltantes y typo de dato.
+
+```{julia}
+using CSV, DataFrames
+
+df = CSV.read("../../data/titanic.csv", DataFrame)
+describe(df)
+```
+
+A esto podemos unirle conocer el tamaño de nuestro conjunto mediante el método `size`.
+
+```{julia}
+size(df)
+```
+
+## Distribuciones de datos
+
+Una de las mejores formes de conocer las distribuciones de datos es precisamente visualizando su histograma o gráfico de densidad. Deberéis instalar los paquetes de visualización pertinentes.
+
+```{julia}
+#| output: false
+
+using Pkg;
+Pkg.activate(".")
+
+Pkg.add("StatsPlots")
+```
+
+```{julia}
+using Plots
+using StatsPlots
+using Statistics
+
+histogram(df.Age, normalize=true)
+```
+
+Vemos que si lo comparamos con una distribución normal, las gráficas difieren bastante. Esto suele requerir de evaluar la normalidad de la 
+
+::: {.callout-tip collapse="true"}
+# Gráfico de distribución normal
+```{julia}
+#| output: false
+
+Pkg.add("Distributions")
+```
+
+```{julia}
+using Distributions
+
+plot(Normal(3, 5), lw=3)
+```
+:::
+
+El primer reto al que nos enfrentaremos será el de poder mostrar el diagrama de densidad, ya que no permite la existencia de valores faltantes. Y como podemos ver existen varios para la columna age. Deberemos aprender a filtrar en base a una condición. 
+
+## Valores faltantes
+
+En el caso de Julia `missing` es un tipo de datos especial que no indica el valor faltante en una celda.
+
+```{julia}
+typeof(missing)
+```
+
+Existen funciones específicas para eliminar o simplemente filtrar en base a la condición de dato faltante (`ismissing`). En este caso podremos ver los primeros tres elementos en nuestro dataframe donde se cumple la condición de dato faltante en el campo edad (`:Age`).
+
+```{julia}
+first(
+    filter(
+        :Age => ismissing, df
+    ),
+    3
+)
+```
+
+Y así podemos ver la densidad indicando nuestro dataframe modificado para que no cumpla esta condición. `StatsPlots` nos da la opción de explorar otras macros (ya vimos la macro de `@time`) que en este caso será el turno de `@df`. Esta macro, empleada con la sintaxis
+
+```julia
+@df <tabla> <función de visualización>
+```
+nos permite definir una estructura tabular que luego será empleada en la función de visualización a la que solo deberemos indicarle en qué columnas centrarse.
+
+```{julia}
+@df filter(:Age => !ismissing, df) density(:Age)
+```
+
+Como vemos, la función de densidad nos presenta un perímetro continuo sobre el histograma anterior. Podemos evaluar la normalidad de nuestra columna empleando tests estadísticos. La librería `HypothesisTests.jl` nos dará buenas referencias de [cuales](https://juliastats.org/HypothesisTests.jl/stable/) podemos usar.
+
+Por simplificar de momento, viendo que la media y la mediana muestra valores parejos para el intervalo de datos, asumiremos dicha normalidad y veremos como imputar la media como valor estimado a los datos faltantes de nuestro dataframe.
+
+```{julia}
+mean(skipmissing(df.Age))
+```
+
+Este valor lo reemplazaremos indicando que queremos transformar (alterando el objeto `df`)
+
+```{julia}
+transform!(df, :Age => ByRow(x -> coalesce(x, mean(skipmissing(df.Age)))); renamecols=false)
+describe(df)
+```
+
+Tras esto, con las dos columnas restantes podemos optar por eliminar estos datos. `dropmissing` eliminará las filas que contengan valores faltantes en sus celdas.
+
+```{julia}
+df_sinfilas = dropmissing(df)
+size(df_sinfilas)
+```
+
+O mediante la función `select` podemos indicarle que no queremos las columnas con datos faltantes. Para esta macro deberemos usar otro paquete muy habitual para este tipo de labores.
+
+```{julia}
+#| output: false
+
+Pkg.add("DataFramesMeta")
+```
+
+```{julia}
+using DataFramesMeta
+
+describe(select(df, Not(:Cabin, :Embarked)))
+```
+
+Ya tenemos un conjunto de datos algo más limpio. Ahora toca estudiarlo en profundidad.

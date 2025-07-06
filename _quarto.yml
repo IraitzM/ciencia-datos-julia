@@ -44,6 +44,7 @@ book:
     - part: "Carga y exploración"
       chapters:
       - parts/dataframes/basics.qmd
+      - parts/dataframes/summary.qmd
 
     - references.qmd
 
