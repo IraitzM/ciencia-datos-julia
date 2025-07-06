@@ -265,7 +265,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   <ul>
   <li><a href="#variables" id="toc-variables" class="nav-link active" data-scroll-target="#variables"><span class="header-section-number">2.1</span> Variables</a></li>
   <li><a href="#arrays" id="toc-arrays" class="nav-link" data-scroll-target="#arrays"><span class="header-section-number">2.2</span> Arrays</a></li>
-  <li><a href="#funciones" id="toc-funciones" class="nav-link" data-scroll-target="#funciones"><span class="header-section-number">2.3</span> Funciones</a></li>
+  <li><a href="#funciones" id="toc-funciones" class="nav-link" data-scroll-target="#funciones"><span class="header-section-number">2.3</span> Funciones</a>
+  <ul class="collapse">
+  <li><a href="#macros" id="toc-macros" class="nav-link" data-scroll-target="#macros">Macros</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -485,7 +488,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a><span class="fu">methods</span>(redondeo)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
-# 2 methods for generic function <b>redondeo</b> from [35mMain.Notebook[39m:<ul><li> redondeo(x::<b>Float64</b>) in Main.Notebook at <a href="https://github.com/IraitzM/ciencia-datos-julia/tree/458f59052b958e0897ac9cf8685586b32ea15a22//parts/firststeps/basics.qmd#L157" target="_blank">/home/runner/work/ciencia-datos-julia/ciencia-datos-julia/parts/firststeps/basics.qmd:157</a></li> <li> redondeo(x::<b>Int64</b>) in Main.Notebook at <a href="https://github.com/IraitzM/ciencia-datos-julia/tree/458f59052b958e0897ac9cf8685586b32ea15a22//parts/firststeps/basics.qmd#L152" target="_blank">/home/runner/work/ciencia-datos-julia/ciencia-datos-julia/parts/firststeps/basics.qmd:152</a></li> </ul>
+# 2 methods for generic function <b>redondeo</b> from [35mMain.Notebook[39m:<ul><li> redondeo(x::<b>Float64</b>) in Main.Notebook at <a href="https://github.com/IraitzM/ciencia-datos-julia/tree/720f58cebcd723e3138f37ba782a3dc83a238837//parts/firststeps/basics.qmd#L157" target="_blank">/home/runner/work/ciencia-datos-julia/ciencia-datos-julia/parts/firststeps/basics.qmd:157</a></li> <li> redondeo(x::<b>Int64</b>) in Main.Notebook at <a href="https://github.com/IraitzM/ciencia-datos-julia/tree/720f58cebcd723e3138f37ba782a3dc83a238837//parts/firststeps/basics.qmd#L152" target="_blank">/home/runner/work/ciencia-datos-julia/ciencia-datos-julia/parts/firststeps/basics.qmd:152</a></li> </ul>
 </div>
 </div>
 <p>Esto nos permite invocar a uno u otro únicamente en base al tipado.</p>
@@ -560,9 +563,47 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </div>
 </div>
 <p>Existen toda una serie de funciones que podemos emplear directamente desde la consola. Tenemos operadores básicos como suma o multiplicación, y otras funcionalidades no tan básicas como la selección de los primeros o últimos elementos de un vector, la creación de números aleatorios o el poder fijar una semilla para dicha generación aleatoria.</p>
+<section id="macros" class="level3">
+<h3 class="anchored" data-anchor-id="macros">Macros</h3>
+<p>Como último apunte, veréis que existen sentencias que iniciamos con el carácter <code>@</code>. Estas son conocidas como macros, operaciones que nos permiten simplificar la sintaxis y que en muchos casos hacen referencia a funciones con el mismo nombre.</p>
+<div id="50" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@time</span> <span class="fu">print</span>(<span class="st">"Hemos tardado en imprimir esta línea"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Hemos tardado en imprimir esta línea  0.000044 seconds (10 allocations: 64.281 KiB)</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Macro creada por nosotros
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div id="52" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="kw">macro</span> <span class="fu">es_entero</span>(x)</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>   <span class="cf">if</span> <span class="fu">typeof</span>(x) <span class="op">==</span> <span class="dt">Int64</span>  </span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>      <span class="cf">return</span> <span class="st">"Es un entero"</span></span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>   <span class="cf">end</span></span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>   <span class="cf">return</span> <span class="st">"No es un entero"</span></span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a><span class="pp">@es_entero</span> <span class="fl">5</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>"Es un entero"</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
 <p>Más que listar todas estas operaciones y estructuras disponibles, iremos viendo con ejemplos las más usuales según avancemos en los materiales.</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
