@@ -26,19 +26,20 @@ size(df)
 Una de las mejores formes de conocer las distribuciones de datos es precisamente visualizando su histograma o gráfico de densidad. Deberéis instalar los paquetes de visualización pertinentes.
 
 ```{julia}
+#| echo: false
 #| output: false
 
 using Pkg;
-Pkg.activate(".")
+Pkg.activate("../../")
+```
 
-Pkg.add("Plots")
+```{julia}
+#| output: false
 Pkg.add("StatsPlots")
 ```
 
 ```{julia}
-using Plots
 using StatsPlots
-using Statistics
 
 histogram(df.Age, normalize=true)
 ```
@@ -97,6 +98,8 @@ Como vemos, la función de densidad nos presenta un perímetro continuo sobre el
 Por simplificar de momento, viendo que la media y la mediana muestra valores parejos para el intervalo de datos, asumiremos dicha normalidad y veremos como imputar la media como valor estimado a los datos faltantes de nuestro dataframe.
 
 ```{julia}
+using Statistics
+
 mean(skipmissing(df.Age))
 ```
 

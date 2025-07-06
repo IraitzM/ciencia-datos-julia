@@ -9,3 +9,6 @@
 # DuckDB
 *.duckdb
 *.wal
+
+# TOML files
+*.toml

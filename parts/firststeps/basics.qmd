@@ -223,4 +223,26 @@ datos
 
 Existen toda una serie de funciones que podemos emplear directamente desde la consola. Tenemos operadores básicos como suma o multiplicación, y otras funcionalidades no tan básicas como la selección de los primeros o últimos elementos de un vector, la creación de números aleatorios o el poder fijar una semilla para dicha generación aleatoria. 
 
+### Macros
+
+Como último apunte, veréis que existen sentencias que iniciamos con el carácter `@`. Estas son conocidas como macros, operaciones que nos permiten simplificar la sintaxis y que en muchos casos hacen referencia a funciones con el mismo nombre.
+
+```{julia}
+@time print("Hemos tardado en imprimir esta línea")
+```
+
+::: {.callout-tip collapse="true"}
+# Macro creada por nosotros
+```{julia}
+macro es_entero(x)
+   if typeof(x) == Int64  
+      return "Es un entero"
+   end
+   return "No es un entero"
+end
+
+@es_entero 5
+```
+:::
+
 Más que listar todas estas operaciones y estructuras disponibles, iremos viendo con ejemplos las más usuales según avancemos en los materiales.
