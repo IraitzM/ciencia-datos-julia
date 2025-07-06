@@ -6,6 +6,8 @@ Este projecto lo inicio por haber querido emplear Julia en el ámbito profesiona
 * [Julia for Data Science](https://www.juliafordatascience.com/)
 * La documentación de [DataScienceTutorials.jl](https://juliaai.github.io/DataScienceTutorials.jl/)
 
+Y algunas muy buenas referencias de programación en [Julia en Español](https://introajulia.org/latest/book.html).
+
 Pero este es mi intento de acercarlo al público hispanohablante. Teniendo referencias en el idioma de uno es más fácil poder adoptar algo y crear una comunidad con contribuya tanto como lo hace la comunidad de Python.
 
 Con suerte este libro ayuda a más de uno a perder el miedo y enfrentarse a este lenguaje que no deja de ser uno de los motivos por los que nuestros amados notebooks son notebooks de Jupyter (**Ju**lia, **pyt**hon y **R**).

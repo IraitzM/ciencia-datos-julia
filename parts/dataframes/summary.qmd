@@ -31,6 +31,7 @@ Una de las mejores formes de conocer las distribuciones de datos es precisamente
 using Pkg;
 Pkg.activate(".")
 
+Pkg.add("Plots")
 Pkg.add("StatsPlots")
 ```
 
