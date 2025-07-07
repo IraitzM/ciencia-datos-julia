@@ -245,6 +245,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Análisis preliminar</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../parts/dataframes/exploratory.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Análisis exploratorio</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item">
@@ -267,7 +273,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   <li><a href="#arrays" id="toc-arrays" class="nav-link" data-scroll-target="#arrays"><span class="header-section-number">2.2</span> Arrays</a></li>
   <li><a href="#funciones" id="toc-funciones" class="nav-link" data-scroll-target="#funciones"><span class="header-section-number">2.3</span> Funciones</a>
   <ul class="collapse">
-  <li><a href="#macros" id="toc-macros" class="nav-link" data-scroll-target="#macros">Macros</a></li>
+  <li><a href="#macros" id="toc-macros" class="nav-link" data-scroll-target="#macros"><span class="header-section-number">2.3.1</span> Macros</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -488,7 +494,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a><span class="fu">methods</span>(redondeo)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
-# 2 methods for generic function <b>redondeo</b> from [35mMain.Notebook[39m:<ul><li> redondeo(x::<b>Float64</b>) in Main.Notebook at <a href="https://github.com/IraitzM/ciencia-datos-julia/tree/720f58cebcd723e3138f37ba782a3dc83a238837//parts/firststeps/basics.qmd#L157" target="_blank">/home/runner/work/ciencia-datos-julia/ciencia-datos-julia/parts/firststeps/basics.qmd:157</a></li> <li> redondeo(x::<b>Int64</b>) in Main.Notebook at <a href="https://github.com/IraitzM/ciencia-datos-julia/tree/720f58cebcd723e3138f37ba782a3dc83a238837//parts/firststeps/basics.qmd#L152" target="_blank">/home/runner/work/ciencia-datos-julia/ciencia-datos-julia/parts/firststeps/basics.qmd:152</a></li> </ul>
+# 2 methods for generic function <b>redondeo</b> from [35mMain.Notebook[39m:<ul><li> redondeo(x::<b>Float64</b>) in Main.Notebook at <a href="https://github.com/IraitzM/ciencia-datos-julia/tree/4cb5bebabc19bb0de2a815aa1735b7b880939db1//parts/firststeps/basics.qmd#L157" target="_blank">/home/runner/work/ciencia-datos-julia/ciencia-datos-julia/parts/firststeps/basics.qmd:157</a></li> <li> redondeo(x::<b>Int64</b>) in Main.Notebook at <a href="https://github.com/IraitzM/ciencia-datos-julia/tree/4cb5bebabc19bb0de2a815aa1735b7b880939db1//parts/firststeps/basics.qmd#L152" target="_blank">/home/runner/work/ciencia-datos-julia/ciencia-datos-julia/parts/firststeps/basics.qmd:152</a></li> </ul>
 </div>
 </div>
 <p>Esto nos permite invocar a uno u otro únicamente en base al tipado.</p>
@@ -563,13 +569,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </div>
 </div>
 <p>Existen toda una serie de funciones que podemos emplear directamente desde la consola. Tenemos operadores básicos como suma o multiplicación, y otras funcionalidades no tan básicas como la selección de los primeros o últimos elementos de un vector, la creación de números aleatorios o el poder fijar una semilla para dicha generación aleatoria.</p>
-<section id="macros" class="level3">
-<h3 class="anchored" data-anchor-id="macros">Macros</h3>
+<section id="macros" class="level3" data-number="2.3.1">
+<h3 data-number="2.3.1" class="anchored" data-anchor-id="macros"><span class="header-section-number">2.3.1</span> Macros</h3>
 <p>Como último apunte, veréis que existen sentencias que iniciamos con el carácter <code>@</code>. Estas son conocidas como macros, operaciones que nos permiten simplificar la sintaxis y que en muchos casos hacen referencia a funciones con el mismo nombre.</p>
 <div id="50" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb51"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@time</span> <span class="fu">print</span>(<span class="st">"Hemos tardado en imprimir esta línea"</span>)</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Hemos tardado en imprimir esta línea  0.000044 seconds (10 allocations: 64.281 KiB)</code></pre>
+<pre><code>Hemos tardado en imprimir esta línea  0.000030 seconds (10 allocations: 64.281 KiB)</code></pre>
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
