@@ -67,6 +67,13 @@ El carácter final `;` s simplemente para que no imprima el resultado por pantal
 Gracias a la librería `Query.jl` podemos emplear una sintaxis más compacta en nuestras consultas, añadiendo etapas de transformación como en los pipelines habituales en R o Python.
 
 ```{julia}
+#| output: false
+
+using Pkg;
+Pkg.add("Query")
+```
+
+```{julia}
 using DataFrames, Query
 
 campos = [:Survived, :PassengerId, :Pclass]
