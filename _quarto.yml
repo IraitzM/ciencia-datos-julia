@@ -45,6 +45,7 @@ book:
       chapters:
       - parts/dataframes/basics.qmd
       - parts/dataframes/summary.qmd
+      - parts/dataframes/exploratory.qmd
 
     - references.qmd
 
@@ -54,7 +55,7 @@ format:
   html:
     include-in-header: static/code_head.html
     include-before-body: static/code_body.html
-    number-depth: 2
+    number-depth: 3
     theme: 
      - cosmo
      - style.scss

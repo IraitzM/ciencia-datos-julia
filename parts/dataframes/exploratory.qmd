@@ -1,0 +1,278 @@
+---
+title: "Análisis exploratorio"
+format:
+  html:
+    code-fold: false
+engine: julia
+---
+
+Tras haber trabajado con nuestros datos originales, ya disponemos de unos datos limpios, sin datos faltantes y con cierta carga informativa.
+
+```{julia}
+#| echo: false
+#| output: false
+
+data_path = "../../data/"
+```
+```{julia}
+using Parquet
+using DataFrames
+using CategoricalArrays
+
+df = read_parquet(joinpath(data_path,"titanic.parquet")) |> DataFrames.DataFrame
+
+# Primero, reemplazamos los valores numéricos por los nombres de nivel deseados
+df[!, :Pclass] = replace(df[!, :Pclass], "1" => "Primera", "2" => "Segunda", "3" => "Tercera")
+
+# Luego, convertimos la columna a categórica con los niveles y orden deseado
+levels = ["Tercera", "Segunda", "Primera"]
+df[!, :Pclass] = categorical(df[!, :Pclass]; levels, ordered=true)
+
+levels = ["male", "female"]
+df[!, :Sex] = categorical(df[!, :Sex]; levels, ordered=false)
+
+describe(df)
+```
+
+Ahora procederemos a explorar las distribuciones de datos y estadísticas de las categorías pertinentes.
+
+## Balance de muestras
+
+Necesitamos evaluar si existen categoría mayoritarias en nuestro conjunto de datos. `StatsBase` nos ofrece la función `countmap` que directamente nos dará las ocurrencias de cada opción en las columnas como clave y valor de un diccionario.
+
+```{julia}
+#| output: false
+import Pkg
+
+Pkg.add("StatsBase")
+```
+
+```{julia}
+using StatsBase
+
+countmap(df[:,:Survived])
+```
+
+Y con `StatsPlots` podremos visualizar un gráfico de barras de cara a comparar los valores.
+
+```{julia}
+using StatsPlots
+
+# Conteo de ocurrencias
+conteo = countmap(df[:,:Survived])
+
+# Convertir a porcentajes
+total = sum(values(conteo))
+porcentajes = Dict(k => v/total*100 for (k,v) in conteo)
+
+# Etiquetas según los valores de Survived
+etiquetas = ["No sobrevivió", "Sobrevivió"]
+# Ordenar los porcentajes según etiquetas (asumiendo false = No sobrevivió, true = Sobrevivió)
+valores = [get(porcentajes, false, 0.0), get(porcentajes, true, 0.0)]
+
+# Graficar
+bar(
+    etiquetas,
+    valores,
+    legend=false,
+    ylabel="Porcentaje (%)",
+    xlabel="Survived", 
+    title="Porcentaje de supervivientes"
+)
+```
+
+Vemos que un porcentaje superior de pasajeros (61%) no sobrevivió al Titanic.
+
+## Distribución de datos
+
+Podemos querer analizar si estas dos poblaciones muestran características significativas entre sí. Algo que permita distinguir a los dos conjuntos de datos de forma significativa.
+
+### Numérica (edad)
+
+```{julia}
+@df df violin(
+    :Survived,
+    :Age,
+    legend=false,
+    ylabel="Edad",
+    xlabel="Supervivencia",
+    title="Distribución de edad según supervivencia",
+    xticks=([false, true], ["No sobrevivió", "Sobrevivió"])
+)
+```
+
+Se observa que en el espectro más bajo de edad el conjunto de viajeros que sobrevivió es algo superior.
+
+### Categórica (sexo)
+
+```{julia}
+using StatsPlots
+
+# Filtrar por supervivientes y no supervivientes
+df_no = filter(:Survived => x -> x == false, df)
+df_si = filter(:Survived => x -> x == true, df)
+
+# Conteo por sexo en cada grupo
+conteo_no = countmap(df_no[:, :Sex])
+conteo_si = countmap(df_si[:, :Sex])
+
+# Etiquetas y valores
+etiquetas_sexo = ["Hombre", "Mujer"]
+valores_no = [get(conteo_no, "male", 0), get(conteo_no, "female", 0)]
+valores_si = [get(conteo_si, "male", 0), get(conteo_si, "female", 0)]
+
+# Dibujar dos gráficas en paralelo
+plot(
+    bar(etiquetas_sexo, valores_no, title="No sobrevivió", legend=false, ylabel="Cantidad", xlabel="Sexo"),
+    bar(etiquetas_sexo, valores_si, title="Sobrevivió", legend=false, ylabel="Cantidad", xlabel="Sexo"),
+    layout=(1,2)
+)
+```
+
+Vaya, aquí si que vemos dos extremos importantes. De los que sobrevivieron existe un desbalance positivo con respecto a las mujeres frente al caso de no superviviencia, donde la población de hombres fue mucho más significativa.
+
+Posiblemente si añadieramos un eje adicional con respecto a la clase, veríamos cómo esta última característica afecta significativamente a la probabilidad de supervivencia.
+
+### De dispersión (sexo y clase)
+
+```{julia}
+using DataFrames, StatsPlots
+
+# Agrupar por clase y sexo, calcular tasa de supervivencia
+df_group = combine(groupby(df, [:Pclass, :Sex]), :Survived => mean => :SurvivalRate)
+
+# Convertir Sex a string para etiquetas
+df_group.Sex = string.(df_group.Sex)
+
+# Crear etiquetas combinadas para el eje x
+df_group.label = string.(df_group.Pclass, " - ", df_group.Sex)
+
+# Graficar barras agrupadas
+@df df_group bar(
+    :label,
+    :SurvivalRate,
+    group = :Sex,
+    ylabel = "Tasa de supervivencia",
+    legend = :topright,
+    title = "Tasa de supervivencia por clase y sexo",
+    bar_position = :dodge,
+    ylim = (0,1),
+    xrotation = 45
+)
+```
+
+Vemos que la edad es también un factor a tener en cuenta y el precio del billete que de algún modo también indica la clase o ventajas abordo.
+
+En este caso debemos ver si las distribuciones de ambas columnas muestra simetría o están volcadas a uno de los ejes (**skewness**).
+
+```{julia}
+plot(
+    density(df.Age),
+    density(df.Fare),
+    layout=(1,2)
+)
+```
+
+Como podemos ver, el precio del billete muestra una asimetría significativa que dificultará un análisis visual de los datos.
+
+```{julia}
+using DataFrames, StatsPlots
+
+# Agrupar por clase y sexo, calcular tasa de supervivencia
+df_group = combine(groupby(df, [:Fare, :Age]), :Survived => mean => :SurvivalRate)
+
+# Convertir Sex a string para el eje y
+df_group.Age = string.(df_group.Age)
+
+# Graficar: eje x = Fare, eje y = Age, tamaño/color = tasa de supervivencia
+@df df_group scatter(
+    :Fare,
+    :Age,
+    markersize = 15,
+    zcolor = :SurvivalRate,
+    xlabel = "Precio",
+    ylabel = "Age",
+    title = "Tasa de supervivencia por precio del billete y edad",
+    legend = :right,
+    cbar_title = "Tasa de supervivencia"
+)
+```
+
+Podemos compensar este echo mediante una transformación de la distribución empleando un `logaritmo` que reduzca la distancia de los valores más anómalos contra el centro de la distribución.
+
+```{julia}
+plot(
+    histogram(df.Fare),
+    histogram(log.(df.Fare)),
+    layout=(1,2),
+    xlabel = ["Precio del billete" "Log(Precio del billete)"]
+)
+```
+
+```{julia}
+
+@df df_group scatter(
+    log.(:Fare),
+    :Age,
+    markersize = 15,
+    zcolor = :SurvivalRate,
+    xlabel = "Precio",
+    ylabel = "Age",
+    title = "Tasa de supervivencia por precio del billete y edad",
+    legend = :right,
+    cbar_title = "Tasa de supervivencia"
+)
+```
+
+Aunque no del todo claro, ahora podemos observar mejor una mayor concentración de tasas elevadas de superviviencia para los billetes más caros.
+
+## Correlaciones
+
+Aún no encontramos un ecosistema cerrado como es el caso de Scikit-learn en Python o Tidyverse en R. En este caso, para mostrar correlaciones entre apres recurriremos a la librería [PairPlots](https://sefffal.github.io/PairPlots.jl/dev/) y su dependencia actual con respecto a [Makie](https://docs.makie.org/v0.21/).
+
+```{julia}
+#| output: false
+import Pkg
+
+Pkg.add("PairPlots")
+Pkg.add("CairoMakie")
+```
+
+```{julia}
+using CairoMakie
+using PairPlots
+
+# Selecciona solo columnas numéricas relevantes
+cols = [:Age, :Fare, :SibSp, :Parch, :Survived]
+df_num = dropmissing(df[:, cols])
+
+pairplot(
+    df_num => (
+        PairPlots.HexBin(colormap=Makie.cgrad([:transparent, :black])),
+        PairPlots.Scatter(filtersigma=2, color=:black),
+        PairPlots.Contour(color=:black),
+        PairPlots.MarginHist(),
+        PairPlots.MarginQuantileText(),
+        # New:
+        PairPlots.MarginQuantileLines(),
+    ),
+    fullgrid=true
+)
+```
+
+Resulta difícil ver las discrepancias así, de modo que separaremos nuestro conjunto en los dos grupos objeto de estudio.
+
+```{julia}
+# Por categoría
+df_num_survived = filter(:Survived => x -> x == true, df_num)
+df_num_didntsurvive = filter(:Survived => x -> x == false, df_num)
+
+pairplot(
+    PairPlots.Series(
+        df_num_survived, bottomleft=true, topright=false),
+    PairPlots.Series(
+        df_num_didntsurvive, bottomleft=false, topright=true)
+)
+```
+
+_continuará_

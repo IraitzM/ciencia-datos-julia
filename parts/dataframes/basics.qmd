@@ -15,6 +15,13 @@ Quizás uno de los formatos más comunes en el mundo empresarial es el fichero d
 Dado que leer y trabajar con estos ficheros puede ser tedioso, recurriremos a uno de las primeras librerías que nos serán de ayuda en nuestra tarea.Dos en realidad, `CSV` que sabe como tratar estos ficheros y `DataFrames` que nos ofrece todas las funcionalidades de las estructuras tabulares.
 
 ```{julia}
+#| echo: false
+#| output: false
+
+data_path = "../../data"
+```
+
+```{julia}
 #| output: false
 
 using Pkg;
@@ -25,7 +32,7 @@ Pkg.add("DataFrames")
 ```{julia}
 using CSV, DataFrames
 
-df = CSV.read("../../data/titanic.csv", DataFrame)
+df = CSV.read(joinpath(data_path,"titanic.csv"), DataFrame)
 first(df)
 ```
 
@@ -37,7 +44,7 @@ Otro formato habitual, particularmente cuando trabajamos contra [API](https://es
 ```{julia}
 #| output: true
 
-readlines("../../data/titanic.json")
+readlines(joinpath(data_path,"titanic.json"))
 ```
 
 Podemos ver que en este caso disponemos de una lista de objetos con un único nivel de datos que podemos trasladar directamente a un DataFrame.
@@ -53,7 +60,7 @@ Pkg.add("JSON")
 using JSON, DataFrames
 
 # Leemos las lineas y las juntamos en una cadena única
-data = join(readlines("../../data/titanic.json"))
+data = join(readlines(joinpath(data_path,"titanic.json")))
 
 df = DataFrame(JSON.parse(data))
 first(df)
@@ -72,18 +79,12 @@ using Pkg;
 Pkg.add("Parquet")
 ```
 
-```{julia}
-using Parquet
-
-read_parquet("../../data/titanic.parquet")
-```
-
 Podemos cargar el contenido directamente como DataFrame gracias a la compatibilidad entre estas dos librerías.
 
-```julia
+```{julia}
 using Parquet, DataFrames
 
-df = DataFrame(read_parquet("../../data/titanic.parquet"))
+df = DataFrame(read_parquet(joinpath(data_path,"titanic.parquet")))
 first(df)
 ```
 

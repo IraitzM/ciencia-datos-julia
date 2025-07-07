@@ -116,7 +116,7 @@ Tal y como veíamos en la [introducción](../../intro.qmd#crear-un-proyecto) est
 
 Las librerías que emplearemos en líneas generales son:
 
-* **Manipulación de datos**: [DataFrames.jl](https://dataframes.juliadata.org/stable/)
-* **Visualización**: [Mackie.jl](https://docs.makie.org/stable/) y [Plots.jl](https://docs.juliaplots.org/stable/)
+* **Manipulación de datos**: [DataFrames.jl](https://dataframes.juliadata.org/stable/) y [DataFramesMeta.jl](https://juliadata.org/DataFramesMeta.jl/stable/)
+* **Visualización**: [Plots.jl](https://docs.juliaplots.org/stable/)
 
 Todos estos paquetes y más están disponibles en https://juliapackages.com/. 

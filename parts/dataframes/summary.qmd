@@ -9,9 +9,16 @@ engine: julia
 Partimos de nuestros datos ya cargados, y deberemos ver la estructura base de nuestro dataframe. La función `describe` nos ofrece una primera revisión de los datos indicando nombre de las columnas, estadísticas de la distribución de datos, valores faltantes y typo de dato.
 
 ```{julia}
+#| echo: false
+#| output: false
+
+data_path = "../../data/"
+```
+
+```{julia}
 using CSV, DataFrames
 
-df = CSV.read("../../data/titanic.csv", DataFrame)
+df = CSV.read(joinpath(data_path,"titanic.csv"), DataFrame)
 describe(df)
 ```
 
@@ -21,17 +28,87 @@ A esto podemos unirle conocer el tamaño de nuestro conjunto mediante el método
 size(df)
 ```
 
-## Distribuciones de datos
+Deberemos entender la naturaleza de los datos que nos muestran y conocer, entre otras cuestiones:
 
-Una de las mejores formes de conocer las distribuciones de datos es precisamente visualizando su histograma o gráfico de densidad. Deberéis instalar los paquetes de visualización pertinentes.
+* Si son valores numéricos, que fenómeno representan y cómo se distribuyen
+* Si son valores categóricos, si las categorías vienen bien informadas y si muestran algún orden.
+
+Esto nos obliga a explorar si son variables categóricas codificadas con números, si existen campos con una **granularidad** alta o con valor constante. Podemos pedir estadísticas concretas al método [describe](https://dataframes.juliadata.org/stable/lib/functions/#DataAPI.describe).
 
 ```{julia}
-#| echo: false
-#| output: false
-
-using Pkg;
-Pkg.activate("../../")
+describe(df, :nunique)
 ```
+
+## Selección de campos
+
+Podemos por tanto descartar aquellos casos donde el grano de detalle es prácticamente individual.
+
+```{julia}
+campos_a_descartar = [:Ticket, :Name]
+```
+
+Vemos que únicamente a contemplado los casos donde nos encontramos con tipos `String`. Pero sabemos, por ejemplo, que la columna _Survived_ es una condición booleana de si sobrevivieron o no. Emplearemos la propia función de conversión de cada tipo, añadiéndole un `.` al final que denote _por fila_. En Julia, el punto (`.`) al final de una función o nombre de tipo (como `string.`) indica **broadcasting**, lo que aplicar una función elemento por elemento a lo largo de un array o colección, sin necesidad de escribir un bucle explícito.
+
+Al igual que antes, empleamos el indicador `!` ya que vamos a modificar la columna en su sitio. En Julia:
+
+- `df[:, :Columna]` devuelve una **copia** de la columna. Si modificas el resultado, el DataFrame original no cambia.
+- `df[!, :Columna]` devuelve una **referencia** a la columna original. Si modificas el resultado, el DataFrame original sí cambia.
+
+```{julia}
+df[!,:Survived] = Bool.(df[!,:Survived])
+df[!,:PassengerId] = string.(df[!,:PassengerId])
+df[!,:Pclass] = string.(df[!,:Pclass]);
+```
+
+:::{.callout-note}
+El carácter final `;` s simplemente para que no imprima el resultado por pantalla cuando se emplean Notebooks o scripts the Quarto `.qmd`.
+:::
+
+Gracias a la librería `Query.jl` podemos emplear una sintaxis más compacta en nuestras consultas, añadiendo etapas de transformación como en los pipelines habituales en R o Python.
+
+```{julia}
+using DataFrames, Query
+
+campos = [:Survived, :PassengerId, :Pclass]
+
+filas = nrow(df)
+
+for col in campos
+    únicos = df |> 
+        @select({Symbol(col) = _.col}) |> collect |> x -> unique(df[!, col])
+    println("Columna $col tiene $(length(únicos)) valores únicos en $(filas) filas.")
+    println()
+end
+```
+
+Tenemos varios puntos en el código anterior:
+
+* `@select` es una [macro](../firststeps/basics.qmd#macros) para seleccionar columnas de un DataFrame. `{Symbol(col) = _.col}` crea un diccionario o mapeo donde la clave es el símbolo de la variable col y el valor es la columna correspondiente en el DataFrame. `Symbol(col)`en sí convierte el nombre de la columna (probablemente un string) en un símbolo, que es un tipo de dato común en Julia para referirse a nombres de columnas.
+* `|>` es el operador "pipe" en Julia, que pasa el resultado de la expresión anterior como argumento a la función siguiente.
+* `collect` toma un iterable (como el resultado de @select) y lo convierte en una colección concreta, como un array.
+* `x -> unique(df[!, col])` es una función anónima (sin nombre designado como en el caso de las lambda) que toma `x` (aunque aquí no se usa directamente) y devuelve los valores únicos de la columna col del DataFrame df.
+
+Hemos dado un salto en este bloque así que tomaros tiempo para entender cada parte. De aquí concluimos que la columna PassengerId no será muy relevante en el análisis estadístico ya que muestra un grano muy fino de valores que únicamente permiten identificar a cada individuo de nuestro conjunto.
+Pasará algo muy similar con valores de texto que indiquen nombre o ticket. Este dato ya lo obtuvimos anteriormente con lo que podemos determinar que las columnas de interés en adelante serán
+
+```{julia}
+append!(campos_a_descartar, [:PassengerId])
+select!(df, Not(campos_a_descartar));
+```
+Recordad que `!` modifica el dato objeto
+
+```{julia}
+first(df, 5)
+```
+
+:::{.callout-tip collapse="true"}
+# Frameworks de manipulación
+Tenéis más información en [DataFrames.jl > Querying frameworks](https://dataframes.juliadata.org/stable/man/querying_frameworks/)
+:::
+
+## Valores numéricos
+
+Una de las mejores formes de conocer las distribuciones de datos es precisamente visualizando su histograma o gráfico de densidad. Deberéis instalar los paquetes de visualización pertinentes.
 
 ```{julia}
 #| output: false
@@ -56,6 +133,7 @@ Pkg.add("Distributions")
 
 ```{julia}
 using Distributions
+#| output: collapse
 
 plot(Normal(3, 5), lw=3)
 ```
@@ -63,7 +141,7 @@ plot(Normal(3, 5), lw=3)
 
 El primer reto al que nos enfrentaremos será el de poder mostrar el diagrama de densidad, ya que no permite la existencia de valores faltantes. Y como podemos ver existen varios para la columna age. Deberemos aprender a filtrar en base a una condición. 
 
-## Valores faltantes
+### Valores faltantes
 
 En el caso de Julia `missing` es un tipo de datos especial que no indica el valor faltante en una celda.
 
@@ -71,14 +149,14 @@ En el caso de Julia `missing` es un tipo de datos especial que no indica el valo
 typeof(missing)
 ```
 
-Existen funciones específicas para eliminar o simplemente filtrar en base a la condición de dato faltante (`ismissing`). En este caso podremos ver los primeros tres elementos en nuestro dataframe donde se cumple la condición de dato faltante en el campo edad (`:Age`).
+Existen funciones específicas para eliminar o simplemente filtrar (`filter`) en base a la condición de dato faltante (`ismissing`). En este caso podremos ver los primeros tres elementos en nuestro dataframe donde se cumple la condición de dato faltante en el campo edad (`:Age`).
 
 ```{julia}
 first(
     filter(
         :Age => ismissing, df
     ),
-    3
+    3 # mostramos los primeros tres elementos
 )
 ```
 
@@ -128,7 +206,63 @@ Pkg.add("DataFramesMeta")
 ```{julia}
 using DataFramesMeta
 
-describe(select(df, Not(:Cabin, :Embarked)))
+select!(df, Not(:Cabin, :Embarked))
+describe(df)
 ```
 
-Ya tenemos un conjunto de datos algo más limpio. Ahora toca estudiarlo en profundidad.
+## Variables categóricas
+
+Las variables categóricas son un tipo especial de variable que se utiliza para representar datos que pueden tomar un número limitado de valores distintos, llamados categorías o niveles.
+
+En Julia, las variables categóricas se manejan principalmente usando el paquete `CategoricalArrays.jl`. Este paquete proporciona el tipo `CategoricalArray`, que permite almacenar datos categóricos de manera eficiente y realizar operaciones como ordenamiento, agrupamiento y comparación entre categorías.
+
+En nuestro caso, la columna `Pclass` muestra categorías de prioridad de los pasajeros que encajarían dentro de la descripción de niveles.
+
+```{julia}
+#| output: false
+
+Pkg.add("CategoricalArrays")
+```
+
+```{julia}
+using CategoricalArrays
+
+# Creamos una copia del dataframe
+df_cat = copy(df)
+
+# Primero, reemplazamos los valores numéricos por los nombres de nivel deseados
+df_cat[!, :Pclass] = replace(df_cat[!, :Pclass], "1" => "Primera", "2" => "Segunda", "3" => "Tercera")
+
+# Luego, convertimos la columna a categórica con los niveles y orden deseado
+levels = ["Tercera", "Segunda", "Primera"]
+df_cat[!, :Pclass] = categorical(df_cat[!, :Pclass]; levels, ordered=true)
+
+# Y comprobamos el resultado
+describe(df_cat)
+```
+
+Gracias a ser categóricas ordenadas, podemos realizar comparativas como si de números se tratara pero empleando una sintaxis que nos aporta cierta claridad semántica. Si ordenamos de forma ascendente vemos que los viajeros en **Tercera** están en una categoría inferior a los de **Primera**.
+
+```{julia}
+first(sort(df_cat, :Pclass), 3)
+```
+
+```{julia}
+last(sort(df_cat, :Pclass), 3)
+```
+
+Cosa que no podríamos hacer con el uso de cadenas de texto.
+
+```{julia}
+"Primera" < "Tercera"
+```
+
+Ya tenemos un conjunto de datos algo más limpio. Ahora toca estudiarlo en profundidad. Si queremos guardarlo para más adelante podemos volcar el DataFrame a fichero aunque si lo volcamos a un CSV o fichero de texto podemos perder la información categórica. De hecho, muchos formatos y entornos no serán compatibles con esta tipología de dato concreta.
+
+```{julia}
+using Parquet
+
+df[!,:Sex] = String.(df[!,:Sex]);
+
+write_parquet(joinpath(data_path,"titanic.parquet"), df)
+```
