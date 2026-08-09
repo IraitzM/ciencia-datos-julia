@@ -7,11 +7,17 @@ on:
 
 name: Quarto Publish
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     # Refuerza lo que ya indica `julia.exeflags` en _quarto.yml: todos los
     # capítulos deben usar el entorno del repositorio, no el global.
     env:
@@ -42,11 +48,13 @@ jobs:
       - name: Render
         uses: quarto-dev/quarto-actions/render@v2
 
-      - name: Publish
+      - name: Upload Pages artifact
         if: github.event_name != 'pull_request'
-        uses: quarto-dev/quarto-actions/publish@v2
+        uses: actions/upload-pages-artifact@v3
         with:
-          target: gh-pages
-          render: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          path: _book
+
+      - name: Deploy to GitHub Pages
+        if: github.event_name != 'pull_request'
+        id: deployment
+        uses: actions/deploy-pages@v4
