@@ -6,7 +6,7 @@ format:
 engine: julia
 ---
 
-Partimos de nuestros datos ya cargados, y deberemos ver la estructura base de nuestro dataframe. La función `describe` nos ofrece una primera revisión de los datos indicando nombre de las columnas, estadísticas de la distribución de datos, valores faltantes y typo de dato.
+Partimos de nuestros datos ya cargados, y deberemos ver la estructura base de nuestro dataframe. La función `describe` nos ofrece una primera revisión de los datos indicando nombre de las columnas, estadísticas de la distribución de datos, valores faltantes y tipo de dato.
 
 ```{julia}
 #| echo: false
@@ -47,7 +47,7 @@ Podemos por tanto descartar aquellos casos donde el grano de detalle es práctic
 campos_a_descartar = [:Ticket, :Name]
 ```
 
-Vemos que únicamente a contemplado los casos donde nos encontramos con tipos `String`. Pero sabemos, por ejemplo, que la columna _Survived_ es una condición booleana de si sobrevivieron o no. Emplearemos la propia función de conversión de cada tipo, añadiéndole un `.` al final que denote _por fila_. En Julia, el punto (`.`) al final de una función o nombre de tipo (como `string.`) indica **broadcasting**, lo que aplicar una función elemento por elemento a lo largo de un array o colección, sin necesidad de escribir un bucle explícito.
+Vemos que únicamente ha contemplado los casos donde nos encontramos con tipos `String`. Pero sabemos, por ejemplo, que la columna _Survived_ es una condición booleana de si sobrevivieron o no. Emplearemos la propia función de conversión de cada tipo, añadiéndole un `.` al final que denote _por fila_. En Julia, el punto (`.`) al final de una función o nombre de tipo (como `string.`) indica **broadcasting**, lo que aplicar una función elemento por elemento a lo largo de un array o colección, sin necesidad de escribir un bucle explícito.
 
 Al igual que antes, empleamos el indicador `!` ya que vamos a modificar la columna en su sitio. En Julia:
 
@@ -61,15 +61,12 @@ df[!,:Pclass] = string.(df[!,:Pclass]);
 ```
 
 :::{.callout-note}
-El carácter final `;` s simplemente para que no imprima el resultado por pantalla cuando se emplean Notebooks o scripts the Quarto `.qmd`.
+El carácter final `;` es simplemente para que no imprima el resultado por pantalla cuando se emplean Notebooks o documentos de Quarto `.qmd`.
 :::
 
 Gracias a la librería `Query.jl` podemos emplear una sintaxis más compacta en nuestras consultas, añadiendo etapas de transformación como en los pipelines habituales en R o Python.
 
-```{julia}
-#| output: false
-
-using Pkg;
+```julia
 Pkg.add("Query")
 ```
 
@@ -115,10 +112,9 @@ Tenéis más información en [DataFrames.jl > Querying frameworks](https://dataf
 
 ## Valores numéricos
 
-Una de las mejores formes de conocer las distribuciones de datos es precisamente visualizando su histograma o gráfico de densidad. Deberéis instalar los paquetes de visualización pertinentes.
+Una de las mejores formas de conocer las distribuciones de datos es precisamente visualizando su histograma o gráfico de densidad. Deberéis instalar los paquetes de visualización pertinentes.
 
-```{julia}
-#| output: false
+```julia
 Pkg.add("StatsPlots")
 ```
 
@@ -128,13 +124,11 @@ using StatsPlots
 histogram(df.Age, normalize=true)
 ```
 
-Vemos que si lo comparamos con una distribución normal, las gráficas difieren bastante. Esto suele requerir de evaluar la normalidad de la 
+Vemos que si lo comparamos con una distribución normal, las gráficas difieren bastante. Esto obliga a evaluar la normalidad de la variable antes de dar por buena cualquier técnica que la presuponga.
 
 ::: {.callout-tip collapse="true"}
 # Gráfico de distribución normal
-```{julia}
-#| output: false
-
+```julia
 Pkg.add("Distributions")
 ```
 
@@ -150,7 +144,7 @@ El primer reto al que nos enfrentaremos será el de poder mostrar el diagrama de
 
 ### Valores faltantes
 
-En el caso de Julia `missing` es un tipo de datos especial que no indica el valor faltante en una celda.
+En el caso de Julia `missing` es un valor especial que representa un dato ausente en una celda.
 
 ```{julia}
 typeof(missing)
@@ -191,9 +185,19 @@ mean(skipmissing(df.Age))
 Este valor lo reemplazaremos indicando que queremos transformar (alterando el objeto `df`)
 
 ```{julia}
-transform!(df, :Age => ByRow(x -> coalesce(x, mean(skipmissing(df.Age)))); renamecols=false)
+# Calculamos la media UNA sola vez. Si la dejamos dentro de `ByRow`, Julia la
+# recalcula para cada fila y la operación pasa a ser O(n²).
+media_edad = mean(skipmissing(df.Age))
+
+transform!(df, :Age => ByRow(x -> coalesce(x, media_edad)); renamecols=false)
 describe(df)
 ```
+
+::: {.callout-warning}
+## Cuidado con imputar antes de tiempo
+
+Estamos calculando la media sobre **todo** el conjunto. Es válido para explorar, pero en cuanto entremos en modelado habrá que hacerlo *después* de separar entrenamiento y test y usando solo el primero. Si no, la información del conjunto de test se filtra en el entrenamiento y las métricas salen optimistas.
+:::
 
 Tras esto, con las dos columnas restantes podemos optar por eliminar estos datos. `dropmissing` eliminará las filas que contengan valores faltantes en sus celdas.
 
@@ -204,9 +208,7 @@ size(df_sinfilas)
 
 O mediante la función `select` podemos indicarle que no queremos las columnas con datos faltantes. Para esta macro deberemos usar otro paquete muy habitual para este tipo de labores.
 
-```{julia}
-#| output: false
-
+```julia
 Pkg.add("DataFramesMeta")
 ```
 
@@ -225,9 +227,7 @@ En Julia, las variables categóricas se manejan principalmente usando el paquete
 
 En nuestro caso, la columna `Pclass` muestra categorías de prioridad de los pasajeros que encajarían dentro de la descripción de niveles.
 
-```{julia}
-#| output: false
-
+```julia
 Pkg.add("CategoricalArrays")
 ```
 

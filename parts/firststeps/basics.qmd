@@ -110,7 +110,7 @@ Podemos separar en filas nuestros elementos y así generar un vector de dos dime
 a = [1 2 3; 4 5 6]
 ```
 
-Y podemos así extender a las dimensiones que necesitemos nuestros elementos multidimensionales. El acceso a los datos se realiza por índices o rangos, teniendo en cuenta el número de índices de nuestro vector. Quizás una de las cuestiones más relevantes viniendo de lenguajes como Python es que Julia cuenta lso elementos **iniciando en 1 en lugar de 0**. Por lo tanto pedir el elemento `a[0]` nos dará un <span style="color:red">error</span>.
+Y podemos así extender a las dimensiones que necesitemos nuestros elementos multidimensionales. El acceso a los datos se realiza por índices o rangos, teniendo en cuenta el número de índices de nuestro vector. Quizás una de las cuestiones más relevantes viniendo de lenguajes como Python es que Julia cuenta los elementos **iniciando en 1 en lugar de 0**. Por lo tanto pedir el elemento `a[0]` nos dará un <span style="color:red">error</span>.
 
 ```{julia}
 a[1]
@@ -144,7 +144,7 @@ function nombre_funcion(arg1, arg2)
 end
 ```
 
-También permite la definición mediate asignación, a modo de [función lambda](https://ellibrodepython.com/lambda-python) `f_name(arg1, arg2) = hacemos cosas con arg1 y arg2` aunque por claridad emplearemos el modelo anterior.
+También permite la definición mediante asignación, a modo de [función lambda](https://ellibrodepython.com/lambda-python) `f_name(arg1, arg2) = hacemos cosas con arg1 y arg2` aunque por claridad emplearemos el modelo anterior.
 
 Julia permite especificar el tipo de argumentos haciendo que dos funciones con el mismo nombre apliquen distinta lógica en base a los argumentos de entrada y su tipo.
 
@@ -233,16 +233,30 @@ Como último apunte, veréis que existen sentencias que iniciamos con el caráct
 
 ::: {.callout-tip collapse="true"}
 # Macro creada por nosotros
+
+La clave para entender una macro es que **no recibe valores, recibe la expresión de código sin evaluar**. Podemos comprobarlo imprimiendo lo que llega:
+
 ```{julia}
-macro es_entero(x)
-   if typeof(x) == Int64  
-      return "Es un entero"
-   end
-   return "No es un entero"
+macro muestra(x)
+    println("recibo: ", x, "  (de tipo ", typeof(x), ")")
+    return x
 end
 
-@es_entero 5
+@muestra 5
 ```
+
+Con un literal, `x` es directamente el número. Pero en cuanto la expresión es algo más que un literal, lo que llega es un objeto `Expr` que representa el código todavía sin ejecutar:
+
+```{julia}
+@muestra 2 + 3
+```
+
+```{julia}
+y = 5
+@muestra y
+```
+
+En el último caso `x` es el símbolo `y`, no el valor `5`: la macro se expande **antes** de que exista ese valor. Por eso una macro puede reescribir el código, y por eso `typeof(x)` dentro de una macro casi nunca coincide con el tipo del resultado final.
 :::
 
 Más que listar todas estas operaciones y estructuras disponibles, iremos viendo con ejemplos las más usuales según avancemos en los materiales.

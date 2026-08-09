@@ -33,14 +33,19 @@ using Downloads
 
 fichero_url = "https://raw.githubusercontent.com/datasciencedojo/datasets/refs/heads/master/titanic.csv"
 fichero = Downloads.download(fichero_url)
-readlines(fichero)[:20]
+readlines(fichero)[1:20]
 ```
 
 Si queremos conservar el fichero para más adelante podemos recurrir a la función `write()` y guardarlo donde nosotros queramos.
 
 ```{julia}
-write("../../data/titanic.csv", read(fichero))
+destino = joinpath(mktempdir(), "titanic.csv")
+write(destino, read(fichero))
 ```
+
+::: {.callout-note}
+Guardamos en un directorio temporal a propósito: construir el libro no debería modificar ficheros ya versionados. En el repositorio el conjunto ya está en `data/titanic.csv`, de modo que los capítulos siguientes funcionan aunque la descarga falle.
+:::
 
 Y podemos revisar el contenido iterando sobre `walkdir()` que recorre los elementos de un directorio.
 

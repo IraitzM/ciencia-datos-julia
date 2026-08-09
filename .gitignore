@@ -1,14 +1,17 @@
 # Quarto
 /.quarto/
 /_book/
-/_freeze/
 
-# Rednering 
+# NOTA: _freeze/ SÍ se versiona. Con `freeze: auto` guarda el resultado de
+# ejecutar cada capítulo, de modo que el build es reproducible y no depende
+# de que las APIs externas estén disponibles en el momento de publicar.
+
+# Entorno de renderizado
 .venv
 
-# DuckDB
+# DuckDB (se genera en un directorio temporal durante el render)
 *.duckdb
 *.wal
 
-# TOML files
-*.toml
+# NOTA: Project.toml y Manifest.toml SÍ se versionan. Son los que permiten
+# reproducir el entorno exacto (ver capítulo de introducción).

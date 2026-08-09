@@ -40,10 +40,7 @@ Ahora procederemos a explorar las distribuciones de datos y estadísticas de las
 
 Necesitamos evaluar si existen categoría mayoritarias en nuestro conjunto de datos. `StatsBase` nos ofrece la función `countmap` que directamente nos dará las ocurrencias de cada opción en las columnas como clave y valor de un diccionario.
 
-```{julia}
-#| output: false
-import Pkg
-
+```julia
 Pkg.add("StatsBase")
 ```
 
@@ -129,7 +126,7 @@ plot(
 )
 ```
 
-Vaya, aquí si que vemos dos extremos importantes. De los que sobrevivieron existe un desbalance positivo con respecto a las mujeres frente al caso de no superviviencia, donde la población de hombres fue mucho más significativa.
+Vaya, aquí si que vemos dos extremos importantes. De los que sobrevivieron existe un desbalance positivo con respecto a las mujeres frente al caso de no supervivencia, donde la población de hombres fue mucho más significativa.
 
 Posiblemente si añadieramos un eje adicional con respecto a la clase, veríamos cómo esta última característica afecta significativamente a la probabilidad de supervivencia.
 
@@ -178,13 +175,10 @@ Como podemos ver, el precio del billete muestra una asimetría significativa que
 ```{julia}
 using DataFrames, StatsPlots
 
-# Agrupar por clase y sexo, calcular tasa de supervivencia
+# Agrupamos por precio y edad, y calculamos la tasa de supervivencia
 df_group = combine(groupby(df, [:Fare, :Age]), :Survived => mean => :SurvivalRate)
 
-# Convertir Sex a string para el eje y
-df_group.Age = string.(df_group.Age)
-
-# Graficar: eje x = Fare, eje y = Age, tamaño/color = tasa de supervivencia
+# Graficar: eje x = Fare, eje y = Age, color = tasa de supervivencia
 @df df_group scatter(
     :Fare,
     :Age,
@@ -198,25 +192,29 @@ df_group.Age = string.(df_group.Age)
 )
 ```
 
-Podemos compensar este echo mediante una transformación de la distribución empleando un `logaritmo` que reduzca la distancia de los valores más anómalos contra el centro de la distribución.
+Podemos compensar este hecho mediante una transformación de la distribución empleando un `logaritmo` que reduzca la distancia de los valores más anómalos contra el centro de la distribución.
+
+::: {.callout-important}
+Usaremos `log1p`, que calcula `log(1 + x)`, en lugar de `log` directamente. El motivo es que este conjunto contiene billetes con precio `0.0` (pasajeros que no pagaron) y `log(0)` devuelve `-Inf`, lo que rompería tanto el histograma como el gráfico de dispersión.
+:::
 
 ```{julia}
 plot(
     histogram(df.Fare),
-    histogram(log.(df.Fare)),
+    histogram(log1p.(df.Fare)),
     layout=(1,2),
-    xlabel = ["Precio del billete" "Log(Precio del billete)"]
+    xlabel = ["Precio del billete" "Log(1 + Precio del billete)"]
 )
 ```
 
 ```{julia}
 
 @df df_group scatter(
-    log.(:Fare),
+    log1p.(:Fare),
     :Age,
     markersize = 15,
     zcolor = :SurvivalRate,
-    xlabel = "Precio",
+    xlabel = "Log(1 + Precio)",
     ylabel = "Age",
     title = "Tasa de supervivencia por precio del billete y edad",
     legend = :right,
@@ -228,12 +226,9 @@ Aunque no del todo claro, ahora podemos observar mejor una mayor concentración 
 
 ## Correlaciones
 
-Aún no encontramos un ecosistema cerrado como es el caso de Scikit-learn en Python o Tidyverse en R. En este caso, para mostrar correlaciones entre apres recurriremos a la librería [PairPlots](https://sefffal.github.io/PairPlots.jl/dev/) y su dependencia actual con respecto a [Makie](https://docs.makie.org/v0.21/).
+Aún no encontramos un ecosistema cerrado como es el caso de Scikit-learn en Python o Tidyverse en R. En este caso, para mostrar correlaciones entre pares recurriremos a la librería [PairPlots](https://sefffal.github.io/PairPlots.jl/dev/) y su dependencia actual con respecto a [Makie](https://docs.makie.org/v0.21/).
 
-```{julia}
-#| output: false
-import Pkg
-
+```julia
 Pkg.add("PairPlots")
 Pkg.add("CairoMakie")
 ```

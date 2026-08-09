@@ -53,18 +53,20 @@ Ahora ya solo nos queda empezar a trabajar.
 
 Julia trae por defecto un gestor de paquetes propio. Esto nos ayuda a indicar las dependencias de nuestro código para que pueda ejecutarse en otros entornos de manera correcta.
 
-Podemos crear un primer proyecto indicando la activación del mismo.
+Podemos crear un primer proyecto indicando la activación del mismo. Aquí lo haremos sobre un directorio temporal para no alterar el entorno de este libro, pero tú puedes usar la carpeta de tu proyecto.
 
 ```{julia}
 #| output: false
-import Pkg;
-Pkg.activate(".")
+import Pkg
+
+proyecto_demo = mktempdir()
+Pkg.activate(proyecto_demo)
 ```
 
-Esto generará dos ficheros esenciales para el correcto funcionamiento de nuestro código:
+Al activar el entorno y añadir la primera dependencia se generan dos ficheros esenciales para el correcto funcionamiento de nuestro código:
 
-* Project.toml: Donde se listan las dependencias de nuestro proyecto.
-* Manifest.toml: Donde se indican las versiones de nuestro intérprete de Julia a utilizar, además de los _hash_ de las versiones de los paquetes compatibles.
+* `Project.toml`: donde se listan las dependencias **directas** de nuestro proyecto y, opcionalmente, el rango de versiones admitido para cada una.
+* `Manifest.toml`: el resultado exacto de resolver esas dependencias. Recoge la versión concreta y el _hash_ de **todos** los paquetes (los directos y los que estos arrastran), además de la versión de Julia con la que se resolvió.
 
 Podemos ver las distintas opciones en la [documentación oficial](https://pkgdocs.julialang.org/v1/toml-files/). Podemos añadir una dependencia mediante la función `.add()`
 
@@ -74,12 +76,33 @@ Podemos ver las distintas opciones en la [documentación oficial](https://pkgdoc
 Pkg.add("Plots")
 ```
 
-Y esta se sumará a nuestros ficheros TOML. El comando `.status()` nos informará de las dependencias actuales. 
+Y esta se sumará a nuestros ficheros TOML. El comando `.status()` nos informará de las dependencias actuales.
 
 ```{julia}
 #| output: true
 
 Pkg.status()
+```
+
+::: {.callout-important}
+## Reproducir un entorno
+
+Estos dos ficheros son los que permiten que tu código se ejecute igual en otra máquina, así que **deben versionarse junto al código**. Quien clone el proyecto solo tiene que ejecutar
+
+```julia
+Pkg.activate(".")
+Pkg.instantiate()
+```
+
+y `instantiate` descargará exactamente las versiones fijadas en el `Manifest.toml`, sin volver a resolver nada. Este mismo libro se construye así: puedes ver su [Project.toml](https://github.com/IraitzM/ciencia-datos-julia/blob/main/Project.toml) y su [Manifest.toml](https://github.com/IraitzM/ciencia-datos-julia/blob/main/Manifest.toml).
+:::
+
+```{julia}
+#| echo: false
+#| output: false
+
+# Volvemos al entorno del libro para el resto del capítulo
+Pkg.activate(@__DIR__)
 ```
 
 De forma que podemos hacer uso de esas librerías o paquetes en nuestro código.

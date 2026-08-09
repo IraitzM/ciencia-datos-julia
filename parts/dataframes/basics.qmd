@@ -12,7 +12,7 @@ Ya conocemos las bases de Julia y ahora toca empezar a ver cómo hacer uso de lo
 
 Quizás uno de los formatos más comunes en el mundo empresarial es el fichero de texto con extensión CSV (Comma Separated Value). Extraído habitualmente de ficheros Excel o bien de exportaciones de sistemas gestores de base de datos, veremos que presenta un formato tabular donde cada celda viene separado por un carácter (siendo `,` o `;` los más habituales); y el salto de línea marca el inicio de una nueva fila.
 
-Dado que leer y trabajar con estos ficheros puede ser tedioso, recurriremos a uno de las primeras librerías que nos serán de ayuda en nuestra tarea.Dos en realidad, `CSV` que sabe como tratar estos ficheros y `DataFrames` que nos ofrece todas las funcionalidades de las estructuras tabulares.
+Dado que leer y trabajar con estos ficheros puede ser tedioso, recurriremos a uno de las primeras librerías que nos serán de ayuda en nuestra tarea. Dos en realidad, `CSV` que sabe cómo tratar estos ficheros y `DataFrames` que nos ofrece todas las funcionalidades de las estructuras tabulares.
 
 ```{julia}
 #| echo: false
@@ -21,13 +21,15 @@ Dado que leer y trabajar con estos ficheros puede ser tedioso, recurriremos a un
 data_path = "../../data"
 ```
 
-```{julia}
-#| output: false
-
-using Pkg;
+```julia
+using Pkg
 Pkg.add("CSV")
 Pkg.add("DataFrames")
 ```
+
+::: {.callout-note}
+Los bloques de instalación como el anterior son ilustrativos: no se ejecutan al construir el libro. Este proyecto ya declara todas sus dependencias en `Project.toml`, así que basta con `Pkg.instantiate()` una sola vez, tal y como vimos en la [introducción](../../intro.qmd#crear-un-proyecto).
+:::
 
 ```{julia}
 using CSV, DataFrames
@@ -49,10 +51,7 @@ readlines(joinpath(data_path,"titanic.json"))
 
 Podemos ver que en este caso disponemos de una lista de objetos con un único nivel de datos que podemos trasladar directamente a un DataFrame.
 
-```{julia}
-#| output: false
-
-using Pkg;
+```julia
 Pkg.add("JSON")
 ```
 
@@ -72,10 +71,7 @@ Es importante prestar atención a la estructura del JSON ya que si dispone de m�
 
 Si hay un formato omnipresente desde que fue creado allá por 2013 es [Parquet](https://parquet.apache.org/). Formato columnar y comprimido por defecto, permite trabajar con estructuras de datos tabulares de forma eficiente para los procesos analíticos, con una huella de almacenamiento mínima y compatible con multitud de las herramientas de stack de ciencia de datos. De hecho, es la base para estructuras de almacenamiento más complejas que ofrecen capacidades [ACID](https://es.wikipedia.org/wiki/ACID) como [Iceberg](https://iceberg.apache.org/) o [Delta Lake](https://delta.io/).
 
-```{julia}
-#| output: false
-
-using Pkg;
+```julia
 Pkg.add("Parquet")
 ```
 
@@ -94,10 +90,7 @@ Existen otras dos grandes fuentes con las que será necesario interactuar para f
 
 Interactuar con APIs requiere realizar consultas siguiendo el protocolo HTTP y obtener los datos de respuesta en un formato compatible. En nuestro caso, al haber visto como el formato JSON es manejable gracias a la librería de Julia, simplemente deberemos añadir librerías de manejo del protocolo en concreto.
 
-```{julia}
-#| output: false
-
-using Pkg;
+```julia
 Pkg.add("HTTP")
 ```
 
@@ -142,17 +135,18 @@ Para la mayoría de casos deberemos encontrar la librería compatible con nuestr
 
 Y más que podéis encontrar en [https://juliapackages.com/c/database](https://juliapackages.com/c/database).
 
-```{julia}
-#| output: false
-
-using Pkg;
+```julia
 Pkg.add("DuckDB")
 ```
 
 ```{julia}
 using DuckDB
 
-con_duckdb = DBInterface.connect(DuckDB.DB, "bd.duckdb")
+# Usamos un directorio temporal para que cada ejecución parta de una base
+# limpia. Si apuntas a un fichero fijo, el INSERT de más abajo iría
+# acumulando filas cada vez que reconstruyas el documento.
+ruta_bd = joinpath(mktempdir(), "bd.duckdb")
+con_duckdb = DBInterface.connect(DuckDB.DB, ruta_bd)
 ```
 
 Una vez conectados podemos leer de los datos del entorno.

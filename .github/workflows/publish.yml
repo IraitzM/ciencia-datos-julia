@@ -2,6 +2,8 @@ on:
   workflow_dispatch:
   push:
     branches: main
+  pull_request:
+    branches: main
 
 name: Quarto Publish
 
@@ -10,21 +12,41 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    # Refuerza lo que ya indica `julia.exeflags` en _quarto.yml: todos los
+    # capítulos deben usar el entorno del repositorio, no el global.
+    env:
+      JULIA_PROJECT: ${{ github.workspace }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
 
+      # Se fija la versión: Quarto < 1.7 fija QuartoNotebookRunner =0.11.6,
+      # que no es compatible con Julia >= 1.12.
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          version: 1.10.18
 
       - name: Install Julia
-        uses: julia-actions/setup-julia@v1
+        uses: julia-actions/setup-julia@v2
         with:
-            version: '1.11.5'
+          version: '1.12'
 
-      - name: Render and Publish
+      - name: Cache Julia packages
+        uses: julia-actions/cache@v2
+
+      # Instala exactamente las versiones fijadas en Manifest.toml.
+      - name: Instantiate project environment
+        run: julia --project=. -e 'using Pkg; Pkg.instantiate()'
+
+      - name: Render
+        uses: quarto-dev/quarto-actions/render@v2
+
+      - name: Publish
+        if: github.event_name != 'pull_request'
         uses: quarto-dev/quarto-actions/publish@v2
         with:
           target: gh-pages
+          render: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

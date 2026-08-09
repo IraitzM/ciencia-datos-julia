@@ -58,10 +58,10 @@ Podemos ver que tipo soporta nuestra variable resultante.
 typeof(periodo)
 ```
 
-La función `today()` nos devuelve un `Day` por lo que si queremos más precisión, deberemos convertirlo a `DateTime` y usar `now()` en nuestra comparativa para que la resta sea entre los mismos tipos.
+La función `today()` devuelve un `Date`, y al restar dos `Date` obtenemos un `Day`. Si queremos más precisión deberemos trabajar con `DateTime` y usar `now()` en nuestra comparativa, para que la resta sea entre los mismos tipos.
 
 ```{julia}
-fecha_hora_ms = DateTime(2025, 7, 1, 12, 1, 3, 120) # precisión de microsegundos 
+fecha_hora_ms = DateTime(2025, 7, 1, 12, 1, 3, 120) # el último campo son milisegundos
 lapso = now() - fecha_hora_ms
 ```
 
@@ -109,7 +109,7 @@ En el caso de tratarse de módulos no disponibles como parte de la librería sta
 
 ```julia
 using Pkg;
-Pkg.add("Libreria.jl")
+Pkg.add("Libreria") # sin el sufijo .jl
 ```
 
 Tal y como veíamos en la [introducción](../../intro.qmd#crear-un-proyecto) estos paquetes serán añadidos a los dos ficheros clave que nos permiten reproducir nuestro entorno en otra máquina.

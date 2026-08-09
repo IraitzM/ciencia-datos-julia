@@ -2,7 +2,15 @@ project:
   type: book
 
 execute:
-  freeze: false
+  # `auto` reejecuta solo los capítulos que cambian y guarda el resultado en
+  # _freeze/. Evita que una caída de las APIs externas tumbe la publicación.
+  freeze: auto
+
+# Todos los capítulos usan el entorno fijado en Project.toml/Manifest.toml.
+# `@.` busca el Project.toml en el directorio actual o en sus padres, así que
+# funciona igual para los .qmd de la raíz que para los de parts/.
+julia:
+  exeflags: ["--project=@."]
 
 book:
   title: "Ciencia de datos con Julia"
