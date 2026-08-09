@@ -9,7 +9,7 @@
 <meta name="author" content="Iraitz Montalbán">
 <meta name="description" content="Tutoriales y guías de ciencia de datos utilizando el lenguaje Julia.">
 
-<title>5&nbsp; Sistema de ficheros – Ciencia de datos con Julia</title>
+<title>11&nbsp; Pipelines – Ciencia de datos con Julia</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -73,8 +73,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../parts/dataframes/basics.html" rel="next">
-<link href="../../parts/firststeps/librerias.html" rel="prev">
+<link href="../../parts/produccion/despliegue.html" rel="next">
+<link href="../../parts/preparacion/codificacion.html" rel="prev">
 <link href="../../images/cover.png" rel="icon" type="image/png">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -134,7 +134,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <meta name="keywords" content="Julia, Ciencia de Datos, Visualización, Machine Learning">
 
 
-<meta property="og:title" content="5&nbsp; Sistema de ficheros – Ciencia de datos con Julia">
+<meta property="og:title" content="11&nbsp; Pipelines – Ciencia de datos con Julia">
 <meta property="og:description" content="Tutoriales y guías de ciencia de datos utilizando el lenguaje Julia.">
 <meta property="og:image" content="https://iraitzm.github.io/ciencia-datos-julia/images/cover.png">
 <meta property="og:site_name" content="Ciencia de datos con Julia">
@@ -151,7 +151,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../parts/firststeps/basics.html">Primeros pasos</a></li><li class="breadcrumb-item"><a href="../../parts/firststeps/sistemaficheros.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Sistema de ficheros</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../parts/preparacion/particion.html">Preparación de datos</a></li><li class="breadcrumb-item"><a href="../../parts/preparacion/pipelines.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Pipelines</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Buscar" onclick="window.quartoOpenSearch();">
@@ -194,13 +194,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
  <span class="menu-text">Primeros pasos</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Alternar sección">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../parts/firststeps/basics.html" class="sidebar-item-text sidebar-link">
@@ -221,7 +221,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../parts/firststeps/sistemaficheros.html" class="sidebar-item-text sidebar-link active">
+  <a href="../../parts/firststeps/sistemaficheros.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Sistema de ficheros</span></span></a>
   </div>
 </li>
@@ -258,13 +258,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
  <span class="menu-text">Preparación de datos</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Alternar sección">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Alternar sección">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../parts/preparacion/particion.html" class="sidebar-item-text sidebar-link">
@@ -279,7 +279,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../parts/preparacion/pipelines.html" class="sidebar-item-text sidebar-link">
+  <a href="../../parts/preparacion/pipelines.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Pipelines</span></span></a>
   </div>
 </li>
@@ -325,8 +325,20 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Tabla de contenidos</h2>
+   
+  <ul>
+  <li><a href="#el-problema-de-encadenar-a-mano" id="toc-el-problema-de-encadenar-a-mano" class="nav-link active" data-scroll-target="#el-problema-de-encadenar-a-mano"><span class="header-section-number">11.1</span> El problema de encadenar a mano</a></li>
+  <li><a href="#un-pipeline-en-julia" id="toc-un-pipeline-en-julia" class="nav-link" data-scroll-target="#un-pipeline-en-julia"><span class="header-section-number">11.2</span> Un pipeline en Julia</a></li>
+  <li><a href="#ajustar-y-predecir" id="toc-ajustar-y-predecir" class="nav-link" data-scroll-target="#ajustar-y-predecir"><span class="header-section-number">11.3</span> Ajustar y predecir</a></li>
+  <li><a href="#validación-cruzada" id="toc-validación-cruzada" class="nav-link" data-scroll-target="#validación-cruzada"><span class="header-section-number">11.4</span> Validación cruzada</a></li>
+  <li><a href="#por-qué-esto-elimina-la-fuga" id="toc-por-qué-esto-elimina-la-fuga" class="nav-link" data-scroll-target="#por-qué-esto-elimina-la-fuga"><span class="header-section-number">11.5</span> Por qué esto elimina la fuga</a></li>
+  <li><a href="#inspeccionar-el-pipeline" id="toc-inspeccionar-el-pipeline" class="nav-link" data-scroll-target="#inspeccionar-el-pipeline"><span class="header-section-number">11.6</span> Inspeccionar el pipeline</a></li>
+  <li><a href="#lo-que-hemos-conseguido" id="toc-lo-que-hemos-conseguido" class="nav-link" data-scroll-target="#lo-que-hemos-conseguido"><span class="header-section-number">11.7</span> Lo que hemos conseguido</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -334,9 +346,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PLKHBRCG" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../parts/firststeps/basics.html">Primeros pasos</a></li><li class="breadcrumb-item"><a href="../../parts/firststeps/sistemaficheros.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Sistema de ficheros</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../parts/preparacion/particion.html">Preparación de datos</a></li><li class="breadcrumb-item"><a href="../../parts/preparacion/pipelines.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Pipelines</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Sistema de ficheros</span></h1>
+<h1 class="title"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Pipelines</span></h1>
 </div>
 
 
@@ -359,68 +371,50 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </header>
 
 
-<p>Como en todo lenguaje de programación, deberemos gestionar la lectura y escritura de ficheros. El sistema de ficheros lo gestiona el sistema operativo de nuestra máquina con lo que se trata más bien de interactuar con este al menos de cara a conocer por ejemplo, dónde estamos ubicados.</p>
-<div id="2" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dirname</span>(<span class="pp">@__FILE__</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>"/home/iraitz/Documentos/Projects/ciencia-datos-julia/parts/firststeps"</code></pre>
-</div>
-</div>
-<p>Podemos crear carpetas de forma programática pero en la mayoría de casos se tratará de leer y escribir ficheros en rutas concretas. Para ello nos será útil la función <code>joinpath</code> que nos ayuda a conformar rutas tal y como el sistema de ficheros requiere.</p>
+<p>Terminamos el capítulo anterior con dos objetos <code>machine</code> sueltos y una advertencia: hay que acordarse de ajustarlos solo con entrenamiento y de aplicarlos en el orden correcto. Ese “hay que acordarse” es exactamente el tipo de garantía que no aguanta un proyecto real.</p>
+<section id="el-problema-de-encadenar-a-mano" class="level2" data-number="11.1">
+<h2 data-number="11.1" class="anchored" data-anchor-id="el-problema-de-encadenar-a-mano"><span class="header-section-number">11.1</span> El problema de encadenar a mano</h2>
+<p>Imaginad el flujo completo: imputar faltantes, escalar, codificar categorías y entrenar. Son cuatro pasos, cada uno con parámetros aprendidos. Y ahora imaginad que queréis hacer validación cruzada con cinco particiones. Los cuatro pasos hay que repetirlos <strong>dentro de cada pliegue</strong>, ajustándolos solo con las cuatro quintas partes que hacen de entrenamiento en esa vuelta.</p>
+<p>Hacerlo a mano son veinte ajustes en el orden correcto. Es fácil escribir un bucle que impute una sola vez fuera del bucle, y ese descuido, silencioso porque no genera ni error ni aviso, infla las métricas. La solución no es tener más cuidado, es que la estructura del código haga imposible el error.</p>
 <div id="4" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>root <span class="op">=</span> <span class="fu">dirname</span>(<span class="pp">@__FILE__</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">joinpath</span>(root, <span class="st">"ejemplo.txt"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<details class="code-fold">
+<summary>Recuperamos los datos, esta vez sin imputar a mano</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">CSV</span>, <span class="bu">DataFrames</span>, <span class="bu">MLJ</span>, <span class="bu">Statistics</span>, <span class="bu">CategoricalArrays</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> CSV.<span class="fu">read</span>(<span class="fu">joinpath</span>(data_path, <span class="st">"titanic.csv"</span>), DataFrame)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">select!</span>(df, <span class="fu">Not</span>([<span class="op">:</span>PassengerId, <span class="op">:</span>Name, <span class="op">:</span>Ticket, <span class="op">:</span>Cabin, <span class="op">:</span>Embarked]))</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>df.Survived <span class="op">=</span> <span class="fu">coerce</span>(df.Survived, Multiclass)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>y, X <span class="op">=</span> <span class="fu">unpack</span>(df, <span class="op">==</span>(<span class="op">:</span>Survived))</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Declarar los tipos científicos NO es aprender de los datos: es describir qué</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># significa cada columna. Por eso podemos hacerlo sobre el conjunto completo.</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> <span class="fu">coerce</span>(X, <span class="op">:</span>Pclass <span class="op">=&gt;</span> OrderedFactor, <span class="op">:</span>Sex <span class="op">=&gt;</span> Multiclass)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">levels!</span>(X.Pclass, [<span class="fl">3</span>, <span class="fl">2</span>, <span class="fl">1</span>])   <span class="co"># de peor a mejor clase, como en el capítulo anterior</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>(Xtrain, Xtest), (ytrain, ytest) <span class="op">=</span> <span class="fu">partition</span>(</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    (X, y), <span class="fl">0.7</span>, multi <span class="op">=</span> <span class="cn">true</span>, shuffle <span class="op">=</span> <span class="cn">true</span>, stratify <span class="op">=</span> y, rng <span class="op">=</span> <span class="fl">1234</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="fu">schema</span>(X)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 <div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>"/home/iraitz/Documentos/Projects/ciencia-datos-julia/parts/firststeps/ejemplo.txt"</code></pre>
+<div class="ansi-escaped-output">
+<pre>┌────────┬────────────────────────────┬───────────────────────────────────┐
+│<span class="ansi-black-fg"> names  </span>│<span class="ansi-black-fg"> scitypes                   </span>│<span class="ansi-black-fg"> types                             </span>│
+├────────┼────────────────────────────┼───────────────────────────────────┤
+│ Pclass │ OrderedFactor{3}           │ CategoricalValue{Int64, UInt32}   │
+│ Sex    │ Multiclass{2}              │ CategoricalValue{String7, UInt32} │
+│ Age    │ Union{Missing, Continuous} │ Union{Missing, Float64}           │
+│ SibSp  │ Count                      │ Int64                             │
+│ Parch  │ Count                      │ Int64                             │
+│ Fare   │ Continuous                 │ Float64                           │
+└────────┴────────────────────────────┴───────────────────────────────────┘
+</pre>
 </div>
 </div>
-<p>Y como vimos anteriormente, usar la función <code>readlines()</code> para leer su contenido.</p>
-<div id="6" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>fichero <span class="op">=</span> <span class="fu">joinpath</span>(root, <span class="st">"ejemplo.txt"</span>)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">readline</span>(fichero)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>"Hola desde un fichero!"</code></pre>
 </div>
-</div>
-<p>Imaginemos por tanto que queremos descargarnos un CSV (Comma Separated Value) con información sobre los pasajeros del <a href="https://www.kaggle.com/datasets/yasserh/titanic-dataset">Titanic</a></p>
-<div id="8" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Downloads</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>fichero_url <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/datasciencedojo/datasets/refs/heads/master/titanic.csv"</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>fichero <span class="op">=</span> <span class="bu">Downloads</span>.<span class="fu">download</span>(fichero_url)</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">readlines</span>(fichero)[<span class="fl">1</span><span class="op">:</span><span class="fl">20</span>]</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>20-element Vector{String}:
- "PassengerId,Survived,Pclass,Name,Sex,Age,SibSp,Parch,Ticket,Fare,Cabin,Embarked"
- "1,0,3,\"Braund, Mr. Owen Harris\",male,22,1,0,A/5 21171,7.25,,S"
- "2,1,1,\"Cumings, Mrs. John Bradley (Florence Briggs Thayer)\",female,38,1,0,PC 17599,71.2833,C85,C"
- "3,1,3,\"Heikkinen, Miss. Laina\",female,26,0,0,STON/O2. 3101282,7.925,,S"
- "4,1,1,\"Futrelle, Mrs. Jacques Heath (Lily May Peel)\",female,35,1,0,113803,53.1,C123,S"
- "5,0,3,\"Allen, Mr. William Henry\",male,35,0,0,373450,8.05,,S"
- "6,0,3,\"Moran, Mr. James\",male,,0,0,330877,8.4583,,Q"
- "7,0,1,\"McCarthy, Mr. Timothy J\",male,54,0,0,17463,51.8625,E46,S"
- "8,0,3,\"Palsson, Master. Gosta Leonard\",male,2,3,1,349909,21.075,,S"
- "9,1,3,\"Johnson, Mrs. Oscar W (Elisabeth Vilhelmina Berg)\",female,27,0,2,347742,11.1333,,S"
- "10,1,2,\"Nasser, Mrs. Nicholas (Adele Achem)\",female,14,1,0,237736,30.0708,,C"
- "11,1,3,\"Sandstrom, Miss. Marguerite Rut\",female,4,1,1,PP 9549,16.7,G6,S"
- "12,1,1,\"Bonnell, Miss. Elizabeth\",female,58,0,0,113783,26.55,C103,S"
- "13,0,3,\"Saundercock, Mr. William Henry\",male,20,0,0,A/5. 2151,8.05,,S"
- "14,0,3,\"Andersson, Mr. Anders Johan\",male,39,1,5,347082,31.275,,S"
- "15,0,3,\"Vestrom, Miss. Hulda Amanda Adolfina\",female,14,0,0,350406,7.8542,,S"
- "16,1,2,\"Hewlett, Mrs. (Mary D Kingcome) \",female,55,0,0,248706,16,,S"
- "17,0,3,\"Rice, Master. Eugene\",male,2,4,1,382652,29.125,,Q"
- "18,1,2,\"Williams, Mr. Charles Eugene\",male,,0,0,244373,13,,S"
- "19,0,3,\"Vander Planke, Mrs. Julius (Emelia Maria Vandemoortele)\",female,31,1,0,345763,18,,S"</code></pre>
-</div>
-</div>
-<p>Si queremos conservar el fichero para más adelante podemos recurrir a la función <code>write()</code> y guardarlo donde nosotros queramos.</p>
-<div id="10" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>destino <span class="op">=</span> <span class="fu">joinpath</span>(<span class="fu">mktempdir</span>(), <span class="st">"titanic.csv"</span>)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write</span>(destino, <span class="fu">read</span>(fichero))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>60302</code></pre>
-</div>
-</div>
+<p>Fijaos en que <code>Age</code> conserva sus valores faltantes. Esta vez no los vamos a tocar: dejaremos que lo haga el pipeline.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -431,20 +425,201 @@ Nota
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Guardamos en un directorio temporal a propósito: construir el libro no debería modificar ficheros ya versionados. En el repositorio el conjunto ya está en <code>data/titanic.csv</code>, de modo que los capítulos siguientes funcionan aunque la descarga falle.</p>
+<p>Declarar tipos con <code>coerce</code> sobre todo el conjunto es seguro porque no calcula nada a partir de los datos, solo dice cómo hay que interpretarlos. Distinto es una media, una desviación o el conjunto de categorías observadas: eso sí se aprende, y va dentro del pipeline.</p>
 </div>
 </div>
-<p>Y podemos revisar el contenido iterando sobre <code>walkdir()</code> que recorre los elementos de un directorio.</p>
-<div id="12" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>itr <span class="op">=</span> <span class="fu">walkdir</span>(<span class="st">"../../data/"</span>)</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>(root, dirs, files) <span class="op">=</span> <span class="fu">first</span>(itr)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="un-pipeline-en-julia" class="level2" data-number="11.2">
+<h2 data-number="11.2" class="anchored" data-anchor-id="un-pipeline-en-julia"><span class="header-section-number">11.2</span> Un pipeline en Julia</h2>
+<p>Necesitamos un modelo con el que terminar la cadena. Usaremos una regresión logística, que es el punto de partida razonable en cualquier problema de clasificación binaria.</p>
+<div id="6" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">MLJLinearModels</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>RegresionLogistica <span class="op">=</span> <span class="pp">@load</span> LogisticClassifier pkg<span class="op">=</span>MLJLinearModels verbosity<span class="op">=</span><span class="fl">0</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>("../../data/", String[], [".gitkeep", "titanic.csv", "titanic.json", "titanic.parquet"])</code></pre>
+<pre><code>LogisticClassifier</code></pre>
 </div>
 </div>
-<p>Disponemos de los comandos más usuales a la hora de crear un directorio (<code>mkdir()</code>) o adentrarnos en él (<code>cd()</code>). Tenéis más detalle sobre los comandos disponibles <a href="https://docs.julialang.org/en/v1/base/file/">aquí</a>.</p>
+<p>Y ahora encadenamos. En Julia el operador <code>|&gt;</code> que ya conocemos del <a href="../../parts/dataframes/summary.html">análisis preliminar</a> sirve también para componer modelos de MLJ:</p>
+<div id="8" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>pipe <span class="op">=</span> <span class="fu">FillImputer</span>() <span class="op">|&gt;</span> <span class="fu">Standardizer</span>() <span class="op">|&gt;</span> <span class="fu">ContinuousEncoder</span>() <span class="op">|&gt;</span> <span class="fu">RegresionLogistica</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>ProbabilisticPipeline(
+  fill_imputer = FillImputer(
+        features = Symbol[], 
+        continuous_fill = MLJTransforms._median, 
+        count_fill = MLJTransforms._round_median, 
+        finite_fill = MLJTransforms._mode), 
+  standardizer = Standardizer(
+        features = Symbol[], 
+        ignore = false, 
+        ordered_factor = false, 
+        count = false), 
+  continuous_encoder = ContinuousEncoder(
+        drop_last = false, 
+        one_hot_ordered_factors = false), 
+  logistic_classifier = LogisticClassifier(
+        lambda = 2.220446049250313e-16, 
+        gamma = 0.0, 
+        penalty = :l2, 
+        fit_intercept = true, 
+        penalize_intercept = false, 
+        scale_penalty_with_samples = true, 
+        solver = nothing), 
+  cache = true)</code></pre>
+</div>
+</div>
+<p>El orden importa y merece justificarse:</p>
+<ol type="1">
+<li><strong><code>FillImputer</code></strong> rellena los faltantes. Va primero porque el resto de pasos no sabría qué hacer con un <code>missing</code>.</li>
+<li><strong><code>Standardizer</code></strong> centra y escala las variables continuas. Va antes de codificar para que solo toque <code>Age</code> y <code>Fare</code>, y no las columnas binarias que creará el siguiente paso.</li>
+<li><strong><code>ContinuousEncoder</code></strong> convierte en números continuos todo lo que queda, es decir, categorías y conteos. A diferencia del <code>OneHotEncoder</code> del capítulo anterior, aquí no descartamos una categoría: la regularización que la regresión logística aplica por defecto se encarga de que la redundancia no genere problemas.</li>
+<li><strong><code>RegresionLogistica</code></strong> es el modelo propiamente dicho.</li>
+</ol>
+<p>Lo importante es que el resultado es <strong>un único modelo</strong>. Se ajusta de una vez, se aplica de una vez, y se comporta ante MLJ igual que cualquier otro.</p>
+</section>
+<section id="ajustar-y-predecir" class="level2" data-number="11.3">
+<h2 data-number="11.3" class="anchored" data-anchor-id="ajustar-y-predecir"><span class="header-section-number">11.3</span> Ajustar y predecir</h2>
+<div id="10" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>mach <span class="op">=</span> <span class="fu">machine</span>(pipe, Xtrain, ytrain)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">fit!</span>(mach, verbosity <span class="op">=</span> <span class="fl">0</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>ŷ <span class="op">=</span> <span class="fu">predict_mode</span>(mach, Xtest)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">accuracy</span>(ŷ, ytest)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>0.7798507462686567</code></pre>
+</div>
+</div>
+<p>Con una llamada hemos imputado, escalado, codificado y entrenado; y al predecir sobre <code>Xtest</code> se han aplicado exactamente las mismas transformaciones, con los parámetros aprendidos del entrenamiento.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span><code>ŷ</code>, y otros nombres que Julia permite
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Ese <code>ŷ</code> es un identificador válido. En la REPL o en un editor con soporte de Julia se escribe <code>y\hat</code> seguido de tabulador. Julia admite Unicode en los nombres de variable, lo que permite que el código se parezca a la notación matemática del artículo que estás implementando: <code>α</code>, <code>σ²</code>, <code>∑</code>. Con moderación, ayuda bastante a la legibilidad en código científico.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="validación-cruzada" class="level2" data-number="11.4">
+<h2 data-number="11.4" class="anchored" data-anchor-id="validación-cruzada"><span class="header-section-number">11.4</span> Validación cruzada</h2>
+<p>Una sola partición nos da una sola estimación, y esa estimación depende de la semilla que elegimos. La validación cruzada reparte los datos en varios pliegues y entrena tantas veces como pliegues, usando cada vez uno distinto para evaluar.</p>
+<div id="12" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>resultado <span class="op">=</span> <span class="fu">evaluate</span>(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    pipe, X, y,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    resampling <span class="op">=</span> <span class="fu">StratifiedCV</span>(nfolds <span class="op">=</span> <span class="fl">5</span>, rng <span class="op">=</span> <span class="fl">1234</span>),</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    measures   <span class="op">=</span> [log_loss, auc],</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    verbosity  <span class="op">=</span> <span class="fl">0</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>resultado</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<div class="ansi-escaped-output">
+<pre>PerformanceEvaluation object with these fields:
+  model, tag, measure, operation,
+  measurement, uncertainty_radius_95, per_fold, per_observation,
+  fitted_params_per_fold, report_per_fold,
+  train_test_rows, resampling, repeats
+Tag: ProbabilisticPipeline-923
+Extract:
+┌───┬──────────────────────┬───────────┬─────────────┐
+│<span class="ansi-black-fg">   </span>│<span class="ansi-black-fg"> measure              </span>│<span class="ansi-black-fg"> operation </span>│<span class="ansi-black-fg"> measurement </span>│
+├───┼──────────────────────┼───────────┼─────────────┤
+│ A │ LogLoss(             │ predict   │ 0.449       │
+│   │   tol = 2.22045e-16) │           │             │
+│ B │ AreaUnderCurve()     │ predict   │ 0.854       │
+└───┴──────────────────────┴───────────┴─────────────┘
+┌───┬─────────────────────────────────────┬─────────┐
+│<span class="ansi-black-fg">   </span>│<span class="ansi-black-fg"> per_fold                            </span>│<span class="ansi-black-fg"> 1.96*SE </span>│
+├───┼─────────────────────────────────────┼─────────┤
+│ A │ [0.516, 0.476, 0.396, 0.454, 0.404] │ 0.0493  │
+│ B │ [0.807, 0.832, 0.902, 0.843, 0.886] │ 0.0384  │
+└───┴─────────────────────────────────────┴─────────┘
+</pre>
+</div>
+</div>
+</div>
+<p>Usamos <code>StratifiedCV</code> y no <code>CV</code> a secas por el mismo motivo por el que estratificamos la partición: queremos que cada pliegue conserve la proporción de supervivientes.</p>
+<p>Las dos medidas dicen cosas distintas. <code>log_loss</code> penaliza las probabilidades mal calibradas, castigando sobre todo equivocarse con mucha confianza, mientras que <code>auc</code> mide la capacidad de ordenar correctamente los casos sin depender de dónde pongamos el umbral de decisión. Volveremos sobre la elección de métricas cuando lleguemos a la evaluación.</p>
+<p>Además de la medida agregada, la salida trae dos columnas que conviene mirar siempre. <code>per_fold</code> muestra el valor obtenido en cada uno de los cinco pliegues, y <code>1.96*SE</code> es el radio del intervalo de confianza al 95 % alrededor de la media. Si ese radio es del mismo orden que la diferencia entre dos modelos que estás comparando, la comparación no distingue nada: estás mirando ruido.</p>
+</section>
+<section id="por-qué-esto-elimina-la-fuga" class="level2" data-number="11.5">
+<h2 data-number="11.5" class="anchored" data-anchor-id="por-qué-esto-elimina-la-fuga"><span class="header-section-number">11.5</span> Por qué esto elimina la fuga</h2>
+<p>Aquí está el pago de todo el capítulo. Cuando <code>evaluate</code> procesa el tercer pliegue:</p>
+<ol type="1">
+<li>Toma las cuatro quintas partes que hacen de entrenamiento en esa vuelta.</li>
+<li>Ajusta <code>FillImputer</code> <strong>solo con ellas</strong>: la mediana que usará sale de ahí.</li>
+<li>Ajusta <code>Standardizer</code> <strong>solo con ellas</strong>: media y desviación salen de ahí.</li>
+<li>Ajusta <code>ContinuousEncoder</code> y el modelo, otra vez solo con ellas.</li>
+<li>Aplica esa cadena al pliegue reservado y mide.</li>
+</ol>
+<p>Y repite el proceso completo en cada vuelta. No hay forma de que una media calculada en el pliegue cinco contamine el entrenamiento del pliegue uno, porque cada vuelta reconstruye la cadena desde cero. <strong>La corrección deja de depender de la disciplina de quien escribe el código y pasa a estar garantizada por la estructura.</strong></p>
+<p>Comparadlo con lo que hicimos en el <a href="../../parts/preparacion/particion.html">primer capítulo de esta parte</a>: allí calculamos la media a mano y tuvimos que razonar con cuidado sobre de dónde salía. Con una transformación era llevadero; aquí son tres, multiplicadas por cinco pliegues.</p>
+</section>
+<section id="inspeccionar-el-pipeline" class="level2" data-number="11.6">
+<h2 data-number="11.6" class="anchored" data-anchor-id="inspeccionar-el-pipeline"><span class="header-section-number">11.6</span> Inspeccionar el pipeline</h2>
+<p>Que sea un único objeto no significa que sea opaco. Podemos abrirlo y ver qué aprendió cada etapa.</p>
+<div id="14" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>params <span class="op">=</span> <span class="fu">fitted_params</span>(mach)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">keys</span>(params)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>(:logistic_classifier, :continuous_encoder, :standardizer, :fill_imputer)</code></pre>
+</div>
+</div>
+<div id="16" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>params.standardizer</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>(features_fit = [:Age, :Fare], means = (29.51338683788122, 31.347484430176568), stds = (13.09415483803606, 44.27287942095778))</code></pre>
+</div>
+</div>
+<p>Ahí están las medias y desviaciones que aprendió el escalador dentro del pipeline, las mismas que en el capítulo anterior calculábamos por separado.</p>
+<p>Y los coeficientes del modelo:</p>
+<div id="18" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>coefs <span class="op">=</span> params.logistic_classifier.coefs</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (nombre, valor) <span class="kw">in</span> coefs</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span>(<span class="fu">rpad</span>(nombre, <span class="fl">16</span>), <span class="fu">lpad</span>(<span class="fu">round</span>(valor, digits <span class="op">=</span> <span class="fl">4</span>), <span class="fl">10</span>))</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Pclass              1.0809
+Sex__female         0.8007
+Sex__male          -2.0413
+Age                -0.4622
+SibSp              -0.2601
+Parch              -0.2144
+Fare               -0.0037</code></pre>
+</div>
+</div>
+<p>Un coeficiente positivo empuja hacia la supervivencia y uno negativo en contra. Como escalamos las variables continuas antes de entrenar, las magnitudes son comparables entre sí, algo que no podríamos hacer si <code>Fare</code> siguiera en libras y <code>Age</code> en años.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Advertencia
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Interpretar coeficientes de una regresión logística tiene más matices de los que caben aquí: signo y magnitud dependen de la codificación elegida y las variables correlacionadas se reparten el peso de formas poco intuitivas. Lo usamos como comprobación de coherencia, no como explicación causal.</p>
+</div>
+</div>
+</section>
+<section id="lo-que-hemos-conseguido" class="level2" data-number="11.7">
+<h2 data-number="11.7" class="anchored" data-anchor-id="lo-que-hemos-conseguido"><span class="header-section-number">11.7</span> Lo que hemos conseguido</h2>
+<p>Cerramos la parte de preparación con un objeto único que encapsula todo el tratamiento de los datos y el modelo, que se puede validar de forma honesta y que se puede guardar y volver a cargar tal cual.</p>
+<p>Eso es justo lo que hace falta para la siguiente fase. Con el pipeline como unidad de trabajo, comparar modelos deja de ser el ejercicio de fontanería que supone repetir el preprocesado para cada candidato, y se convierte en sustituir la última etapa de la cadena. En la próxima parte cambiaremos esa última etapa por árboles, conjuntos de árboles y otros modelos, y aprenderemos a elegir entre ellos con criterio.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -849,13 +1024,13 @@ Nota
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../../parts/firststeps/librerias.html" class="pagination-link" aria-label="Módulos y librerías">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Módulos y librerías</span></span>
+      <a href="../../parts/preparacion/codificacion.html" class="pagination-link" aria-label="Codificación y escalado">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Codificación y escalado</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../parts/dataframes/basics.html" class="pagination-link" aria-label="Cargando datos">
-        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Cargando datos</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../../parts/produccion/despliegue.html" class="pagination-link" aria-label="Del pipeline al servicio">
+        <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Del pipeline al servicio</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

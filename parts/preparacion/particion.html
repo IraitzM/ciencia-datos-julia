@@ -9,7 +9,7 @@
 <meta name="author" content="Iraitz Montalbán">
 <meta name="description" content="Tutoriales y guías de ciencia de datos utilizando el lenguaje Julia.">
 
-<title>4&nbsp; Módulos y librerías – Ciencia de datos con Julia</title>
+<title>9&nbsp; Separación de datos – Ciencia de datos con Julia</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -66,15 +66,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../../site_libs/quarto-nav/headroom.min.js"></script>
 <script src="../../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../parts/firststeps/sistemaficheros.html" rel="next">
-<link href="../../parts/firststeps/flujos.html" rel="prev">
+<link href="../../parts/preparacion/codificacion.html" rel="next">
+<link href="../../parts/dataframes/exploratory.html" rel="prev">
 <link href="../../images/cover.png" rel="icon" type="image/png">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -132,9 +132,15 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <!-- End Google Tag Manager -->
 
 <meta name="keywords" content="Julia, Ciencia de Datos, Visualización, Machine Learning">
+<script src="../../site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="../../site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="../../site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
-<meta property="og:title" content="4&nbsp; Módulos y librerías – Ciencia de datos con Julia">
+<meta property="og:title" content="9&nbsp; Separación de datos – Ciencia de datos con Julia">
 <meta property="og:description" content="Tutoriales y guías de ciencia de datos utilizando el lenguaje Julia.">
 <meta property="og:image" content="https://iraitzm.github.io/ciencia-datos-julia/images/cover.png">
 <meta property="og:site_name" content="Ciencia de datos con Julia">
@@ -151,7 +157,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../parts/firststeps/basics.html">Primeros pasos</a></li><li class="breadcrumb-item"><a href="../../parts/firststeps/librerias.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Módulos y librerías</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../parts/preparacion/particion.html">Preparación de datos</a></li><li class="breadcrumb-item"><a href="../../parts/preparacion/particion.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Separación de datos</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Buscar" onclick="window.quartoOpenSearch();">
@@ -194,13 +200,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
  <span class="menu-text">Primeros pasos</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Alternar sección">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../parts/firststeps/basics.html" class="sidebar-item-text sidebar-link">
@@ -215,7 +221,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../parts/firststeps/librerias.html" class="sidebar-item-text sidebar-link active">
+  <a href="../../parts/firststeps/librerias.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Módulos y librerías</span></span></a>
   </div>
 </li>
@@ -258,16 +264,16 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
  <span class="menu-text">Preparación de datos</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Alternar sección">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Alternar sección">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../parts/preparacion/particion.html" class="sidebar-item-text sidebar-link">
+  <a href="../../parts/preparacion/particion.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Separación de datos</span></span></a>
   </div>
 </li>
@@ -330,10 +336,18 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <h2 id="toc-title">Tabla de contenidos</h2>
    
   <ul>
-  <li><a href="#fechas" id="toc-fechas" class="nav-link active" data-scroll-target="#fechas"><span class="header-section-number">4.1</span> Fechas</a></li>
-  <li><a href="#descargas" id="toc-descargas" class="nav-link" data-scroll-target="#descargas"><span class="header-section-number">4.2</span> Descargas</a></li>
-  <li><a href="#aleatorios" id="toc-aleatorios" class="nav-link" data-scroll-target="#aleatorios"><span class="header-section-number">4.3</span> Aleatorios</a></li>
-  <li><a href="#paquetes-habituales" id="toc-paquetes-habituales" class="nav-link" data-scroll-target="#paquetes-habituales"><span class="header-section-number">4.4</span> Paquetes habituales</a></li>
+  <li><a href="#por-qué-separar" id="toc-por-qué-separar" class="nav-link active" data-scroll-target="#por-qué-separar"><span class="header-section-number">9.1</span> Por qué separar</a></li>
+  <li><a href="#el-punto-de-partida" id="toc-el-punto-de-partida" class="nav-link" data-scroll-target="#el-punto-de-partida"><span class="header-section-number">9.2</span> El punto de partida</a></li>
+  <li><a href="#tipos-científicos" id="toc-tipos-científicos" class="nav-link" data-scroll-target="#tipos-científicos"><span class="header-section-number">9.3</span> Tipos científicos</a></li>
+  <li><a href="#separar-objetivo-y-características" id="toc-separar-objetivo-y-características" class="nav-link" data-scroll-target="#separar-objetivo-y-características"><span class="header-section-number">9.4</span> Separar objetivo y características</a></li>
+  <li><a href="#la-partición" id="toc-la-partición" class="nav-link" data-scroll-target="#la-partición"><span class="header-section-number">9.5</span> La partición</a>
+  <ul class="collapse">
+  <li><a href="#shuffle-nunca-confíes-en-el-orden" id="toc-shuffle-nunca-confíes-en-el-orden" class="nav-link" data-scroll-target="#shuffle-nunca-confíes-en-el-orden"><span class="header-section-number">9.5.1</span> <code>shuffle</code>: nunca confíes en el orden</a></li>
+  <li><a href="#rng-reproducibilidad" id="toc-rng-reproducibilidad" class="nav-link" data-scroll-target="#rng-reproducibilidad"><span class="header-section-number">9.5.2</span> <code>rng</code>: reproducibilidad</a></li>
+  <li><a href="#stratify-mantener-las-proporciones" id="toc-stratify-mantener-las-proporciones" class="nav-link" data-scroll-target="#stratify-mantener-las-proporciones"><span class="header-section-number">9.5.3</span> <code>stratify</code>: mantener las proporciones</a></li>
+  </ul></li>
+  <li><a href="#volviendo-sobre-la-imputación" id="toc-volviendo-sobre-la-imputación" class="nav-link" data-scroll-target="#volviendo-sobre-la-imputación"><span class="header-section-number">9.6</span> Volviendo sobre la imputación</a></li>
+  <li><a href="#lo-que-hemos-conseguido" id="toc-lo-que-hemos-conseguido" class="nav-link" data-scroll-target="#lo-que-hemos-conseguido"><span class="header-section-number">9.7</span> Lo que hemos conseguido</a></li>
   </ul>
 </nav>
     </div>
@@ -343,9 +357,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PLKHBRCG" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../parts/firststeps/basics.html">Primeros pasos</a></li><li class="breadcrumb-item"><a href="../../parts/firststeps/librerias.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Módulos y librerías</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../parts/preparacion/particion.html">Preparación de datos</a></li><li class="breadcrumb-item"><a href="../../parts/preparacion/particion.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Separación de datos</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Módulos y librerías</span></h1>
+<h1 class="title"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Separación de datos</span></h1>
 </div>
 
 
@@ -368,121 +382,288 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </header>
 
 
-<p>Un aspecto clave en los lenguajes de programación para ciencia de datos es el uso de librerías. Estas nos permiten atajar retos que otros ya han enfrentado y hacer uso de funciones ya creadas para el objeto.</p>
-<p>La carga de módulos se hace mediante el comando <code>using</code></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Modulo</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Veremos algunos módulos base que nos ayudarán con ciertas structuras de datos complejas de manejar.</p>
-<section id="fechas" class="level2" data-number="4.1">
-<h2 data-number="4.1" class="anchored" data-anchor-id="fechas"><span class="header-section-number">4.1</span> Fechas</h2>
-<p>Para poder gestionar fechas deberemos importar un módulo específico</p>
-<div id="2" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Dates</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Hasta aquí hemos cargado los datos, los hemos limpiado y los hemos explorado. Sabemos que el sexo y la clase del pasajero pesan mucho en la supervivencia. El paso natural sería empezar a construir un modelo, pero antes hay una decisión que condiciona todo lo que viene después.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+  A[Carga] --&gt; B[Exploración]
+  B --&gt; C[Preparación]
+  C --&gt; D[Modelado]
+  D --&gt; E[Evaluación]
+  E --&gt; F[Producción]
+  F -. reentrenamiento .-&gt; C
+  style C fill:#e8d5f2,stroke:#7b3fa0,stroke-width:3px
+</pre>
 </div>
-<p>Existen dos tipos de fecha que deberemos manejar. <code>Date</code> para fechas sin tiempo informado</p>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p>Estamos entrando en la fase de <strong>preparación</strong>, y lo primero que hay que hacer en ella, antes de tocar una sola columna, es separar los datos.</p>
+<section id="por-qué-separar" class="level2" data-number="9.1">
+<h2 data-number="9.1" class="anchored" data-anchor-id="por-qué-separar"><span class="header-section-number">9.1</span> Por qué separar</h2>
+<p>Un modelo se entrena buscando patrones en los datos que le damos. El problema es que un modelo suficientemente flexible no distingue entre aprender un patrón general y memorizar los casos concretos que ha visto. Si evaluamos ese modelo sobre los mismos datos con los que lo hemos entrenado, no estamos midiendo su capacidad de generalizar: estamos midiendo su memoria.</p>
+<p>Lo que de verdad queremos saber es cómo se comportará ante pasajeros que <strong>nunca ha visto</strong>. Y la única forma honesta de estimarlo es reservar una parte de los datos, no dejar que participen en absoluto en el entrenamiento, y usarlos solo al final para medir.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Importante</span>La regla que ordena esta parte del libro
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Cualquier cantidad que se <strong>aprenda de los datos</strong> (una media para imputar, una desviación típica para escalar, el conjunto de categorías de una variable) tiene que calcularse <strong>únicamente con los datos de entrenamiento</strong>.</p>
+<p>En el <a href="../../parts/dataframes/summary.html">capítulo de análisis preliminar</a> imputamos la edad con la media de todo el conjunto. Para explorar era perfectamente razonable. A partir de ahora no lo es, y en este capítulo lo corregimos.</p>
+</div>
+</div>
+</section>
+<section id="el-punto-de-partida" class="level2" data-number="9.2">
+<h2 data-number="9.2" class="anchored" data-anchor-id="el-punto-de-partida"><span class="header-section-number">9.2</span> El punto de partida</h2>
+<p>Volvemos al fichero original en lugar de al Parquet que guardamos, precisamente porque aquel ya llevaba la edad imputada de forma que ahora sabemos incorrecta.</p>
 <div id="4" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Date</span>(<span class="fl">2025</span>, <span class="fl">7</span>, <span class="fl">3</span>) <span class="co"># año, mes, dia</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">CSV</span>, <span class="bu">DataFrames</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> CSV.<span class="fu">read</span>(<span class="fu">joinpath</span>(data_path, <span class="st">"titanic.csv"</span>), DataFrame)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Descartamos identificadores y las columnas que ya vimos problemáticas</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">select!</span>(df, <span class="fu">Not</span>([<span class="op">:</span>PassengerId, <span class="op">:</span>Name, <span class="op">:</span>Ticket, <span class="op">:</span>Cabin, <span class="op">:</span>Embarked]))</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">describe</span>(df, <span class="op">:</span>nmissing, <span class="op">:</span>eltype)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>2025-07-03</code></pre>
+<div><div style="float: left;"><span>7×3 DataFrame</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
+<table class="data-frame caption-top table table-sm table-striped small">
+<thead>
+<tr class="columnLabelRow header">
+<th class="stubheadLabel" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;">Row</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">variable</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">nmissing</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">eltype</th>
+</tr>
+<tr class="columnLabelRow even">
+<th class="stubheadLabel" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Symbol">Symbol</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Int64">Int64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Type">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr class="dataRow odd">
+<td class="rowLabel" style="text-align: right; font-weight: bold;">1</td>
+<td style="text-align: left;">Survived</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">Int64</td>
+</tr>
+<tr class="dataRow even">
+<td class="rowLabel" style="text-align: right; font-weight: bold;">2</td>
+<td style="text-align: left;">Pclass</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">Int64</td>
+</tr>
+<tr class="dataRow odd">
+<td class="rowLabel" style="text-align: right; font-weight: bold;">3</td>
+<td style="text-align: left;">Sex</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">String7</td>
+</tr>
+<tr class="dataRow even">
+<td class="rowLabel" style="text-align: right; font-weight: bold;">4</td>
+<td style="text-align: left;">Age</td>
+<td style="text-align: right;">177</td>
+<td style="text-align: left;">Union{Missing, Float64}</td>
+</tr>
+<tr class="dataRow odd">
+<td class="rowLabel" style="text-align: right; font-weight: bold;">5</td>
+<td style="text-align: left;">SibSp</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">Int64</td>
+</tr>
+<tr class="dataRow even">
+<td class="rowLabel" style="text-align: right; font-weight: bold;">6</td>
+<td style="text-align: left;">Parch</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">Int64</td>
+</tr>
+<tr class="dataRow odd">
+<td class="rowLabel" style="text-align: right; font-weight: bold;">7</td>
+<td style="text-align: left;">Fare</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">Float64</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
-<p>Y <code>DateTime</code> para fechas en las que dispongamos de hora.</p>
+</div>
+<p>Fijaos en que la columna <code>Age</code> sigue teniendo valores faltantes. Es deliberado: los vamos a tratar <strong>después</strong> de separar.</p>
+</section>
+<section id="tipos-científicos" class="level2" data-number="9.3">
+<h2 data-number="9.3" class="anchored" data-anchor-id="tipos-científicos"><span class="header-section-number">9.3</span> Tipos científicos</h2>
+<p>Vamos a apoyarnos en <a href="https://juliaai.github.io/MLJ.jl/stable/">MLJ.jl</a>, el ecosistema de aprendizaje automático de Julia, que hace el papel que en Python hace scikit-learn.</p>
+<p>MLJ introduce una distinción que al principio sorprende pero resulta muy útil: separa el <strong>tipo de máquina</strong> (cómo se almacena el dato: <code>Int64</code>, <code>String</code>, <code>Float64</code>) del <strong>tipo científico</strong> o <em>scitype</em> (qué representa: una cantidad continua, un conteo, una categoría). Un <code>Int64</code> puede ser una edad (continua), un número de hermanos (un conteo) o un código de clase (una categoría), y el modelo debe tratarlos de forma muy distinta.</p>
 <div id="6" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">DateTime</span>(<span class="fl">2025</span>, <span class="fl">7</span>, <span class="fl">3</span>, <span class="fl">12</span>, <span class="fl">0</span>) <span class="co"># año, mes, dia, hora, minutos</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">MLJ</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">schema</span>(df)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>2025-07-03T12:00:00</code></pre>
+<div class="ansi-escaped-output">
+<pre>┌──────────┬────────────────────────────┬─────────────────────────┐
+│<span class="ansi-black-fg"> names    </span>│<span class="ansi-black-fg"> scitypes                   </span>│<span class="ansi-black-fg"> types                   </span>│
+├──────────┼────────────────────────────┼─────────────────────────┤
+│ Survived │ Count                      │ Int64                   │
+│ Pclass   │ Count                      │ Int64                   │
+│ Sex      │ Textual                    │ String7                 │
+│ Age      │ Union{Missing, Continuous} │ Union{Missing, Float64} │
+│ SibSp    │ Count                      │ Int64                   │
+│ Parch    │ Count                      │ Int64                   │
+│ Fare     │ Continuous                 │ Float64                 │
+└──────────┴────────────────────────────┴─────────────────────────┘
+</pre>
 </div>
 </div>
-<p>Podremos también indicarlos basado en formato, como segundo argumento de nuestros dos tipos base.</p>
+</div>
+<p>La columna <code>Survived</code> se ha leído como <code>Int64</code>, es decir, como un conteo. Pero para un problema de clasificación el objetivo tiene que ser una categoría, así que se lo indicamos explícitamente con <code>coerce</code>.</p>
 <div id="8" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>format <span class="op">=</span> <span class="fu">DateFormat</span>(<span class="st">"yyyymmdd"</span>)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Date</span>(<span class="st">"19870913"</span>, format)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>df.Survived <span class="op">=</span> <span class="fu">coerce</span>(df.Survived, Multiclass)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">scitype</span>(df.Survived)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>1987-09-13</code></pre>
+<div class="ansi-escaped-output">
+<pre>AbstractVector{Multiclass{2}}<span class="ansi-bright-black-fg"> (alias for </span><span class="ansi-bright-black-fg">AbstractArray{Multiclass{2}, 1}</span><span class="ansi-bright-black-fg">)</span></pre>
 </div>
 </div>
-<section id="intervalos" class="level4">
-<h4 class="anchored" data-anchor-id="intervalos">Intervalos</h4>
-<p>Como siempre con las fechas, podremos acceder a intervalos temporales (o periodos).</p>
+</div>
+<p>Profundizaremos en los tipos científicos y en el resto de columnas en el <a href="../../parts/preparacion/codificacion.html">capítulo siguiente</a>. Por ahora nos basta con el objetivo bien tipado.</p>
+</section>
+<section id="separar-objetivo-y-características" class="level2" data-number="9.4">
+<h2 data-number="9.4" class="anchored" data-anchor-id="separar-objetivo-y-características"><span class="header-section-number">9.4</span> Separar objetivo y características</h2>
+<p>Es habitual referirse a <code>X</code> como la matriz de características (<em>features</em>) y a <code>y</code> como el vector objetivo (<em>target</em>). La función <code>unpack</code> nos permite partir el DataFrame indicando qué columna es el objetivo.</p>
 <div id="10" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>fecha <span class="op">=</span> <span class="fu">Date</span>(<span class="fl">2025</span>, <span class="fl">7</span>, <span class="fl">1</span>) </span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>periodo <span class="op">=</span> <span class="fu">today</span>() <span class="op">-</span> fecha</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>y, X <span class="op">=</span> <span class="fu">unpack</span>(df, <span class="op">==</span>(<span class="op">:</span>Survived))</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(X)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>404 days</code></pre>
+<pre><code>6-element Vector{String}:
+ "Pclass"
+ "Sex"
+ "Age"
+ "SibSp"
+ "Parch"
+ "Fare"</code></pre>
 </div>
 </div>
-<p>Podemos ver que tipo soporta nuestra variable resultante.</p>
+</section>
+<section id="la-partición" class="level2" data-number="9.5">
+<h2 data-number="9.5" class="anchored" data-anchor-id="la-partición"><span class="header-section-number">9.5</span> La partición</h2>
+<p>Ahora sí, separamos. <code>partition</code> acepta la proporción que queremos destinar a entrenamiento y nos devuelve los dos trozos.</p>
 <div id="12" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(periodo)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(Xtrain, Xtest), (ytrain, ytest) <span class="op">=</span> <span class="fu">partition</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    (X, y), <span class="fl">0.7</span>,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    multi   <span class="op">=</span> <span class="cn">true</span>,   <span class="co"># partimos X e y a la vez, manteniendo la correspondencia</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    shuffle <span class="op">=</span> <span class="cn">true</span>,   <span class="co"># barajamos: el fichero podría venir ordenado</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    stratify <span class="op">=</span> y,     <span class="co"># conservamos la proporción de supervivientes</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    rng     <span class="op">=</span> <span class="fl">1234</span>    <span class="co"># semilla: hace la partición reproducible</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(Xtrain), <span class="fu">nrow</span>(Xtest)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>Day</code></pre>
+<pre><code>(623, 268)</code></pre>
 </div>
 </div>
-<p>La función <code>today()</code> devuelve un <code>Date</code>, y al restar dos <code>Date</code> obtenemos un <code>Day</code>. Si queremos más precisión deberemos trabajar con <code>DateTime</code> y usar <code>now()</code> en nuestra comparativa, para que la resta sea entre los mismos tipos.</p>
+<p>Hay tres argumentos que merecen comentario.</p>
+<section id="shuffle-nunca-confíes-en-el-orden" class="level3" data-number="9.5.1">
+<h3 data-number="9.5.1" class="anchored" data-anchor-id="shuffle-nunca-confíes-en-el-orden"><span class="header-section-number">9.5.1</span> <code>shuffle</code>: nunca confíes en el orden</h3>
+<p>Los ficheros llegan ordenados más veces de las que uno espera: por fecha, por identificador, por la clave con la que se exportaron. Si el conjunto estuviera ordenado por clase, un corte sin barajar dejaría toda la tercera clase en test. Barajar elimina ese riesgo.</p>
+</section>
+<section id="rng-reproducibilidad" class="level3" data-number="9.5.2">
+<h3 data-number="9.5.2" class="anchored" data-anchor-id="rng-reproducibilidad"><span class="header-section-number">9.5.2</span> <code>rng</code>: reproducibilidad</h3>
+<p>Sin fijar la semilla, cada ejecución produce una partición distinta y por tanto métricas distintas. Cuando alguien te diga que su modelo acierta un 82 %, la primera pregunta debería ser con qué partición. Fijar <code>rng</code> hace que tú y quien lea este libro obtengáis exactamente los mismos números.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Semillas y honestidad
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Fijar la semilla sirve para reproducir un resultado, no para elegirlo. Probar semillas hasta dar con la que mejores métricas arroja es una forma sutil de engañarse: se está ajustando al conjunto de test. Si las métricas varían mucho entre semillas, eso es en sí mismo un resultado, porque significa que el conjunto es pequeño o inestable, y la respuesta es validación cruzada, que veremos en el <a href="../../parts/preparacion/pipelines.html">capítulo de pipelines</a>.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="stratify-mantener-las-proporciones" class="level3" data-number="9.5.3">
+<h3 data-number="9.5.3" class="anchored" data-anchor-id="stratify-mantener-las-proporciones"><span class="header-section-number">9.5.3</span> <code>stratify</code>: mantener las proporciones</h3>
+<p>Ya vimos que el conjunto está desbalanceado: alrededor de un 38 % sobrevivió. Si partimos al azar sin más, esa proporción puede desviarse en cada trozo por pura suerte. <code>stratify</code> fuerza a que ambos conjuntos reproduzcan la proporción del original.</p>
 <div id="14" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>fecha_hora_ms <span class="op">=</span> <span class="fu">DateTime</span>(<span class="fl">2025</span>, <span class="fl">7</span>, <span class="fl">1</span>, <span class="fl">12</span>, <span class="fl">1</span>, <span class="fl">3</span>, <span class="fl">120</span>) <span class="co"># el último campo son milisegundos</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>lapso <span class="op">=</span> <span class="fu">now</span>() <span class="op">-</span> fecha_hora_ms</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>34896921338 milliseconds</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Statistics</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (nombre, conjunto) <span class="kw">in</span> [(<span class="st">"completo"</span>, y), (<span class="st">"entrenamiento"</span>, ytrain), (<span class="st">"test"</span>, ytest)]</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    pct <span class="op">=</span> <span class="fu">round</span>(<span class="fl">100</span> <span class="op">*</span> <span class="fu">mean</span>(conjunto <span class="op">.==</span> <span class="fl">1</span>), digits <span class="op">=</span> <span class="fl">2</span>)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span>(<span class="fu">rpad</span>(nombre, <span class="fl">16</span>), <span class="fu">lpad</span>(pct, <span class="fl">6</span>), <span class="st">" % sobrevivió   ("</span>, <span class="fu">length</span>(conjunto), <span class="st">" filas)"</span>)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>completo         38.38 % sobrevivió   (891 filas)
+entrenamiento    38.36 % sobrevivió   (623 filas)
+test             38.43 % sobrevivió   (268 filas)</code></pre>
 </div>
 </div>
+<p>Las tres proporciones coinciden dentro de una décima de punto. Sin estratificar, las desviaciones serían pequeñas en un conjunto como este, pero se vuelven un problema serio cuando la clase minoritaria es rara (detección de fraude, diagnóstico de enfermedades poco frecuentes) y un corte desafortunado puede dejar apenas un puñado de casos positivos en test.</p>
+</section>
+</section>
+<section id="volviendo-sobre-la-imputación" class="level2" data-number="9.6">
+<h2 data-number="9.6" class="anchored" data-anchor-id="volviendo-sobre-la-imputación"><span class="header-section-number">9.6</span> Volviendo sobre la imputación</h2>
+<p>Ahora ya podemos tratar los valores faltantes de <code>Age</code> como corresponde. Comparemos primero la media que usaríamos en cada caso.</p>
 <div id="16" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(lapso)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>Millisecond</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>media_global <span class="op">=</span> <span class="fu">mean</span>(<span class="fu">skipmissing</span>(X.Age))</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>media_train  <span class="op">=</span> <span class="fu">mean</span>(<span class="fu">skipmissing</span>(Xtrain.Age))</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Media de Age con TODO el conjunto  : "</span>, <span class="fu">round</span>(media_global, digits <span class="op">=</span> <span class="fl">4</span>))</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Media de Age solo con entrenamiento: "</span>, <span class="fu">round</span>(media_train,  digits <span class="op">=</span> <span class="fl">4</span>))</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Diferencia                         : "</span>, <span class="fu">round</span>(<span class="fu">abs</span>(media_global <span class="op">-</span> media_train), digits <span class="op">=</span> <span class="fl">4</span>))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Media de Age con TODO el conjunto  : 29.6991
+Media de Age solo con entrenamiento: 29.9163
+Diferencia                         : 0.2172</code></pre>
 </div>
 </div>
-</section>
-</section>
-<section id="descargas" class="level2" data-number="4.2">
-<h2 data-number="4.2" class="anchored" data-anchor-id="descargas"><span class="header-section-number">4.2</span> Descargas</h2>
-<p>Existe otro módulo que nos vendrá muy bien a la hora de descargarnos ficheros.</p>
+<p>La diferencia es pequeña, y precisamente por eso conviene entender el argumento bien. <strong>El problema no es el tamaño del error, es de dónde viene la información.</strong> La media global incorpora las edades del conjunto de test; si la usamos para rellenar huecos en entrenamiento, el modelo recibe, de forma indirecta y difícil de detectar, información que se suponía que no debía ver. Esto es lo que se conoce como <strong>fuga de información</strong> o <em>data leakage</em>, y su consecuencia es que las métricas salen mejores de lo que el modelo realmente vale.</p>
+<p>Con una media es casi inocuo. Con un escalado, una codificación de categorías o una selección de variables hecha sobre el conjunto completo, la fuga puede ser grande. La costumbre correcta es la misma en todos los casos: calcular con entrenamiento, aplicar a ambos.</p>
 <div id="18" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Downloads</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Podremos indicarle a la función <code>Downloads.download()</code> la dirección desde la que descargar nuestro conjunto de datos.</p>
-<div id="20" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/IraitzM/ciencia-datos-julia/refs/heads/main/parts/firststeps/ejemplo.txt"</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>fichero_proyecto <span class="op">=</span> <span class="bu">Downloads</span>.<span class="fu">download</span>(url) <span class="co"># creamos un fichero temporal</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>Xtrain[!, <span class="op">:</span>Age] <span class="op">=</span> <span class="fu">coalesce</span>.(Xtrain.Age, media_train)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>Xtest[!,  <span class="op">:</span>Age] <span class="op">=</span> <span class="fu">coalesce</span>.(Xtest.Age,  media_train)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">ismissing</span>.(Xtrain.Age)), <span class="fu">sum</span>(<span class="fu">ismissing</span>.(Xtest.Age))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>"/tmp/jl_u00GeD/ejemplo.txt"</code></pre>
+<pre><code>(0, 0)</code></pre>
 </div>
 </div>
-<p>Y con funciones como <code>readlines</code> leer su contenido.</p>
-<div id="22" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">readlines</span>(fichero_proyecto)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>1-element Vector{String}:
- "Hola desde un fichero!"</code></pre>
+<p>Ya no quedan valores faltantes, y el valor con el que hemos rellenado el conjunto de test procede exclusivamente del de entrenamiento.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Nota
 </div>
 </div>
-<p>Vemos que devuelve una estructura de <a href="https://docs.julialang.org/en/v1/base/arrays/#Base.Vector">Vector</a> con cadenas de texto (<a href="https://docs.julialang.org/en/v1/base/strings/#Base.string">String</a>) con el contenido del fichero.</p>
-</section>
-<section id="aleatorios" class="level2" data-number="4.3">
-<h2 data-number="4.3" class="anchored" data-anchor-id="aleatorios"><span class="header-section-number">4.3</span> Aleatorios</h2>
-<p>Trabajar con números aleatorios es habitual en ciencia de datos, y para ello podemos recurrir al módulo <code>Random</code></p>
-<div id="24" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Random</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="bu">Random</span>.<span class="fu">seed!</span>(<span class="fl">1234</span>)</span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="bu">Random</span>.<span class="fu">randn</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>-0.3597289068234817</code></pre>
+<div class="callout-body-container callout-body">
+<p>Fijaos en que hemos usado <code>Xtrain[!, :Age]</code> y no <code>Xtrain[:, :Age]</code>. Como vimos en el <a href="../../parts/dataframes/summary.html#selección-de-campos">análisis preliminar</a>, <code>!</code> nos da una referencia a la columna y modifica el DataFrame; <code>:</code> devolvería una copia y nuestro cambio se perdería.</p>
 </div>
 </div>
 </section>
-<section id="paquetes-habituales" class="level2" data-number="4.4">
-<h2 data-number="4.4" class="anchored" data-anchor-id="paquetes-habituales"><span class="header-section-number">4.4</span> Paquetes habituales</h2>
-<p>En el caso de tratarse de módulos no disponibles como parte de la librería standard, deberemos recurrir al gestor de paquetes e instalarlas.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Pkg;</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">add</span>(<span class="st">"Libreria"</span>) <span class="co"># sin el sufijo .jl</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Tal y como veíamos en la <a href="../../intro.html#crear-un-proyecto">introducción</a> estos paquetes serán añadidos a los dos ficheros clave que nos permiten reproducir nuestro entorno en otra máquina.</p>
-<p>Las librerías que emplearemos en líneas generales son:</p>
-<ul>
-<li><strong>Manipulación de datos</strong>: <a href="https://dataframes.juliadata.org/stable/">DataFrames.jl</a> y <a href="https://juliadata.org/DataFramesMeta.jl/stable/">DataFramesMeta.jl</a></li>
-<li><strong>Visualización</strong>: <a href="https://docs.juliaplots.org/stable/">Plots.jl</a></li>
-</ul>
-<p>Todos estos paquetes y más están disponibles en https://juliapackages.com/.</p>
+<section id="lo-que-hemos-conseguido" class="level2" data-number="9.7">
+<h2 data-number="9.7" class="anchored" data-anchor-id="lo-que-hemos-conseguido"><span class="header-section-number">9.7</span> Lo que hemos conseguido</h2>
+<p>Tenemos cuatro objetos (<code>Xtrain</code>, <code>ytrain</code>, <code>Xtest</code>, <code>ytest</code>) con la proporción de clases preservada, la partición reproducible y la imputación hecha sin mirar el conjunto de test.</p>
+<p>Hacer esto a mano funciona con una transformación, pero se vuelve frágil en cuanto encadenamos varias: basta olvidar un <code>fit</code> sobre el conjunto equivocado. En el <a href="../../parts/preparacion/pipelines.html">capítulo de pipelines</a> veremos cómo encadenarlas de forma que la separación quede garantizada por construcción y no por disciplina. Antes, en el <a href="../../parts/preparacion/codificacion.html">capítulo siguiente</a>, toca preparar las columnas para que un modelo pueda digerirlas.</p>
 
 
 </section>
@@ -890,13 +1071,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../../parts/firststeps/flujos.html" class="pagination-link" aria-label="Flujos en Julia">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Flujos en Julia</span></span>
+      <a href="../../parts/dataframes/exploratory.html" class="pagination-link" aria-label="Análisis exploratorio">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Análisis exploratorio</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../parts/firststeps/sistemaficheros.html" class="pagination-link" aria-label="Sistema de ficheros">
-        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Sistema de ficheros</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../../parts/preparacion/codificacion.html" class="pagination-link" aria-label="Codificación y escalado">
+        <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Codificación y escalado</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

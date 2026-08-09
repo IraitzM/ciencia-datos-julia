@@ -9,7 +9,7 @@
 <meta name="author" content="Iraitz Montalbán">
 <meta name="description" content="Tutoriales y guías de ciencia de datos utilizando el lenguaje Julia.">
 
-<title>5&nbsp; Sistema de ficheros – Ciencia de datos con Julia</title>
+<title>14&nbsp; El ciclo de vida completo – Ciencia de datos con Julia</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -73,8 +73,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../parts/dataframes/basics.html" rel="next">
-<link href="../../parts/firststeps/librerias.html" rel="prev">
+<link href="../../references.html" rel="next">
+<link href="../../parts/produccion/monitorizacion.html" rel="prev">
 <link href="../../images/cover.png" rel="icon" type="image/png">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -132,9 +132,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <!-- End Google Tag Manager -->
 
 <meta name="keywords" content="Julia, Ciencia de Datos, Visualización, Machine Learning">
+<script src="../../site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="../../site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="../../site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
 
-<meta property="og:title" content="5&nbsp; Sistema de ficheros – Ciencia de datos con Julia">
+<meta property="og:title" content="14&nbsp; El ciclo de vida completo – Ciencia de datos con Julia">
 <meta property="og:description" content="Tutoriales y guías de ciencia de datos utilizando el lenguaje Julia.">
 <meta property="og:image" content="https://iraitzm.github.io/ciencia-datos-julia/images/cover.png">
 <meta property="og:site_name" content="Ciencia de datos con Julia">
@@ -151,7 +154,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../parts/firststeps/basics.html">Primeros pasos</a></li><li class="breadcrumb-item"><a href="../../parts/firststeps/sistemaficheros.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Sistema de ficheros</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../parts/produccion/despliegue.html">Puesta en producción</a></li><li class="breadcrumb-item"><a href="../../parts/produccion/mlops.html"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">El ciclo de vida completo</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Buscar" onclick="window.quartoOpenSearch();">
@@ -194,13 +197,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
  <span class="menu-text">Primeros pasos</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Alternar sección">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../parts/firststeps/basics.html" class="sidebar-item-text sidebar-link">
@@ -221,7 +224,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../parts/firststeps/sistemaficheros.html" class="sidebar-item-text sidebar-link active">
+  <a href="../../parts/firststeps/sistemaficheros.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Sistema de ficheros</span></span></a>
   </div>
 </li>
@@ -287,13 +290,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
  <span class="menu-text">Puesta en producción</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Alternar sección">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Alternar sección">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../parts/produccion/despliegue.html" class="sidebar-item-text sidebar-link">
@@ -308,7 +311,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../parts/produccion/mlops.html" class="sidebar-item-text sidebar-link">
+  <a href="../../parts/produccion/mlops.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">El ciclo de vida completo</span></span></a>
   </div>
 </li>
@@ -325,8 +328,18 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Tabla de contenidos</h2>
+   
+  <ul>
+  <li><a href="#la-pregunta-que-hay-que-poder-responder" id="toc-la-pregunta-que-hay-que-poder-responder" class="nav-link active" data-scroll-target="#la-pregunta-que-hay-que-poder-responder"><span class="header-section-number">14.1</span> La pregunta que hay que poder responder</a></li>
+  <li><a href="#una-ficha-del-modelo" id="toc-una-ficha-del-modelo" class="nav-link" data-scroll-target="#una-ficha-del-modelo"><span class="header-section-number">14.2</span> Una ficha del modelo</a></li>
+  <li><a href="#herramientas-del-ecosistema" id="toc-herramientas-del-ecosistema" class="nav-link" data-scroll-target="#herramientas-del-ecosistema"><span class="header-section-number">14.3</span> Herramientas del ecosistema</a></li>
+  <li><a href="#una-lista-de-comprobación" id="toc-una-lista-de-comprobación" class="nav-link" data-scroll-target="#una-lista-de-comprobación"><span class="header-section-number">14.4</span> Una lista de comprobación</a></li>
+  <li><a href="#hasta-aquí" id="toc-hasta-aquí" class="nav-link" data-scroll-target="#hasta-aquí"><span class="header-section-number">14.5</span> Hasta aquí</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -334,9 +347,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PLKHBRCG" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../parts/firststeps/basics.html">Primeros pasos</a></li><li class="breadcrumb-item"><a href="../../parts/firststeps/sistemaficheros.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Sistema de ficheros</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../parts/produccion/despliegue.html">Puesta en producción</a></li><li class="breadcrumb-item"><a href="../../parts/produccion/mlops.html"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">El ciclo de vida completo</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Sistema de ficheros</span></h1>
+<h1 class="title"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">El ciclo de vida completo</span></h1>
 </div>
 
 
@@ -359,68 +372,68 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </header>
 
 
-<p>Como en todo lenguaje de programación, deberemos gestionar la lectura y escritura de ficheros. El sistema de ficheros lo gestiona el sistema operativo de nuestra máquina con lo que se trata más bien de interactuar con este al menos de cara a conocer por ejemplo, dónde estamos ubicados.</p>
-<div id="2" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dirname</span>(<span class="pp">@__FILE__</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>"/home/iraitz/Documentos/Projects/ciencia-datos-julia/parts/firststeps"</code></pre>
+<p>Llevamos todo el libro recorriendo una línea recta: cargar, explorar, preparar, modelar, desplegar. El capítulo anterior terminó rompiendo esa linealidad, porque producción no es el final sino el punto en el que el ciclo vuelve a empezar.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+  A[Carga] --&gt; B[Exploración]
+  B --&gt; C[Preparación]
+  C --&gt; D[Modelado]
+  D --&gt; E[Evaluación]
+  E --&gt; F[Producción]
+  F -. reentrenamiento .-&gt; C
+  style F fill:#e8d5f2,stroke:#7b3fa0,stroke-width:3px
+  linkStyle 5 stroke:#7b3fa0,stroke-width:2px
+</pre>
+</div>
+<p></p></figure><p></p>
 </div>
 </div>
-<p>Podemos crear carpetas de forma programática pero en la mayoría de casos se tratará de leer y escribir ficheros en rutas concretas. Para ello nos será útil la función <code>joinpath</code> que nos ayuda a conformar rutas tal y como el sistema de ficheros requiere.</p>
-<div id="4" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>root <span class="op">=</span> <span class="fu">dirname</span>(<span class="pp">@__FILE__</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">joinpath</span>(root, <span class="st">"ejemplo.txt"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>"/home/iraitz/Documentos/Projects/ciencia-datos-julia/parts/firststeps/ejemplo.txt"</code></pre>
 </div>
-</div>
-<p>Y como vimos anteriormente, usar la función <code>readlines()</code> para leer su contenido.</p>
-<div id="6" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>fichero <span class="op">=</span> <span class="fu">joinpath</span>(root, <span class="st">"ejemplo.txt"</span>)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">readline</span>(fichero)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>"Hola desde un fichero!"</code></pre>
-</div>
-</div>
-<p>Imaginemos por tanto que queremos descargarnos un CSV (Comma Separated Value) con información sobre los pasajeros del <a href="https://www.kaggle.com/datasets/yasserh/titanic-dataset">Titanic</a></p>
-<div id="8" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Downloads</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>fichero_url <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/datasciencedojo/datasets/refs/heads/master/titanic.csv"</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>fichero <span class="op">=</span> <span class="bu">Downloads</span>.<span class="fu">download</span>(fichero_url)</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">readlines</span>(fichero)[<span class="fl">1</span><span class="op">:</span><span class="fl">20</span>]</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>20-element Vector{String}:
- "PassengerId,Survived,Pclass,Name,Sex,Age,SibSp,Parch,Ticket,Fare,Cabin,Embarked"
- "1,0,3,\"Braund, Mr. Owen Harris\",male,22,1,0,A/5 21171,7.25,,S"
- "2,1,1,\"Cumings, Mrs. John Bradley (Florence Briggs Thayer)\",female,38,1,0,PC 17599,71.2833,C85,C"
- "3,1,3,\"Heikkinen, Miss. Laina\",female,26,0,0,STON/O2. 3101282,7.925,,S"
- "4,1,1,\"Futrelle, Mrs. Jacques Heath (Lily May Peel)\",female,35,1,0,113803,53.1,C123,S"
- "5,0,3,\"Allen, Mr. William Henry\",male,35,0,0,373450,8.05,,S"
- "6,0,3,\"Moran, Mr. James\",male,,0,0,330877,8.4583,,Q"
- "7,0,1,\"McCarthy, Mr. Timothy J\",male,54,0,0,17463,51.8625,E46,S"
- "8,0,3,\"Palsson, Master. Gosta Leonard\",male,2,3,1,349909,21.075,,S"
- "9,1,3,\"Johnson, Mrs. Oscar W (Elisabeth Vilhelmina Berg)\",female,27,0,2,347742,11.1333,,S"
- "10,1,2,\"Nasser, Mrs. Nicholas (Adele Achem)\",female,14,1,0,237736,30.0708,,C"
- "11,1,3,\"Sandstrom, Miss. Marguerite Rut\",female,4,1,1,PP 9549,16.7,G6,S"
- "12,1,1,\"Bonnell, Miss. Elizabeth\",female,58,0,0,113783,26.55,C103,S"
- "13,0,3,\"Saundercock, Mr. William Henry\",male,20,0,0,A/5. 2151,8.05,,S"
- "14,0,3,\"Andersson, Mr. Anders Johan\",male,39,1,5,347082,31.275,,S"
- "15,0,3,\"Vestrom, Miss. Hulda Amanda Adolfina\",female,14,0,0,350406,7.8542,,S"
- "16,1,2,\"Hewlett, Mrs. (Mary D Kingcome) \",female,55,0,0,248706,16,,S"
- "17,0,3,\"Rice, Master. Eugene\",male,2,4,1,382652,29.125,,Q"
- "18,1,2,\"Williams, Mr. Charles Eugene\",male,,0,0,244373,13,,S"
- "19,0,3,\"Vander Planke, Mrs. Julius (Emelia Maria Vandemoortele)\",female,31,1,0,345763,18,,S"</code></pre>
-</div>
-</div>
-<p>Si queremos conservar el fichero para más adelante podemos recurrir a la función <code>write()</code> y guardarlo donde nosotros queramos.</p>
-<div id="10" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>destino <span class="op">=</span> <span class="fu">joinpath</span>(<span class="fu">mktempdir</span>(), <span class="st">"titanic.csv"</span>)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write</span>(destino, <span class="fu">read</span>(fichero))</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>60302</code></pre>
-</div>
-</div>
+<p>A la disciplina que se ocupa de que ese bucle sea repetible, trazable y automatizable se le llama <strong>MLOps</strong>. No es una tecnología concreta ni un producto que se compre: es el conjunto de prácticas que hacen que la pregunta “¿de dónde salió este modelo?” tenga respuesta.</p>
+<section id="la-pregunta-que-hay-que-poder-responder" class="level2" data-number="14.1">
+<h2 data-number="14.1" class="anchored" data-anchor-id="la-pregunta-que-hay-que-poder-responder"><span class="header-section-number">14.1</span> La pregunta que hay que poder responder</h2>
+<p>Imaginad que un modelo en producción toma una decisión discutible y alguien la reclama. Seis meses después hay que explicar cómo se llegó a ella. Para responder hacen falta cuatro cosas, y las cuatro tienen que estar versionadas:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Qué</th>
+<th>Sin ello no puedes</th>
+<th>Cómo se versiona</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Código</strong></td>
+<td>Reproducir la lógica</td>
+<td>Git, que ya usamos</td>
+</tr>
+<tr class="even">
+<td><strong>Datos</strong></td>
+<td>Reproducir el entrenamiento</td>
+<td>Instantánea inmutable o consulta con fecha</td>
+</tr>
+<tr class="odd">
+<td><strong>Entorno</strong></td>
+<td>Garantizar el mismo resultado numérico</td>
+<td><code>Project.toml</code> y <code>Manifest.toml</code></td>
+</tr>
+<tr class="even">
+<td><strong>Modelo</strong></td>
+<td>Saber cuál estaba sirviendo</td>
+<td>Artefacto con versión y registro</td>
+</tr>
+</tbody>
+</table>
+<p>Los proyectos suelen versionar el primero, olvidar el segundo, descubrir el tercero cuando algo se rompe y resolver el cuarto con un fichero llamado <code>modelo_final_v2_bueno.jls</code>.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -431,20 +444,185 @@ Nota
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Guardamos en un directorio temporal a propósito: construir el libro no debería modificar ficheros ya versionados. En el repositorio el conjunto ya está en <code>data/titanic.csv</code>, de modo que los capítulos siguientes funcionan aunque la descarga falle.</p>
+<p>El tercer punto es donde Julia lo pone especialmente fácil. El <code>Manifest.toml</code> que llevamos arrastrando desde la <a href="../../intro.html">introducción</a> fija la versión exacta de cada paquete, incluidos los que llegan de forma indirecta. Reproducir el entorno es <code>Pkg.instantiate()</code>, sin ambigüedad.</p>
 </div>
 </div>
-<p>Y podemos revisar el contenido iterando sobre <code>walkdir()</code> que recorre los elementos de un directorio.</p>
-<div id="12" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>itr <span class="op">=</span> <span class="fu">walkdir</span>(<span class="st">"../../data/"</span>)</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>(root, dirs, files) <span class="op">=</span> <span class="fu">first</span>(itr)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="una-ficha-del-modelo" class="level2" data-number="14.2">
+<h2 data-number="14.2" class="anchored" data-anchor-id="una-ficha-del-modelo"><span class="header-section-number">14.2</span> Una ficha del modelo</h2>
+<p>La forma más barata de empezar a ser trazable es que cada modelo entrenado escriba, junto a sus parámetros, un fichero con las circunstancias en las que nació. No requiere ninguna infraestructura y responde a la mayoría de las preguntas incómodas.</p>
+<div id="4" class="cell" data-execution_count="1">
+<details class="code-fold">
+<summary>Reconstruimos y entrenamos el pipeline</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">CSV</span>, <span class="bu">DataFrames</span>, <span class="bu">MLJ</span>, <span class="bu">Statistics</span>, <span class="bu">CategoricalArrays</span>, <span class="bu">MLJLinearModels</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> SEMILLA <span class="op">=</span> <span class="fl">1234</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> CSV.<span class="fu">read</span>(<span class="fu">joinpath</span>(data_path, <span class="st">"titanic.csv"</span>), DataFrame)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">select!</span>(df, <span class="fu">Not</span>([<span class="op">:</span>PassengerId, <span class="op">:</span>Name, <span class="op">:</span>Ticket, <span class="op">:</span>Cabin, <span class="op">:</span>Embarked]))</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>df.Survived <span class="op">=</span> <span class="fu">coerce</span>(df.Survived, Multiclass)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>y, X <span class="op">=</span> <span class="fu">unpack</span>(df, <span class="op">==</span>(<span class="op">:</span>Survived))</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> <span class="fu">coerce</span>(X, <span class="op">:</span>Pclass <span class="op">=&gt;</span> OrderedFactor, <span class="op">:</span>Sex <span class="op">=&gt;</span> Multiclass)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">levels!</span>(X.Pclass, [<span class="fl">3</span>, <span class="fl">2</span>, <span class="fl">1</span>])</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>(Xtrain, Xtest), (ytrain, ytest) <span class="op">=</span> <span class="fu">partition</span>(</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    (X, y), <span class="fl">0.7</span>, multi <span class="op">=</span> <span class="cn">true</span>, shuffle <span class="op">=</span> <span class="cn">true</span>, stratify <span class="op">=</span> y, rng <span class="op">=</span> SEMILLA</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>RegresionLogistica <span class="op">=</span> <span class="pp">@load</span> LogisticClassifier pkg<span class="op">=</span>MLJLinearModels verbosity<span class="op">=</span><span class="fl">0</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>pipe <span class="op">=</span> <span class="fu">FillImputer</span>() <span class="op">|&gt;</span> <span class="fu">Standardizer</span>() <span class="op">|&gt;</span> <span class="fu">ContinuousEncoder</span>() <span class="op">|&gt;</span> <span class="fu">RegresionLogistica</span>()</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>mach <span class="op">=</span> <span class="fu">machine</span>(pipe, Xtrain, ytrain)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="fu">fit!</span>(mach, verbosity <span class="op">=</span> <span class="fl">0</span>)</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>acierto <span class="op">=</span> <span class="fu">accuracy</span>(<span class="fu">predict_mode</span>(mach, Xtest), ytest)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-green-fg ansi-bold">Precompiling</span> packages...
+   1835.9 ms<span class="ansi-green-fg">  ✓ </span>QuartoNotebookWorkerTablesExt<span class="ansi-bright-black-fg"> (serial)</span>
+  1 dependency successfully precompiled in 2 seconds
+<span class="ansi-green-fg ansi-bold">Precompiling</span> packages...
+    900.0 ms<span class="ansi-green-fg">  ✓ </span>QuartoNotebookWorkerLaTeXStringsExt<span class="ansi-bright-black-fg"> (serial)</span>
+  1 dependency successfully precompiled in 1 seconds
+<span class="ansi-green-fg ansi-bold">Precompiling</span> packages...
+   2057.8 ms<span class="ansi-green-fg">  ✓ </span>QuartoNotebookWorkerJSONExt<span class="ansi-bright-black-fg"> (serial)</span>
+  1 dependency successfully precompiled in 2 seconds
+</pre>
+</div>
+</div>
 <div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>("../../data/", String[], [".gitkeep", "titanic.csv", "titanic.json", "titanic.parquet"])</code></pre>
+<pre><code>0.7798507462686567</code></pre>
 </div>
 </div>
-<p>Disponemos de los comandos más usuales a la hora de crear un directorio (<code>mkdir()</code>) o adentrarnos en él (<code>cd()</code>). Tenéis más detalle sobre los comandos disponibles <a href="https://docs.julialang.org/en/v1/base/file/">aquí</a>.</p>
+<p>Recogemos el estado del entorno de forma programática, sin escribirlo a mano en ningún sitio donde pueda quedarse obsoleto.</p>
+<div id="6" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Pkg</span>, <span class="bu">Dates</span>, <span class="bu">JSON</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">commit_actual</span>()</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="fu">strip</span>(<span class="fu">read</span>(<span class="ss">`git rev-parse --short HEAD`</span>, <span class="dt">String</span>))</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">catch</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">"desconocido"</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">ficha_modelo</span>(mach, metricas; semilla)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    dependencias <span class="op">=</span> <span class="fu">Dict</span>(</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>        v.name <span class="op">=&gt;</span> <span class="fu">string</span>(v.version)</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> (_, v) <span class="kw">in</span> <span class="bu">Pkg</span>.<span class="fu">dependencies</span>()</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> v.is_direct_dep <span class="op">&amp;&amp;</span> v.version <span class="op">!==</span> <span class="cn">nothing</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Dict</span>(</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>        <span class="st">"creado"</span>       <span class="op">=&gt;</span> <span class="fu">string</span>(<span class="fu">now</span>()),</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>        <span class="st">"julia"</span>        <span class="op">=&gt;</span> <span class="fu">string</span>(<span class="cn">VERSION</span>),</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>        <span class="st">"commit"</span>       <span class="op">=&gt;</span> <span class="fu">commit_actual</span>(),</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>        <span class="st">"semilla"</span>      <span class="op">=&gt;</span> semilla,</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_train"</span>      <span class="op">=&gt;</span> <span class="fu">nrow</span>(Xtrain),</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_test"</span>       <span class="op">=&gt;</span> <span class="fu">nrow</span>(Xtest),</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>        <span class="st">"variables"</span>    <span class="op">=&gt;</span> <span class="fu">names</span>(Xtrain),</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>        <span class="st">"metricas"</span>     <span class="op">=&gt;</span> metricas,</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>        <span class="st">"dependencias"</span> <span class="op">=&gt;</span> dependencias,</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>ficha <span class="op">=</span> <span class="fu">ficha_modelo</span>(mach, <span class="fu">Dict</span>(<span class="st">"accuracy"</span> <span class="op">=&gt;</span> <span class="fu">round</span>(acierto, digits <span class="op">=</span> <span class="fl">4</span>)); semilla <span class="op">=</span> SEMILLA)</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"julia    : "</span>, ficha[<span class="st">"julia"</span>])</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"commit   : "</span>, ficha[<span class="st">"commit"</span>])</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"semilla  : "</span>, ficha[<span class="st">"semilla"</span>])</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"métricas : "</span>, ficha[<span class="st">"metricas"</span>])</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"paquetes : "</span>, <span class="fu">length</span>(ficha[<span class="st">"dependencias"</span>]), <span class="st">" dependencias directas registradas"</span>)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>julia    : 1.12.6
+commit   : 1bca237
+semilla  : 1234
+métricas : Dict("accuracy" =&gt; 0.7799)
+paquetes : 19 dependencias directas registradas</code></pre>
+</div>
+</div>
+<p>Y la guardamos junto al modelo, en el mismo directorio y con el mismo destino.</p>
+<div id="8" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>directorio <span class="op">=</span> <span class="fu">mktempdir</span>()</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>MLJ.<span class="fu">save</span>(<span class="fu">joinpath</span>(directorio, <span class="st">"modelo.jls"</span>), mach)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">open</span>(<span class="fu">joinpath</span>(directorio, <span class="st">"modelo.json"</span>), <span class="st">"w"</span>) <span class="cf">do</span> io</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    JSON.<span class="fu">print</span>(io, ficha, <span class="fl">2</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="fu">readdir</span>(directorio)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>2-element Vector{String}:
+ "modelo.jls"
+ "modelo.json"</code></pre>
+</div>
+</div>
+<p>Dos ficheros. Con ellos, dentro de seis meses, se puede saber qué versión de Julia y de MLJ produjeron ese modelo, con qué commit del código, con qué semilla y con qué resultado. Es poquísimo esfuerzo para la cantidad de discusiones que ahorra.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Fichas de modelo como documento público
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Esta idea tiene una versión más ambiciosa, las <em>model cards</em>, que además de los metadatos técnicos documentan para qué está pensado el modelo, para qué no, sobre qué población se entrenó y qué sesgos conocidos tiene.</p>
+<p>En nuestro ejemplo sería honesto anotar que el modelo se entrena sobre 891 pasajeros de un naufragio de 1912 y que no debería usarse para nada que no sea aprender a modelar.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="herramientas-del-ecosistema" class="level2" data-number="14.3">
+<h2 data-number="14.3" class="anchored" data-anchor-id="herramientas-del-ecosistema"><span class="header-section-number">14.3</span> Herramientas del ecosistema</h2>
+<p>Cuando la ficha en JSON se queda corta, porque hay que comparar decenas de experimentos, el paso siguiente es un sistema de seguimiento:</p>
+<ul>
+<li><a href="https://github.com/JuliaAI/MLFlowClient.jl">MLFlowClient.jl</a> permite registrar parámetros, métricas y artefactos contra un servidor MLflow, que es el estándar de facto y con el que probablemente ya trabaje el resto del equipo.</li>
+<li><a href="https://juliadynamics.github.io/DrWatson.jl/stable/">DrWatson.jl</a> va por otro camino, muy propio de la comunidad científica de Julia: organiza el proyecto, nombra los ficheros de resultados a partir de los parámetros que los generaron y facilita reproducir simulaciones.</li>
+</ul>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Advertencia</span>Dónde está Julia y dónde no
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Conviene ser sincero. En las fases de análisis, preparación y modelado el ecosistema de Julia es sólido y competitivo. En la capa de MLOps es claramente más joven que el de Python: hay menos integraciones ya hechas y en más de una ocasión habrá que hablar con la API REST de la herramienta correspondiente.</p>
+<p>No es un impedimento, porque los formatos son abiertos y los protocolos estándar, pero sí es trabajo que en Python vendría resuelto. Es un dato a tener en cuenta al decidir el lenguaje de un proyecto, y merece más la pena saberlo de antemano que descubrirlo a mitad de camino.</p>
+</div>
+</div>
+</section>
+<section id="una-lista-de-comprobación" class="level2" data-number="14.4">
+<h2 data-number="14.4" class="anchored" data-anchor-id="una-lista-de-comprobación"><span class="header-section-number">14.4</span> Una lista de comprobación</h2>
+<p>A modo de resumen de todo lo que hemos ido construyendo, esto es lo que debería poder afirmarse de un proyecto antes de considerarlo listo para producción:</p>
+<ul class="task-list">
+<li><label><input type="checkbox">El entorno se reproduce con <code>Pkg.instantiate()</code> desde un <code>Manifest.toml</code> versionado.</label></li>
+<li><label><input type="checkbox">Las semillas están fijadas y anotadas.</label></li>
+<li><label><input type="checkbox">La separación entre entrenamiento y test se hizo antes de cualquier transformación que aprenda de los datos.</label></li>
+<li><label><input type="checkbox">Todas las transformaciones viven dentro del pipeline, no fuera.</label></li>
+<li><label><input type="checkbox">Las métricas proceden de validación cruzada y se reporta su dispersión, no solo la media.</label></li>
+<li><label><input type="checkbox">El artefacto del modelo va acompañado de su ficha de metadatos.</label></li>
+<li><label><input type="checkbox">El contrato de entrada está documentado, incluidos los niveles de las categóricas.</label></li>
+<li><label><input type="checkbox">Hay monitorización de las entradas y de las salidas, no solo de la disponibilidad del servicio.</label></li>
+<li><label><input type="checkbox">Existe un criterio escrito de cuándo reentrenar.</label></li>
+<li><label><input type="checkbox">Se puede responder a la pregunta de qué modelo estaba sirviendo en una fecha dada.</label></li>
+</ul>
+<p>Ninguno de esos puntos es exótico y casi todos cuestan poco si se plantean desde el principio. Lo caro es añadirlos después, cuando ya hay un modelo en producción del que nadie sabe muy bien de dónde salió.</p>
+</section>
+<section id="hasta-aquí" class="level2" data-number="14.5">
+<h2 data-number="14.5" class="anchored" data-anchor-id="hasta-aquí"><span class="header-section-number">14.5</span> Hasta aquí</h2>
+<p>Con esta parte cerramos el recorrido completo del ciclo de vida, desde leer un CSV hasta vigilar un modelo desplegado, sin salir de Julia en ningún momento. Quedan pendientes las fases de modelado y evaluación, que desarrollaremos con detalle en próximas entregas: comparar familias de modelos, ajustar hiperparámetros y elegir métricas con criterio.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -849,13 +1027,13 @@ Nota
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../../parts/firststeps/librerias.html" class="pagination-link" aria-label="Módulos y librerías">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Módulos y librerías</span></span>
+      <a href="../../parts/produccion/monitorizacion.html" class="pagination-link" aria-label="Cuando el modelo se degrada">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Cuando el modelo se degrada</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../parts/dataframes/basics.html" class="pagination-link" aria-label="Cargando datos">
-        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Cargando datos</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../../references.html" class="pagination-link" aria-label="Referencias">
+        <span class="nav-page-text">Referencias</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
