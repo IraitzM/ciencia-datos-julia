@@ -12,7 +12,9 @@ jobs:
   build-deploy:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: read
+      pages: write
+      id-token: write
     # Refuerza lo que ya indica `julia.exeflags` en _quarto.yml: todos los
     # capítulos deben usar el entorno del repositorio, no el global.
     env:
@@ -53,7 +55,5 @@ jobs:
         if: github.event_name != 'pull_request'
         id: deployment
         uses: actions/deploy-pages@v4
-        with:
-          target: gh-pages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
