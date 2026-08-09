@@ -1,0 +1,11 @@
+```{mermaid}
+flowchart LR
+  A[Carga] --> B[Exploración]
+  B --> C[Preparación]
+  C --> D[Modelado]
+  D --> E[Evaluación]
+  E --> F[Producción]
+  F -. reentrenamiento .-> C
+  style A fill:#e8d5f2,stroke:#7b3fa0,stroke-width:3px
+  style B fill:#e8d5f2,stroke:#7b3fa0,stroke-width:3px
+```

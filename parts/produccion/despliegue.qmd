@@ -1,0 +1,227 @@
+---
+title: "Del pipeline al servicio"
+format:
+  html:
+    code-fold: false
+engine: julia
+---
+
+En la [introducción](../../intro.qmd) decíamos que Julia nace para romper la barrera de los dos lenguajes: acabar con esa costumbre de prototipar en un lenguaje cómodo y reescribir después en otro rápido para poder ponerlo en producción. Esta parte del libro es donde esa promesa se cobra o se queda en publicidad.
+
+{{< include ../../_ciclo/produccion.qmd >}}
+
+Venimos con un pipeline entrenado que encapsula imputación, escalado, codificación y modelo en un único objeto. Vamos a sacarlo del documento y convertirlo en algo que otro sistema pueda invocar.
+
+```{julia}
+#| echo: false
+#| output: false
+
+data_path = "../../data/"
+```
+
+```{julia}
+#| code-fold: true
+#| code-summary: "Reconstruimos el pipeline de la parte anterior"
+
+using CSV, DataFrames, MLJ, Statistics, CategoricalArrays, MLJLinearModels
+
+df = CSV.read(joinpath(data_path, "titanic.csv"), DataFrame)
+select!(df, Not([:PassengerId, :Name, :Ticket, :Cabin, :Embarked]))
+df.Survived = coerce(df.Survived, Multiclass)
+
+y, X = unpack(df, ==(:Survived))
+X = coerce(X, :Pclass => OrderedFactor, :Sex => Multiclass)
+levels!(X.Pclass, [3, 2, 1])
+
+(Xtrain, Xtest), (ytrain, ytest) = partition(
+    (X, y), 0.7, multi = true, shuffle = true, stratify = y, rng = 1234
+)
+
+RegresionLogistica = @load LogisticClassifier pkg=MLJLinearModels verbosity=0
+pipe = FillImputer() |> Standardizer() |> ContinuousEncoder() |> RegresionLogistica()
+
+mach = machine(pipe, Xtrain, ytrain)
+fit!(mach, verbosity = 0)
+
+accuracy(predict_mode(mach, Xtest), ytest)
+```
+
+## Guardar el modelo
+
+MLJ serializa la máquina entera, con los parámetros aprendidos por cada etapa.
+
+```{julia}
+ruta_modelo = joinpath(mktempdir(), "modelo_titanic.jls")
+
+MLJ.save(ruta_modelo, mach)
+
+filesize(ruta_modelo)
+```
+
+Poco más de cuatro kilobytes. Conviene entender qué hay ahí dentro y qué no: están los coeficientes, las medias y desviaciones del escalador, los valores que usará el imputador y las categorías que vio cada codificador. No están ni los datos de entrenamiento ni el código de las librerías.
+
+::: {.callout-note}
+Usamos un directorio temporal por la misma razón que en el resto del libro: construir el documento no debe dejar ficheros sueltos. En un proyecto real este fichero es un artefacto versionado, con su número de versión y su registro de qué datos y qué código lo produjeron. Volveremos sobre ello en el [capítulo de MLOps](mlops.qmd).
+:::
+
+## Recuperarlo
+
+En otro proceso, otra máquina u otro momento, se carga pasando la ruta a `machine`.
+
+```{julia}
+mach_cargado = machine(ruta_modelo)
+
+predicciones_original = predict_mode(mach, Xtest)
+predicciones_cargado  = predict_mode(mach_cargado, Xtest)
+
+predicciones_original == predicciones_cargado
+```
+
+Idénticas. Esa igualdad es la propiedad que hace que un despliegue sea fiable: lo que se evaluó es exactamente lo que se sirve.
+
+## Predecir sobre datos nuevos
+
+Aquí aparece el primer problema real del despliegue, y merece la pena verlo fallar. Lo intuitivo sería construir la fila del pasajero y pedir la predicción:
+
+```julia
+pasajera = DataFrame(
+    Pclass = [1], Sex = ["female"], Age = [29.0],
+    SibSp = [0], Parch = [0], Fare = [100.0]
+)
+
+predict(mach_cargado, pasajera)
+```
+
+Y eso **falla**, con un mensaje que dice algo parecido a `Attempting to impute a value of scitype OrderedFactor{3} into a vector of incompatible elscitype, namely OrderedFactor{1}`.
+
+El motivo es sutil. Al crear una fila con `Pclass = [1]`, esa columna contiene una única categoría, así que su tipo científico es `OrderedFactor{1}`. El modelo se entrenó con `OrderedFactor{3}`, porque vio tres clases. Para el pipeline no son el mismo tipo de dato, y con razón: si aceptara la fila sin más, la codificación asignaría números distintos a las mismas categorías y las predicciones serían silenciosamente incorrectas.
+
+::: {.callout-important}
+## El modelo no viaja solo
+
+Un modelo entrenado sobre variables categóricas depende de **qué categorías vio y en qué orden**. Ese vocabulario forma parte del contrato de entrada, igual que los nombres de las columnas. Si el sistema que llama al modelo no lo respeta, o bien falla (que es el buen caso) o bien devuelve resultados erróneos sin avisar.
+:::
+
+La forma correcta es construir la fila declarando los mismos niveles que se usaron al entrenar. Y como los sacamos del propio conjunto de entrenamiento, no hay forma de que se desincronicen.
+
+```{julia}
+niveles_pclass = levels(Xtrain.Pclass)
+niveles_sex    = levels(Xtrain.Sex)
+
+function nuevo_pasajero(; Pclass, Sex, Age, SibSp, Parch, Fare)
+    DataFrame(
+        Pclass = categorical([Pclass]; levels = niveles_pclass, ordered = true),
+        Sex    = categorical([Sex];    levels = niveles_sex),
+        # Declaramos el tipo con Missing incluido para admitir edad desconocida
+        Age    = Union{Missing, Float64}[Age],
+        SibSp  = [SibSp],
+        Parch  = [Parch],
+        Fare   = [Fare],
+    )
+end
+
+pasajera = nuevo_pasajero(Pclass = 1, Sex = "female", Age = 29.0,
+                          SibSp = 0, Parch = 0, Fare = 100.0)
+
+elscitype(pasajera.Pclass), elscitype(pasajera.Sex)
+```
+
+Ahora los tipos coinciden con los del entrenamiento y la predicción funciona.
+
+```{julia}
+prediccion = predict(mach_cargado, pasajera)[1]
+
+round(pdf(prediccion, 1), digits = 4)
+```
+
+Un 94 % de probabilidad de sobrevivir para una mujer de primera clase. Comparemos con un hombre de tercera:
+
+```{julia}
+pasajero = nuevo_pasajero(Pclass = 3, Sex = "male", Age = 29.0,
+                          SibSp = 0, Parch = 0, Fare = 7.5)
+
+round(pdf(predict(mach_cargado, pasajero)[1], 1), digits = 4)
+```
+
+Un 10 %. Los dos números reproducen lo que el análisis exploratorio ya nos había enseñado, lo cual es una buena señal de que no hemos roto nada por el camino.
+
+Fijaos también en que el tipo `Union{Missing, Float64}` de la columna `Age` no era un capricho: permite que llegue una petición sin edad informada, y el imputador del pipeline se encarga.
+
+```{julia}
+sin_edad = nuevo_pasajero(Pclass = 2, Sex = "female", Age = missing,
+                          SibSp = 0, Parch = 0, Fare = 20.0)
+
+round(pdf(predict(mach_cargado, sin_edad)[1], 1), digits = 4)
+```
+
+Que el pipeline sepa qué hacer con un dato ausente en producción, y que lo haga con el mismo criterio con el que se entrenó, es exactamente la ventaja de haber metido la imputación dentro de la cadena en lugar de tratarla como un paso previo.
+
+## Qué tiene que viajar con el modelo
+
+El fichero `.jls` no basta para reproducir el servicio. Para levantarlo en otra máquina hace falta:
+
+| Artefacto | Por qué |
+|---|---|
+| `modelo.jls` | Los parámetros aprendidos |
+| `Project.toml` y `Manifest.toml` | Las versiones exactas de las librerías que saben deserializarlo |
+| La versión de Julia | La serialización no está garantizada entre versiones distintas |
+| El contrato de entrada | Nombres de columnas, tipos y niveles de las categóricas |
+
+El segundo punto es el que más disgustos da. Un fichero serializado con una versión de MLJ y leído con otra puede fallar, o peor, cargar mal. Aquí es donde el `Manifest.toml` que llevamos versionando desde el principio del libro deja de ser una buena práctica abstracta y se convierte en el requisito que hace que el despliegue funcione.
+
+## Exponerlo como servicio
+
+Con el modelo cargado y una función que construye la fila, montar una API es sorprendentemente poco código. Este ejemplo usa `HTTP.jl`, que ya conocemos del [capítulo de carga de datos](../dataframes/basics.qmd):
+
+```julia
+using HTTP, JSON, MLJ
+
+const MACHINE = machine("modelo_titanic.jls")
+
+function predecir(req::HTTP.Request)
+    datos = JSON.parse(String(req.body))
+
+    fila = nuevo_pasajero(
+        Pclass = datos["pclass"],
+        Sex    = datos["sex"],
+        Age    = get(datos, "age", missing),
+        SibSp  = datos["sibsp"],
+        Parch  = datos["parch"],
+        Fare   = datos["fare"],
+    )
+
+    probabilidad = pdf(predict(MACHINE, fila)[1], 1)
+
+    return HTTP.Response(200, JSON.json(Dict("probabilidad" => probabilidad)))
+end
+
+router = HTTP.Router()
+HTTP.register!(router, "POST", "/predecir", predecir)
+HTTP.serve(router, "0.0.0.0", 8080)
+```
+
+No lo ejecutamos al construir el libro porque levantaría un servidor, pero el código es completo. Existen además marcos más cómodos para APIs en Julia, como [Oxygen.jl](https://github.com/OxygenFramework/Oxygen.jl), que añaden documentación automática y validación de entrada.
+
+::: {.callout-warning}
+Este servicio no valida nada. Antes de exponerlo de verdad habría que comprobar que los campos llegan, que los valores caen dentro de los rangos vistos en entrenamiento y que las categorías son conocidas. Un modelo al que le llega `Pclass = 7` no tiene forma de saber que eso no existe, y devolverá un número igualmente.
+:::
+
+## Empaquetar en lugar de improvisar
+
+Un fichero suelto con funciones no es un despliegue. Julia trae la noción de paquete de serie, y `PkgTemplates.jl` genera la estructura completa:
+
+```julia
+using PkgTemplates
+
+Template(; user = "IraitzM", plugins = [Git(), GitHubActions(), Codecov()])("TitanicAPI")
+```
+
+Eso crea un proyecto con su `src/`, su `test/`, su `Project.toml` propio y su integración continua. A partir de ahí, el modelo se carga en el arranque del módulo, la lógica de predicción vive en funciones probadas con `Test.jl` y el servicio es una dependencia más.
+
+## Y el argumento de los dos lenguajes
+
+Llegados aquí conviene volver sobre la promesa del principio. El pipeline que hemos servido es el mismo objeto que entrenamos y evaluamos, escrito en el mismo lenguaje, sin reimplementar nada. No ha habido traducción a otro lenguaje ni una versión "de producción" distinta de la de investigación.
+
+Para casos donde el arranque del intérprete sea un problema, como una función que se invoca en frío muchas veces, Julia ofrece [PackageCompiler.jl](https://julialang.github.io/PackageCompiler.jl/stable/) para generar imágenes de sistema precompiladas y, desde la versión 1.12, `juliac` para producir ejecutables. Es la pieza que faltaba para que el argumento se sostenga de punta a punta.
+
+En el [capítulo siguiente](monitorizacion.qmd) veremos que desplegar no es el final: un modelo en producción se degrada aunque nadie toque el código.

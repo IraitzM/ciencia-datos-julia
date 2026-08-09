@@ -269,5 +269,3 @@ pairplot(
         df_num_didntsurvive, bottomleft=false, topright=true)
 )
 ```
-
-_continuará_

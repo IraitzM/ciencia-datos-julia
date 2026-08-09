@@ -37,7 +37,7 @@ for i in 1:3
 end
 ```
 
-o bien, hasta que se cumpla una condición concreta. En este caso debemos marcar `i` como `global`: el bucle abre su propio ámbito y, sin esa palabra clave, la asignación `i += 1` crearía una variable nueva **dentro** del bucle en lugar de modificar la de fuera. No es que la variable no fuera accesible —leerla funciona sin más—, es que asignarle un valor requiere decir explícitamente a cuál nos referimos.
+o bien, hasta que se cumpla una condición concreta. En este caso debemos marcar `i` como `global`: el bucle abre su propio ámbito y, sin esa palabra clave, la asignación `i += 1` crearía una variable nueva **dentro** del bucle en lugar de modificar la de fuera. No es que la variable no fuera accesible, ya que leerla funciona sin más: es que asignarle un valor requiere decir explícitamente a cuál nos referimos.
 
 ::: {.callout-note}
 Esto aplica al ejecutar el código como script o dentro de una función. En la REPL de Julia el ámbito es «blando» y la palabra `global` no resulta necesaria.

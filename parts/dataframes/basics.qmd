@@ -8,6 +8,10 @@ engine: julia
 
 Ya conocemos las bases de Julia y ahora toca empezar a ver cómo hacer uso de los recursos más comunes en ciencia de datos. Dado que en el [ejemplo anterior](../firststeps/sistemaficheros.qmd) ya hemos creado un fichero con datos del Titanic, veamos si podemos cargarlo.
 
+Con este capítulo entramos en el ciclo de vida de un proyecto de ciencia de datos. Iremos recuperando este esquema al principio de cada parte para situar en qué fase estamos:
+
+{{< include ../../_ciclo/carga.qmd >}}
+
 ## CSV
 
 Quizás uno de los formatos más comunes en el mundo empresarial es el fichero de texto con extensión CSV (Comma Separated Value). Extraído habitualmente de ficheros Excel o bien de exportaciones de sistemas gestores de base de datos, veremos que presenta un formato tabular donde cada celda viene separado por un carácter (siendo `,` o `;` los más habituales); y el salto de línea marca el inicio de una nueva fila.

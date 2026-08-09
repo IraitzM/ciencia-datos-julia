@@ -1,0 +1,162 @@
+---
+title: "Cuando el modelo se degrada"
+format:
+  html:
+    code-fold: false
+engine: julia
+---
+
+Un programa normal, si no se toca, sigue haciendo lo mismo indefinidamente. Un modelo no. Un modelo puede empeorar sin que nadie modifique una sola línea de código, porque lo que cambia es el mundo del que salieron sus datos.
+
+Esta es la diferencia de fondo entre desplegar software y desplegar un modelo, y la razón de que exista una disciplina específica alrededor de ello.
+
+```{julia}
+#| echo: false
+#| output: false
+
+data_path = "../../data/"
+```
+
+```{julia}
+#| code-fold: true
+#| code-summary: "Recuperamos el pipeline entrenado"
+
+using CSV, DataFrames, MLJ, Statistics, CategoricalArrays, MLJLinearModels, HypothesisTests
+
+df = CSV.read(joinpath(data_path, "titanic.csv"), DataFrame)
+select!(df, Not([:PassengerId, :Name, :Ticket, :Cabin, :Embarked]))
+df.Survived = coerce(df.Survived, Multiclass)
+
+y, X = unpack(df, ==(:Survived))
+X = coerce(X, :Pclass => OrderedFactor, :Sex => Multiclass)
+levels!(X.Pclass, [3, 2, 1])
+
+(Xtrain, Xtest), (ytrain, ytest) = partition(
+    (X, y), 0.7, multi = true, shuffle = true, stratify = y, rng = 1234
+)
+
+RegresionLogistica = @load LogisticClassifier pkg=MLJLinearModels verbosity=0
+pipe = FillImputer() |> Standardizer() |> ContinuousEncoder() |> RegresionLogistica()
+
+mach = machine(pipe, Xtrain, ytrain)
+fit!(mach, verbosity = 0)
+
+nrow(Xtrain)
+```
+
+## Dos formas de degradarse
+
+Conviene distinguirlas porque tienen causas y remedios distintos.
+
+**Deriva de datos** (_data drift_): cambia la distribución de lo que entra. El modelo sigue siendo tan válido como antes, pero recibe casos que no se parecen a los que vio entrenando y sobre los que, por tanto, extrapola. Si un modelo se entrenó con pasajeros de entre 20 y 40 años y de pronto empiezan a llegar octogenarios, el modelo no está roto: está opinando sobre territorio desconocido.
+
+**Deriva de concepto** (_concept drift_): cambia la relación entre las entradas y lo que queremos predecir. Las entradas pueden parecer las mismas, pero lo que significan ya no. Un modelo de detección de fraude entrenado antes de que apareciera un tipo nuevo de estafa sufre esto: las transacciones se ven igual, pero la etiqueta correcta ha cambiado.
+
+La primera se detecta mirando solo las entradas, que es información que siempre tenemos. La segunda exige conocer el resultado real, que casi siempre llega tarde y a veces no llega nunca.
+
+::: {.callout-important}
+## El problema de las etiquetas tardías
+
+Para saber si un modelo de riesgo crediticio acierta hay que esperar a que el préstamo se pague o no, lo que puede llevar años. Durante todo ese tiempo el modelo está decidiendo y nadie puede calcular su acierto real.
+
+Por eso la monitorización no puede depender solo de las métricas de calidad. Hay que vigilar lo que sí se observa de inmediato: qué entra y qué sale.
+:::
+
+## Detectar deriva en las entradas
+
+La pregunta es si dos muestras proceden de la misma distribución. Para una variable continua, el test de Kolmogorov-Smirnov compara las distribuciones acumuladas de ambas y nos da un p-valor.
+
+Tomamos como referencia las edades del entrenamiento y simulamos dos lotes de producción: uno que se comporta con normalidad y otro en el que la población ha envejecido doce años.
+
+```{julia}
+edad_referencia = collect(skipmissing(Xtrain.Age))
+lote_normal     = collect(skipmissing(Xtest.Age))
+lote_derivado   = lote_normal .+ 12.0
+
+test_normal   = ApproximateTwoSampleKSTest(edad_referencia, lote_normal)
+test_derivado = ApproximateTwoSampleKSTest(edad_referencia, lote_derivado)
+
+println("Lote normal   p = ", round(pvalue(test_normal),   digits = 4))
+println("Lote derivado p = ", round(pvalue(test_derivado), digits = 8))
+```
+
+El primer p-valor es alto, así que no hay evidencia de que el lote normal venga de una distribución distinta a la de entrenamiento, que es justo lo que esperábamos. El segundo es prácticamente cero: el test detecta la deriva sin ninguna duda.
+
+::: {.callout-warning}
+## Cuidado con el tamaño de la muestra
+
+Un p-valor pequeño dice que la diferencia es *detectable*, no que sea *importante*. Con lotes de millones de registros, cualquier diferencia irrelevante da un p-valor minúsculo y el sistema de alertas se vuelve inútil a base de avisar de todo.
+
+Por eso en producción suele vigilarse también el tamaño del efecto, por ejemplo el propio estadístico del test, y se fija un umbral sobre él y no solo sobre el p-valor.
+:::
+
+```{julia}
+println("Estadístico lote normal   : ", round(test_normal.δ,   digits = 4))
+println("Estadístico lote derivado : ", round(test_derivado.δ, digits = 4))
+```
+
+Para variables categóricas el planteamiento es el mismo pero comparando frecuencias. Basta con vigilar cuánto se mueve la proporción de cada categoría:
+
+```{julia}
+function proporciones(v)
+    total = length(v)
+    Dict(nivel => count(==(nivel), v) / total for nivel in levels(v))
+end
+
+ref = proporciones(Xtrain.Sex)
+lote = proporciones(Xtest.Sex)
+
+for nivel in keys(ref)
+    println(rpad(nivel, 8), " referencia ", round(ref[nivel], digits = 3),
+            "   lote ", round(lote[nivel], digits = 3),
+            "   variación ", round(abs(ref[nivel] - lote[nivel]), digits = 3))
+end
+```
+
+## Vigilar también la salida
+
+Las entradas pueden pasar todos los controles y aun así estar ocurriendo algo raro. La distribución de las probabilidades que el modelo emite es un indicador barato y sorprendentemente informativo, porque resume el efecto conjunto de todas las variables.
+
+```{julia}
+probs_referencia = [pdf(p, 1) for p in predict(mach, Xtrain)]
+probs_lote       = [pdf(p, 1) for p in predict(mach, Xtest)]
+
+println("Media referencia : ", round(mean(probs_referencia), digits = 4))
+println("Media lote       : ", round(mean(probs_lote),       digits = 4))
+println("KS sobre salidas p = ", round(pvalue(ApproximateTwoSampleKSTest(probs_referencia, probs_lote)), digits = 4))
+```
+
+Si la media de las probabilidades predichas se desplaza de forma sostenida, algo ha cambiado aguas arriba aunque ninguna variable por separado haya disparado una alerta.
+
+## Qué monitorizar en la práctica
+
+| Qué | Con qué frecuencia | Para detectar |
+|---|---|---|
+| Distribución de cada variable de entrada | Por lote o a diario | Deriva de datos |
+| Proporción de valores ausentes por columna | Por lote | Roturas en el sistema que alimenta al modelo |
+| Categorías no vistas en entrenamiento | Cada petición | Contratos de entrada rotos |
+| Distribución de las predicciones | A diario | Cambios que no aparecen variable a variable |
+| Métricas de calidad | Cuando lleguen las etiquetas | Deriva de concepto |
+| Latencia y errores del servicio | Continuo | Problemas de ingeniería, no de modelo |
+
+Las tres primeras filas se suelen olvidar y son las que más pronto avisan. Un aumento repentino de valores ausentes en una columna casi nunca significa que el mundo haya cambiado: significa que alguien ha modificado una tabla aguas arriba.
+
+## Cuándo reentrenar
+
+Detectada la deriva, la respuesta habitual es reentrenar con datos recientes. Hay varias políticas y ninguna es universalmente correcta:
+
+- **Por calendario**: reentrenar cada mes o cada trimestre. Simple y predecible, pero reentrena aunque no haga falta y llega tarde si la deriva es brusca.
+- **Por umbral**: reentrenar cuando una métrica de deriva supere un límite. Más eficiente, pero exige haber calibrado ese umbral y puede oscilar.
+- **Por degradación medida**: reentrenar cuando el acierto real caiga. Es el criterio más honesto y solo sirve si las etiquetas llegan con rapidez suficiente.
+
+En todos los casos, reentrenar significa recorrer otra vez la cadena completa que hemos construido en este libro: preparar, ajustar el pipeline, validar y comparar contra el modelo actual antes de sustituirlo. Ese "comparar antes de sustituir" es importante, porque un modelo reentrenado no siempre es mejor.
+
+::: {.callout-tip collapse="true"}
+## Reentrenar no es lo mismo que reajustar
+
+Reajustar es volver a ejecutar el mismo pipeline con datos nuevos. Reentrenar de verdad puede implicar revisar qué variables siguen teniendo sentido, si han aparecido otras nuevas y si el tipo de modelo elegido sigue siendo el adecuado.
+
+Lo primero se automatiza. Lo segundo requiere criterio y es donde el trabajo de ciencia de datos sigue siendo trabajo de personas.
+:::
+
+Con esto cerramos el bucle que aparece en el diagrama del ciclo de vida: producción no desemboca en nada, vuelve a preparación. En el [capítulo final](mlops.qmd) veremos qué hace falta para que ese bucle sea trazable y no una sucesión de modelos de los que nadie recuerda de dónde salieron.

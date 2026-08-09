@@ -40,6 +40,9 @@ están versionados precisamente para que el entorno sea reproducible.
 | `index.qmd`, `intro.qmd` | Prólogo e introducción a Julia |
 | `parts/firststeps/` | Sintaxis, flujos, módulos y sistema de ficheros |
 | `parts/dataframes/` | Carga de datos, análisis preliminar y exploratorio |
+| `parts/preparacion/` | Separación train/test, codificación y pipelines con MLJ |
+| `parts/produccion/` | Despliegue, monitorización de deriva y MLOps |
+| `_ciclo/` | Diagrama del ciclo de vida, incluido al inicio de cada parte |
 | `data/` | Conjuntos de datos usados por los capítulos |
 | `_freeze/` | Resultados congelados de la ejecución (ver más abajo) |
 

@@ -55,6 +55,18 @@ book:
       - parts/dataframes/summary.qmd
       - parts/dataframes/exploratory.qmd
 
+    - part: "Preparación de datos"
+      chapters:
+      - parts/preparacion/particion.qmd
+      - parts/preparacion/codificacion.qmd
+      - parts/preparacion/pipelines.qmd
+
+    - part: "Puesta en producción"
+      chapters:
+      - parts/produccion/despliegue.qmd
+      - parts/produccion/monitorizacion.qmd
+      - parts/produccion/mlops.qmd
+
     - references.qmd
 
 bibliography: references.bib

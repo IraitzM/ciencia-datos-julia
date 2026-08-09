@@ -1,0 +1,163 @@
+---
+title: "Codificación y escalado"
+format:
+  html:
+    code-fold: false
+engine: julia
+---
+
+Ya tenemos los datos separados. El problema ahora es que un modelo no sabe qué hacer con la cadena `"female"` ni entiende que la primera clase sea mejor que la tercera. Necesita números, y necesita que esos números signifiquen lo que queremos que signifiquen.
+
+```{julia}
+#| echo: false
+#| output: false
+
+data_path = "../../data/"
+```
+
+```{julia}
+#| code-fold: true
+#| code-summary: "Recuperamos el punto donde lo dejamos en el capítulo anterior"
+
+using CSV, DataFrames, MLJ, Statistics, CategoricalArrays
+
+df = CSV.read(joinpath(data_path, "titanic.csv"), DataFrame)
+select!(df, Not([:PassengerId, :Name, :Ticket, :Cabin, :Embarked]))
+df.Survived = coerce(df.Survived, Multiclass)
+
+y, X = unpack(df, ==(:Survived))
+
+(Xtrain, Xtest), (ytrain, ytest) = partition(
+    (X, y), 0.7, multi = true, shuffle = true, stratify = y, rng = 1234
+)
+
+media_train = mean(skipmissing(Xtrain.Age))
+Xtrain[!, :Age] = coalesce.(Xtrain.Age, media_train)
+Xtest[!,  :Age] = coalesce.(Xtest.Age,  media_train)
+
+nrow(Xtrain), nrow(Xtest)
+```
+
+## Qué es un tipo científico
+
+Ya lo apuntamos en el capítulo anterior: MLJ distingue entre cómo se guarda un dato y qué representa. Veámoslo con nuestras columnas.
+
+```{julia}
+schema(Xtrain)
+```
+
+La columna `Pclass` se almacena como `Int64` y MLJ la interpreta como `Count`, un conteo. Pero `Pclass` no cuenta nada: es la clase del billete, una categoría con tres valores posibles. Si la dejamos como conteo, el modelo asumirá que la distancia entre primera y tercera es el doble que entre primera y segunda, y que tiene sentido calcular su media.
+
+Estos son los tipos científicos que más nos van a interesar:
+
+| Scitype | Qué representa | Ejemplo en nuestros datos |
+|---|---|---|
+| `Continuous` | Magnitud real | `Age`, `Fare` |
+| `Count` | Conteo entero no negativo | `SibSp`, `Parch` |
+| `Multiclass` | Categoría sin orden | `Sex` |
+| `OrderedFactor` | Categoría con orden | `Pclass` |
+
+::: {.callout-tip collapse="true"}
+## Por qué esta distinción y no simplemente el tipo de Julia
+
+Porque el tipo de almacenamiento es ambiguo. Un `Int64` puede ser una edad, un código postal o un número de hermanos, y cada uno exige un tratamiento distinto. En lugar de que cada modelo adivine, MLJ obliga a declararlo una vez y comprueba la compatibilidad antes de entrenar. Si le pasas un `Multiclass` a un modelo que solo admite `Continuous`, te avisa en lugar de producir un resultado silenciosamente absurdo.
+:::
+
+## Ajustar los tipos
+
+`coerce` nos permite corregir la interpretación columna a columna.
+
+```{julia}
+Xtrain = coerce(Xtrain, :Pclass => OrderedFactor, :Sex => Multiclass)
+Xtest  = coerce(Xtest,  :Pclass => OrderedFactor, :Sex => Multiclass)
+
+schema(Xtrain)
+```
+
+`Pclass` la declaramos `OrderedFactor` porque sus categorías sí tienen un orden natural, igual que hicimos en el [análisis exploratorio](../dataframes/exploratory.qmd). Conviene comprobar en qué orden han quedado los niveles:
+
+```{julia}
+unwrap.(levels(Xtrain.Pclass))
+```
+
+Están en orden ascendente `1 < 2 < 3`, que es el orden del número pero el inverso del prestigio: la primera clase es la mejor. Lo invertimos para que "mayor" signifique "mejor clase", que es como lo interpretará el modelo.
+
+```{julia}
+levels!(Xtrain.Pclass, [3, 2, 1])
+levels!(Xtest.Pclass,  [3, 2, 1])
+
+unwrap.(levels(Xtrain.Pclass))
+```
+
+`Sex` en cambio es `Multiclass`: no hay ningún orden que justifique decir que un sexo es "mayor" que otro.
+
+## De categorías a números
+
+Con los tipos bien declarados podemos codificar. La transformación habitual para una variable sin orden es la **codificación one-hot**: crear una columna binaria por categoría.
+
+```{julia}
+codificador = OneHotEncoder(drop_last = true, ordered_factor = false)
+
+mach_cod = machine(codificador, Xtrain)
+fit!(mach_cod, verbosity = 0)
+
+Xtrain_cod = MLJ.transform(mach_cod, Xtrain)
+first(Xtrain_cod, 3)
+```
+
+::: {.callout-note}
+Escribimos `MLJ.transform` con el prefijo porque `DataFrames` también exporta una función `transform` (la que usamos en el análisis preliminar) y Julia no sabría a cuál nos referimos. Cuando dos paquetes exportan el mismo nombre, cualificarlo es la forma de resolver la ambigüedad.
+:::
+
+Fijaos en `drop_last = true`. Con dos categorías (`male`, `female`) bastan una columna: si `Sex__male` vale 0, necesariamente es `female`. Mantener las dos columnas introduce redundancia perfecta entre ellas, lo que en modelos lineales produce un sistema sin solución única. Descartar la última categoría evita el problema.
+
+Observad también el argumento `ordered_factor = false`. Por defecto `OneHotEncoder` desdobla **también** las variables ordenadas, y aquí no nos interesa: al desactivarlo, `Pclass` sobrevive intacta como `OrderedFactor` y más adelante se convertirá en un único número que conserva el orden, en lugar de en varias columnas independientes. Desdoblarla habría tirado por la borda justo la información que nos molestamos en declarar.
+
+## Escalado
+
+`Age` va de 0 a 80; `Fare` llega hasta 512. Para modelos que miden distancias o que optimizan por descenso de gradiente, esa diferencia de escala hace que la variable de mayor rango domine artificialmente. El escalado estándar lo corrige restando la media y dividiendo por la desviación típica.
+
+```{julia}
+escalador = Standardizer()
+
+mach_esc = machine(escalador, Xtrain)
+fit!(mach_esc, verbosity = 0)
+
+fitted_params(mach_esc)
+```
+
+Aquí se ve con toda claridad el punto del capítulo anterior: **esas medias y desviaciones son parámetros aprendidos**, y se han aprendido del conjunto de entrenamiento. Son exactamente el tipo de cantidad que no debe calcularse con los datos de test.
+
+```{julia}
+Xtrain_esc = MLJ.transform(mach_esc, Xtrain)
+
+describe(Xtrain_esc[!, [:Age, :Fare]], :mean, :std)
+```
+
+Media cero y desviación uno, como esperábamos. Y ahora la parte importante:
+
+```{julia}
+Xtest_esc = MLJ.transform(mach_esc, Xtest)
+
+describe(Xtest_esc[!, [:Age, :Fare]], :mean, :std)
+```
+
+La media del conjunto de test **no** es exactamente cero, y eso es señal de que lo hemos hecho bien. Si lo fuera, significaría que hemos vuelto a calcular la media sobre el test, es decir, que hemos vuelto a filtrar información. El test se transforma con los parámetros del entrenamiento, y el resultado es el que sea.
+
+::: {.callout-important}
+## El patrón que se repite
+
+Todas las transformaciones que hemos visto siguen el mismo ciclo:
+
+1. `machine(modelo, datos_entrenamiento)`: se prepara la transformación.
+2. `fit!(mach)`: se **aprenden** los parámetros, solo con entrenamiento.
+3. `MLJ.transform(mach, datos)`: se **aplican** a lo que haga falta.
+
+Ajustar (`fit!`) y aplicar (`transform`) son operaciones distintas a propósito. La fuga de información aparece casi siempre cuando alguien las confunde y ajusta sobre el conjunto completo.
+:::
+
+## Lo que hemos conseguido
+
+Nuestras columnas ya están en un formato que un modelo puede consumir: categorías codificadas, magnitudes escaladas y tipos científicos declarados.
+
+También hemos acumulado un problema. Llevamos dos objetos `machine`, cada uno con sus parámetros, y hay que acordarse de aplicarlos en el mismo orden y sobre el conjunto correcto. Con dos transformaciones es manejable; con seis, y metidas en una validación cruzada, es cuestión de tiempo que se cuele un error. En el [capítulo siguiente](pipelines.qmd) veremos cómo encadenarlas en un único objeto que se ajusta y se aplica de una vez.

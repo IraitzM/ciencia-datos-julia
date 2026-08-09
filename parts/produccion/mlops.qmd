@@ -1,0 +1,171 @@
+---
+title: "El ciclo de vida completo"
+format:
+  html:
+    code-fold: false
+engine: julia
+---
+
+Llevamos todo el libro recorriendo una línea recta: cargar, explorar, preparar, modelar, desplegar. El capítulo anterior terminó rompiendo esa linealidad, porque producción no es el final sino el punto en el que el ciclo vuelve a empezar.
+
+{{< include ../../_ciclo/produccion.qmd >}}
+
+A la disciplina que se ocupa de que ese bucle sea repetible, trazable y automatizable se le llama **MLOps**. No es una tecnología concreta ni un producto que se compre: es el conjunto de prácticas que hacen que la pregunta "¿de dónde salió este modelo?" tenga respuesta.
+
+## La pregunta que hay que poder responder
+
+Imaginad que un modelo en producción toma una decisión discutible y alguien la reclama. Seis meses después hay que explicar cómo se llegó a ella. Para responder hacen falta cuatro cosas, y las cuatro tienen que estar versionadas:
+
+| Qué | Sin ello no puedes | Cómo se versiona |
+|---|---|---|
+| **Código** | Reproducir la lógica | Git, que ya usamos |
+| **Datos** | Reproducir el entrenamiento | Instantánea inmutable o consulta con fecha |
+| **Entorno** | Garantizar el mismo resultado numérico | `Project.toml` y `Manifest.toml` |
+| **Modelo** | Saber cuál estaba sirviendo | Artefacto con versión y registro |
+
+Los proyectos suelen versionar el primero, olvidar el segundo, descubrir el tercero cuando algo se rompe y resolver el cuarto con un fichero llamado `modelo_final_v2_bueno.jls`.
+
+::: {.callout-note}
+El tercer punto es donde Julia lo pone especialmente fácil. El `Manifest.toml` que llevamos arrastrando desde la [introducción](../../intro.qmd) fija la versión exacta de cada paquete, incluidos los que llegan de forma indirecta. Reproducir el entorno es `Pkg.instantiate()`, sin ambigüedad.
+:::
+
+## Una ficha del modelo
+
+La forma más barata de empezar a ser trazable es que cada modelo entrenado escriba, junto a sus parámetros, un fichero con las circunstancias en las que nació. No requiere ninguna infraestructura y responde a la mayoría de las preguntas incómodas.
+
+```{julia}
+#| echo: false
+#| output: false
+
+data_path = "../../data/"
+```
+
+```{julia}
+#| code-fold: true
+#| code-summary: "Reconstruimos y entrenamos el pipeline"
+
+using CSV, DataFrames, MLJ, Statistics, CategoricalArrays, MLJLinearModels
+
+const SEMILLA = 1234
+
+df = CSV.read(joinpath(data_path, "titanic.csv"), DataFrame)
+select!(df, Not([:PassengerId, :Name, :Ticket, :Cabin, :Embarked]))
+df.Survived = coerce(df.Survived, Multiclass)
+
+y, X = unpack(df, ==(:Survived))
+X = coerce(X, :Pclass => OrderedFactor, :Sex => Multiclass)
+levels!(X.Pclass, [3, 2, 1])
+
+(Xtrain, Xtest), (ytrain, ytest) = partition(
+    (X, y), 0.7, multi = true, shuffle = true, stratify = y, rng = SEMILLA
+)
+
+RegresionLogistica = @load LogisticClassifier pkg=MLJLinearModels verbosity=0
+pipe = FillImputer() |> Standardizer() |> ContinuousEncoder() |> RegresionLogistica()
+
+mach = machine(pipe, Xtrain, ytrain)
+fit!(mach, verbosity = 0)
+
+acierto = accuracy(predict_mode(mach, Xtest), ytest)
+```
+
+Recogemos el estado del entorno de forma programática, sin escribirlo a mano en ningún sitio donde pueda quedarse obsoleto.
+
+```{julia}
+using Pkg, Dates, JSON
+
+function commit_actual()
+    try
+        return strip(read(`git rev-parse --short HEAD`, String))
+    catch
+        return "desconocido"
+    end
+end
+
+function ficha_modelo(mach, metricas; semilla)
+    dependencias = Dict(
+        v.name => string(v.version)
+        for (_, v) in Pkg.dependencies()
+        if v.is_direct_dep && v.version !== nothing
+    )
+
+    Dict(
+        "creado"       => string(now()),
+        "julia"        => string(VERSION),
+        "commit"       => commit_actual(),
+        "semilla"      => semilla,
+        "n_train"      => nrow(Xtrain),
+        "n_test"       => nrow(Xtest),
+        "variables"    => names(Xtrain),
+        "metricas"     => metricas,
+        "dependencias" => dependencias,
+    )
+end
+
+ficha = ficha_modelo(mach, Dict("accuracy" => round(acierto, digits = 4)); semilla = SEMILLA)
+
+println("julia    : ", ficha["julia"])
+println("commit   : ", ficha["commit"])
+println("semilla  : ", ficha["semilla"])
+println("métricas : ", ficha["metricas"])
+println("paquetes : ", length(ficha["dependencias"]), " dependencias directas registradas")
+```
+
+Y la guardamos junto al modelo, en el mismo directorio y con el mismo destino.
+
+```{julia}
+directorio = mktempdir()
+
+MLJ.save(joinpath(directorio, "modelo.jls"), mach)
+open(joinpath(directorio, "modelo.json"), "w") do io
+    JSON.print(io, ficha, 2)
+end
+
+readdir(directorio)
+```
+
+Dos ficheros. Con ellos, dentro de seis meses, se puede saber qué versión de Julia y de MLJ produjeron ese modelo, con qué commit del código, con qué semilla y con qué resultado. Es poquísimo esfuerzo para la cantidad de discusiones que ahorra.
+
+::: {.callout-tip collapse="true"}
+## Fichas de modelo como documento público
+
+Esta idea tiene una versión más ambiciosa, las _model cards_, que además de los metadatos técnicos documentan para qué está pensado el modelo, para qué no, sobre qué población se entrenó y qué sesgos conocidos tiene.
+
+En nuestro ejemplo sería honesto anotar que el modelo se entrena sobre 891 pasajeros de un naufragio de 1912 y que no debería usarse para nada que no sea aprender a modelar.
+:::
+
+## Herramientas del ecosistema
+
+Cuando la ficha en JSON se queda corta, porque hay que comparar decenas de experimentos, el paso siguiente es un sistema de seguimiento:
+
+- [MLFlowClient.jl](https://github.com/JuliaAI/MLFlowClient.jl) permite registrar parámetros, métricas y artefactos contra un servidor MLflow, que es el estándar de facto y con el que probablemente ya trabaje el resto del equipo.
+- [DrWatson.jl](https://juliadynamics.github.io/DrWatson.jl/stable/) va por otro camino, muy propio de la comunidad científica de Julia: organiza el proyecto, nombra los ficheros de resultados a partir de los parámetros que los generaron y facilita reproducir simulaciones.
+
+::: {.callout-warning}
+## Dónde está Julia y dónde no
+
+Conviene ser sincero. En las fases de análisis, preparación y modelado el ecosistema de Julia es sólido y competitivo. En la capa de MLOps es claramente más joven que el de Python: hay menos integraciones ya hechas y en más de una ocasión habrá que hablar con la API REST de la herramienta correspondiente.
+
+No es un impedimento, porque los formatos son abiertos y los protocolos estándar, pero sí es trabajo que en Python vendría resuelto. Es un dato a tener en cuenta al decidir el lenguaje de un proyecto, y merece más la pena saberlo de antemano que descubrirlo a mitad de camino.
+:::
+
+## Una lista de comprobación
+
+A modo de resumen de todo lo que hemos ido construyendo, esto es lo que debería poder afirmarse de un proyecto antes de considerarlo listo para producción:
+
+- [ ] El entorno se reproduce con `Pkg.instantiate()` desde un `Manifest.toml` versionado.
+- [ ] Las semillas están fijadas y anotadas.
+- [ ] La separación entre entrenamiento y test se hizo antes de cualquier transformación que aprenda de los datos.
+- [ ] Todas las transformaciones viven dentro del pipeline, no fuera.
+- [ ] Las métricas proceden de validación cruzada y se reporta su dispersión, no solo la media.
+- [ ] El artefacto del modelo va acompañado de su ficha de metadatos.
+- [ ] El contrato de entrada está documentado, incluidos los niveles de las categóricas.
+- [ ] Hay monitorización de las entradas y de las salidas, no solo de la disponibilidad del servicio.
+- [ ] Existe un criterio escrito de cuándo reentrenar.
+- [ ] Se puede responder a la pregunta de qué modelo estaba sirviendo en una fecha dada.
+
+Ninguno de esos puntos es exótico y casi todos cuestan poco si se plantean desde el principio. Lo caro es añadirlos después, cuando ya hay un modelo en producción del que nadie sabe muy bien de dónde salió.
+
+## Hasta aquí
+
+Con esta parte cerramos el recorrido completo del ciclo de vida, desde leer un CSV hasta vigilar un modelo desplegado, sin salir de Julia en ningún momento. Quedan pendientes las fases de modelado y evaluación, que desarrollaremos con detalle en próximas entregas: comparar familias de modelos, ajustar hiperparámetros y elegir métricas con criterio.
