@@ -53,3 +53,7 @@ jobs:
         if: github.event_name != 'pull_request'
         id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          target: gh-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
