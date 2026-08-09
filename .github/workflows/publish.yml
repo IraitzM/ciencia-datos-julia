@@ -8,17 +8,11 @@ on:
 
 name: Quarto Publish
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      contents: write
     # Refuerza lo que ya indica `julia.exeflags` en _quarto.yml: todos los
     # capítulos deben usar el entorno del repositorio, no el global.
     env:
