@@ -69,6 +69,10 @@ book:
 
     - references.qmd
 
+  appendices:
+    - parts/apendices/apendice_a_tabular.qmd
+    - parts/apendices/apendice_b_deeplearning.qmd
+
 bibliography: references.bib
 
 format:

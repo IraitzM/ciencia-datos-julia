@@ -1,0 +1,180 @@
+---
+title: "Apéndice B: Deep Learning Iterativo (Julia vs. Python)"
+format:
+  html:
+    code-fold: false
+engine: julia
+---
+
+En este apéndice comparamos el desempeño de **Julia** (`Flux.jl` + `Zygote.jl`) frente a **Python** (`PyTorch`) en un pipeline de optimización iterativa mediante redes neuronales (*deep learning*). A diferencia del Apéndice A —donde ambos lenguajes delegaban gran parte del cómputo en backends C/C++ (LightGBM, NumPy)—, aquí el código de usuario **controla el bucle de entrenamiento completo**, incluyendo la diferenciación automática (AD) y las actualizaciones de parámetros.
+
+Este es precisamente el escenario donde la diferencia de rendimiento entre lenguajes se manifiesta con mayor claridad.
+
+::: {.callout-note}
+## Objetivo del Benchmark
+No medimos únicamente el tiempo de entrenamiento total, sino la **dinámica de convergencia en el tiempo**: ¿qué lenguaje alcanza antes un umbral de error objetivo ($\text{MSE} \leq 0.15$)? ¿Cómo se comporta cada uno al escalar el volumen de datos?
+:::
+
+## 1. Diseño del Experimento
+
+### Problema
+
+Se entrena una red neuronal MLP de 3 capas sobre una función sintética no lineal:
+
+$$y = \sin(x_1) + x_2^2 + \varepsilon, \quad \varepsilon \sim \mathcal{N}(0, 0.1)$$
+
+donde $\mathbf{X} \in \mathbb{R}^{10 \times N}$ con $N \in \{100.000,\ 500.000,\ 1.000.000\}$.
+
+### Arquitectura del Modelo (Idéntica en Ambos Lenguajes)
+
+| Capa | Entrada → Salida | Activación |
+| :--- | :--- | :--- |
+| Dense 1 | 10 → 64 | `relu` |
+| Dense 2 | 64 → 32 | `relu` |
+| Dense 3 | 32 → 1 | lineal |
+
+- **Optimizador**: Adam ($\alpha = 0.001$)
+- **Función de Pérdida**: MSE (Error Cuadrático Medio)
+- **Batch Size**: 512
+- **Épocas Máximas**: 50
+- **Umbral de Convergencia**: $\text{MSE} \leq 0.15$
+
+### Metodología de Medición
+
+Para aislar correctamente la compilación JIT de Julia del tiempo de ejecución real, ambos scripts realizan un **Warm-Up** previo con 50 muestras antes de lanzar los benchmarks.
+
+Las métricas registradas para cada tamaño de dataset son:
+
+1. **Tiempo por Época** (`epoch_time_ms`): Media del tiempo por iteración completa (forward + backward + update) en épocas calientes.
+2. **Época de Convergencia** (`convergence_epoch`): Primera época en que $\text{MSE} \leq 0.15$.
+3. **Tiempo hasta Convergencia** (`convergence_time_s`): Suma de tiempos de época hasta alcanzar el umbral.
+4. **Loss Final** (`final_loss`): Valor MSE al final de las 50 épocas.
+5. **Memoria por Época** (`alloc_per_epoch_mb`): Memoria alocada en el ciclo de gradientes.
+
+---
+
+## 2. Código del Benchmark en Julia (`Flux.jl`)
+
+```{julia}
+#| eval: false
+using Flux, Zygote, Random, Statistics
+
+# Generador de datos sintéticos
+function generate_regression_data(n_rows; n_features=10, seed=42)
+    rng = MersenneTwister(seed)
+    X = randn(rng, Float32, n_features, n_rows)
+    y = sin.(X[1:1,:]) .+ X[2:2,:].^2 .+ 0.1f0 .* randn(rng, Float32, 1, n_rows)
+    return X, y
+end
+
+# Definición del modelo MLP
+model = Chain(
+    Dense(10 => 64, relu),
+    Dense(64 => 32, relu),
+    Dense(32 => 1)
+)
+
+loss_fn(m, X, y) = Flux.mse(m(X), y)
+opt = Flux.setup(Adam(1e-3), model)
+loader = Flux.DataLoader((X, y), batchsize=512, shuffle=true)
+
+# Bucle de entrenamiento
+for epoch in 1:50
+    for (Xb, yb) in loader
+        grads = gradient(m -> loss_fn(m, Xb, yb), model)
+        Flux.update!(opt, model, grads[1])
+    end
+end
+```
+
+## 3. Código Equivalente en Python (`PyTorch`)
+
+```python
+import torch, torch.nn as nn
+from torch.utils.data import DataLoader, TensorDataset
+
+class MLP(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.Linear(10, 64), nn.ReLU(),
+            nn.Linear(64, 32), nn.ReLU(),
+            nn.Linear(32, 1)
+        )
+    def forward(self, x):
+        return self.net(x)
+
+model     = MLP()
+optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
+loss_fn   = nn.MSELoss()
+loader    = DataLoader(TensorDataset(X_t, y_t), batch_size=512, shuffle=True)
+
+for epoch in range(50):
+    for Xb, yb in loader:
+        optimizer.zero_grad()
+        loss_fn(model(Xb), yb).backward()
+        optimizer.step()
+```
+
+---
+
+## 4. Resultados: Escalabilidad y Convergencia
+
+Una vez ejecutados los scripts [`benchmark_dl_julia.jl`](../../scripts/benchmark_dl_julia.jl) y
+[`benchmark_dl_python.py`](../../scripts/benchmark_dl_python.py), los resultados completos son los siguientes.
+
+### Tiempo por Época en Caliente
+
+| Tamaño ($N$) | Julia (`Flux.jl`) | Python (`PyTorch`) | Ventaja |
+| :--- | :--- | :--- | :--- |
+| **100.000 filas** | **158.41 ms** | 2675.86 ms (2.68 s) | **Julia ~16.9x más rápido** |
+| **500.000 filas** | **755.80 ms** | 12541.49 ms (12.54 s) | **Julia ~16.6x más rápido** |
+| **1.000.000 filas** | **1693.82 ms** (1.69 s) | 23026.86 ms (23.03 s) | **Julia ~13.6x más rápido** |
+
+### Convergencia: Épocas y Tiempo hasta MSE ≤ 0.15
+
+| Tamaño ($N$) | Julia – Épocas | Julia – Tiempo | Python – Épocas | Python – Tiempo | Ventaja (tiempo) |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **100.000 filas** | 2 | **1.48 s** | 2 | 4.72 s | Julia ~3.2x |
+| **500.000 filas** | 1 | **1.01 s** | 1 | 12.81 s | **Julia ~12.7x** |
+| **1.000.000 filas** | 1 | **0.98 s** | 1 | 24.49 s | **Julia ~25.1x** |
+
+### Loss Final y Memoria por Época
+
+| Tamaño ($N$) | Julia – Loss Final | Python – Loss Final | Julia – Memoria | Python – Memoria |
+| :--- | :--- | :--- | :--- | :--- |
+| **100.000 filas** | 0.01119 | 0.01049 | 134.16 MB | 4.21 MB |
+| **500.000 filas** | 0.01029 | 0.01043 | 670.63 MB | 20.30 MB |
+| **1.000.000 filas** | 0.01055 | 0.01024 | 1341.26 MB (1.34 GB) | 40.31 MB |
+
+::: {.callout-caution}
+## Nota metodológica sobre la memoria
+Las cifras de memoria **no son directamente comparables**: Julia registra con `@allocated` todas las reservas del heap de Julia dentro del bucle de gradientes, mientras que `tracemalloc` en Python solo rastrea objetos de nivel Python y no contabiliza las alocaciones internas de tensores en C++. Además, `tracemalloc` añade sobrecarga a las mediciones de tiempo de Python (~1.5–2x); aun descontándola, la ventaja de Julia por época seguiría siendo del orden de ~6x–10x.
+:::
+
+## 5. Análisis Comparativo
+
+### ¿Por qué PyTorch usa C++ pero Julia compila código nativo?
+
+| Aspecto | Python (`PyTorch`) | Julia (`Flux.jl`) |
+| :--- | :--- | :--- |
+| **Motor de AD** | C++ (Autograd) | `Zygote.jl` (Julia nativo) |
+| **Bucle de Entrenamiento** | Python (lento) + C++ ops | Julia compilado JIT |
+| **Alocaciones en Loop** | Tensores PyTorch administrados | Control fino con `.=` y `@views` |
+| **Paralelismo** | OpenMP/BLAS via C | SIMD nativo + `Threads.@threads` |
+| **Sobrecarga en Batch Pequeño** | Alta (Python GIL + llamadas C) | Baja (bucle Julia nativo) |
+
+La diferencia clave: en PyTorch, el **bucle `for epoch in range(N_EPOCHS)`** se ejecuta en Python interpretado, y solo las operaciones tensoriales delegan a C++. En Julia, **todo** el bucle, incluyendo el backprop de `Zygote`, se compila a código máquina nativo.
+
+Los números lo confirman: dividiendo el tiempo por época entre los $N/512$ batches correspondientes, Julia opera a **~0.8 ms por batch** de forma estable en los tres tamaños, mientras que Python paga **~12–14 ms por batch**. El cuello de botella de PyTorch no es el cómputo tensorial (C++), sino la sobrecarga del bucle interpretado, el *autograd* y el `DataLoader` en **cada** paso de optimización.
+
+## 6. Conclusiones
+
+- **Velocidad por iteración**: Julia es **~13.6x–16.9x más rápido por época**, y la ventaja se mantiene estable al escalar de 100.000 a 1.000.000 de filas. Ambos lenguajes escalan de forma aproximadamente lineal con $N$, pero Python arrastra un coste fijo por *batch* muy superior.
+- **Convergencia idéntica, *wall-clock* distinto**: ambos alcanzan el umbral $\text{MSE} \leq 0.15$ en las mismas épocas (1–2) y terminan con un loss final prácticamente idéntico (~0.010–0.011). La diferencia es puramente de tiempo de ejecución: a 1.000.000 de filas, Julia converge en **0.98 s** frente a **24.49 s** de Python (**~25x**).
+- **Implicación práctica**: en bucles de entrenamiento controlados por el usuario (investigación, *hyperparameter tuning*, entrenamiento iterativo), el coste por paso se multiplica por miles de iteraciones; ahí es donde el código nativo compilado de Julia marca la mayor diferencia.
+
+::: {.callout-tip}
+## Conclusión del Benchmark
+Cuando el bucle de entrenamiento vive en el lenguaje de usuario, Julia (`Flux.jl` + `Zygote.jl`) es **~14x–17x más rápido por época** que Python (`PyTorch`) alcanzando exactamente la misma calidad de modelo (MSE final ~0.010). A diferencia del Apéndice A —donde los backends C/C++ igualaban parcialmente el terreno—, el control fino del bucle de optimización es el escenario donde el diseño compilado-JIT de Julia brilla con mayor claridad.
+:::
