@@ -9,7 +9,7 @@
 <meta name="author" content="Iraitz Montalbán">
 <meta name="description" content="Tutoriales y guías de ciencia de datos utilizando el lenguaje Julia.">
 
-<title>4&nbsp; Módulos y librerías – Ciencia de datos con Julia</title>
+<title>Apéndice A — Apéndice A: Comparativa Tabular (Julia vs.&nbsp;Python) – Ciencia de datos con Julia</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -73,8 +73,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../parts/firststeps/sistemaficheros.html" rel="next">
-<link href="../../parts/firststeps/flujos.html" rel="prev">
+<link href="../../parts/apendices/apendice_b_deeplearning.html" rel="next">
+<link href="../../references.html" rel="prev">
 <link href="../../images/cover.png" rel="icon" type="image/png">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -133,8 +133,37 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 <meta name="keywords" content="Julia, Ciencia de Datos, Visualización, Machine Learning">
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
 
-<meta property="og:title" content="4&nbsp; Módulos y librerías – Ciencia de datos con Julia">
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<meta property="og:title" content="Apéndice A — Apéndice A: Comparativa Tabular (Julia vs.&nbsp;Python) – Ciencia de datos con Julia">
 <meta property="og:description" content="Tutoriales y guías de ciencia de datos utilizando el lenguaje Julia.">
 <meta property="og:image" content="https://iraitzm.github.io/ciencia-datos-julia/images/cover.png">
 <meta property="og:site_name" content="Ciencia de datos con Julia">
@@ -151,7 +180,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../parts/firststeps/basics.html">Primeros pasos</a></li><li class="breadcrumb-item"><a href="../../parts/firststeps/librerias.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Módulos y librerías</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../parts/apendices/apendice_a_tabular.html">Appendices</a></li><li class="breadcrumb-item"><a href="../../parts/apendices/apendice_a_tabular.html"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Apéndice A: Comparativa Tabular (Julia vs.&nbsp;Python)</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Buscar" onclick="window.quartoOpenSearch();">
@@ -194,13 +223,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
  <span class="menu-text">Primeros pasos</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Alternar sección">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Alternar sección">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../parts/firststeps/basics.html" class="sidebar-item-text sidebar-link">
@@ -215,7 +244,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../parts/firststeps/librerias.html" class="sidebar-item-text sidebar-link active">
+  <a href="../../parts/firststeps/librerias.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Módulos y librerías</span></span></a>
   </div>
 </li>
@@ -322,16 +351,16 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
  <span class="menu-text">Appendices</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Alternar sección">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Alternar sección">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../parts/apendices/apendice_a_tabular.html" class="sidebar-item-text sidebar-link">
+  <a href="../../parts/apendices/apendice_a_tabular.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Apéndice A: Comparativa Tabular (Julia vs.&nbsp;Python)</span></span></a>
   </div>
 </li>
@@ -353,10 +382,15 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <h2 id="toc-title">Tabla de contenidos</h2>
    
   <ul>
-  <li><a href="#fechas" id="toc-fechas" class="nav-link active" data-scroll-target="#fechas"><span class="header-section-number">4.1</span> Fechas</a></li>
-  <li><a href="#descargas" id="toc-descargas" class="nav-link" data-scroll-target="#descargas"><span class="header-section-number">4.2</span> Descargas</a></li>
-  <li><a href="#aleatorios" id="toc-aleatorios" class="nav-link" data-scroll-target="#aleatorios"><span class="header-section-number">4.3</span> Aleatorios</a></li>
-  <li><a href="#paquetes-habituales" id="toc-paquetes-habituales" class="nav-link" data-scroll-target="#paquetes-habituales"><span class="header-section-number">4.4</span> Paquetes habituales</a></li>
+  <li><a href="#diseño-del-benchmark" id="toc-diseño-del-benchmark" class="nav-link active" data-scroll-target="#diseño-del-benchmark"><span class="header-section-number">A.1</span> 1. Diseño del Benchmark</a></li>
+  <li><a href="#código-del-benchmark-en-julia" id="toc-código-del-benchmark-en-julia" class="nav-link" data-scroll-target="#código-del-benchmark-en-julia"><span class="header-section-number">A.2</span> 2. Código del Benchmark en Julia</a></li>
+  <li><a href="#código-equivalente-en-python" id="toc-código-equivalente-en-python" class="nav-link" data-scroll-target="#código-equivalente-en-python"><span class="header-section-number">A.3</span> 3. Código Equivalente en Python</a></li>
+  <li><a href="#resultados-comparativos-y-escalabilidad" id="toc-resultados-comparativos-y-escalabilidad" class="nav-link" data-scroll-target="#resultados-comparativos-y-escalabilidad"><span class="header-section-number">A.4</span> 4. Resultados Comparativos y Escalabilidad</a>
+  <ul class="collapse">
+  <li><a href="#tiempo-de-preprocesado-e-ingeniería-de-características" id="toc-tiempo-de-preprocesado-e-ingeniería-de-características" class="nav-link" data-scroll-target="#tiempo-de-preprocesado-e-ingeniería-de-características"><span class="header-section-number">A.4.1</span> Tiempo de Preprocesado e Ingeniería de Características</a></li>
+  <li><a href="#tiempo-de-entrenamiento-del-modelo-fit" id="toc-tiempo-de-entrenamiento-del-modelo-fit" class="nav-link" data-scroll-target="#tiempo-de-entrenamiento-del-modelo-fit"><span class="header-section-number">A.4.2</span> Tiempo de Entrenamiento del Modelo (Fit)</a></li>
+  <li><a href="#resumen-global-a-2.000.000-de-filas" id="toc-resumen-global-a-2.000.000-de-filas" class="nav-link" data-scroll-target="#resumen-global-a-2.000.000-de-filas"><span class="header-section-number">A.4.3</span> Resumen Global a 2.000.000 de Filas</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -366,9 +400,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PLKHBRCG" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../parts/firststeps/basics.html">Primeros pasos</a></li><li class="breadcrumb-item"><a href="../../parts/firststeps/librerias.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Módulos y librerías</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../parts/apendices/apendice_a_tabular.html">Appendices</a></li><li class="breadcrumb-item"><a href="../../parts/apendices/apendice_a_tabular.html"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Apéndice A: Comparativa Tabular (Julia vs.&nbsp;Python)</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Módulos y librerías</span></h1>
+<h1 class="title">Apéndice A — Apéndice A: Comparativa Tabular (Julia vs.&nbsp;Python)</h1>
 </div>
 
 
@@ -391,123 +425,223 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </header>
 
 
-<p>Un aspecto clave en los lenguajes de programación para ciencia de datos es el uso de librerías. Estas nos permiten atajar retos que otros ya han enfrentado y hacer uso de funciones ya creadas para el objeto.</p>
-<p>La carga de módulos se hace mediante el comando <code>using</code></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Modulo</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Veremos algunos módulos base que nos ayudarán con ciertas structuras de datos complejas de manejar.</p>
-<section id="fechas" class="level2" data-number="4.1">
-<h2 data-number="4.1" class="anchored" data-anchor-id="fechas"><span class="header-section-number">4.1</span> Fechas</h2>
-<p>Para poder gestionar fechas deberemos importar un módulo específico</p>
-<div id="2" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Dates</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
+<p>En este apéndice comparamos el desempeño, tiempo de ejecución, sobrecarga de primera ejecución (<em>Time To First Execution</em> o TTFX) y consumo de memoria entre los entornos de <strong>Julia</strong> y <strong>Python</strong> al ejecutar un pipeline completo de ciencia de datos sobre datos tabulares.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
 </div>
-<p>Existen dos tipos de fecha que deberemos manejar. <code>Date</code> para fechas sin tiempo informado</p>
-<div id="4" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Date</span>(<span class="fl">2025</span>, <span class="fl">7</span>, <span class="fl">3</span>) <span class="co"># año, mes, dia</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>2025-07-03</code></pre>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Nota</span>Filosofía de la comparativa
 </div>
 </div>
-<p>Y <code>DateTime</code> para fechas en las que dispongamos de hora.</p>
-<div id="6" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">DateTime</span>(<span class="fl">2025</span>, <span class="fl">7</span>, <span class="fl">3</span>, <span class="fl">12</span>, <span class="fl">0</span>) <span class="co"># año, mes, dia, hora, minutos</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>2025-07-03T12:00:00</code></pre>
+<div class="callout-body-container callout-body">
+<p>La meta no es demostrar la absoluta superioridad de un lenguaje sobre otro en abstracto, sino medir objetivamente los costes y beneficios de cada entorno en fases clave: carga de paquetes, ingesta, preprocesado, entrenamiento y convergencia.</p>
 </div>
 </div>
-<p>Podremos también indicarlos basado en formato, como segundo argumento de nuestros dos tipos base.</p>
-<div id="8" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>format <span class="op">=</span> <span class="fu">DateFormat</span>(<span class="st">"yyyymmdd"</span>)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Date</span>(<span class="st">"19870913"</span>, format)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>1987-09-13</code></pre>
-</div>
-</div>
-<section id="intervalos" class="level4">
-<h4 class="anchored" data-anchor-id="intervalos">Intervalos</h4>
-<p>Como siempre con las fechas, podremos acceder a intervalos temporales (o periodos).</p>
-<div id="10" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>fecha <span class="op">=</span> <span class="fu">Date</span>(<span class="fl">2025</span>, <span class="fl">7</span>, <span class="fl">1</span>) </span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>periodo <span class="op">=</span> <span class="fu">today</span>() <span class="op">-</span> fecha</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>404 days</code></pre>
-</div>
-</div>
-<p>Podemos ver que tipo soporta nuestra variable resultante.</p>
-<div id="12" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(periodo)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>Day</code></pre>
-</div>
-</div>
-<p>La función <code>today()</code> devuelve un <code>Date</code>, y al restar dos <code>Date</code> obtenemos un <code>Day</code>. Si queremos más precisión deberemos trabajar con <code>DateTime</code> y usar <code>now()</code> en nuestra comparativa, para que la resta sea entre los mismos tipos.</p>
-<div id="14" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>fecha_hora_ms <span class="op">=</span> <span class="fu">DateTime</span>(<span class="fl">2025</span>, <span class="fl">7</span>, <span class="fl">1</span>, <span class="fl">12</span>, <span class="fl">1</span>, <span class="fl">3</span>, <span class="fl">120</span>) <span class="co"># el último campo son milisegundos</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>lapso <span class="op">=</span> <span class="fu">now</span>() <span class="op">-</span> fecha_hora_ms</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>34896921338 milliseconds</code></pre>
-</div>
-</div>
-<div id="16" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(lapso)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>Millisecond</code></pre>
-</div>
+<section id="diseño-del-benchmark" class="level2" data-number="A.1">
+<h2 data-number="A.1" class="anchored" data-anchor-id="diseño-del-benchmark"><span class="header-section-number">A.1</span> 1. Diseño del Benchmark</h2>
+<p>El pipeline implementado en ambos lenguajes ejecuta los siguientes pasos sobre una muestra sintética representativa (<span class="math inline">\(N = 100.000\)</span> filas):</p>
+<ol type="1">
+<li><strong>Ingesta y Transformación</strong>: Carga desde CSV e ingeniería de características (cálculo de ratios de ingresos por edad y filtrado condicional).</li>
+<li><strong>Preprocesado y Split</strong>: Imputación de faltantes, estandarización de variables numéricas y codificación <em>One-Hot</em> de variables categóricas, dividiendo el conjunto en entrenamiento (<span class="math inline">\(80\%\)</span>) y test (<span class="math inline">\(20\%\)</span>).</li>
+<li><strong>Ajuste del Modelo</strong>: Entrenamiento de una Regresión Logística regularizada (<code>MLJLinearModels.jl</code> en Julia y <code>scikit-learn</code> en Python).</li>
+<li><strong>Evaluación</strong>: Predicción sobre test y cálculo de la precisión (<em>Accuracy</em>).</li>
+</ol>
+</section>
+<section id="código-del-benchmark-en-julia" class="level2" data-number="A.2">
+<h2 data-number="A.2" class="anchored" data-anchor-id="código-del-benchmark-en-julia"><span class="header-section-number">A.2</span> 2. Código del Benchmark en Julia</h2>
+<p>En Julia utilizamos la infraestructura de <code>MLJ.jl</code>, <code>DataFrames.jl</code> y <code>DataFramesMeta.jl</code>.</p>
+<div id="2" class="cell" data-execution_count="0">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">CSV</span>, <span class="bu">DataFrames</span>, <span class="bu">DataFramesMeta</span>, <span class="bu">MLJ</span>, <span class="bu">MLJLinearModels</span>, <span class="bu">JSON</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Carga de datos</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> CSV.<span class="fu">read</span>(<span class="st">"data/benchmark_tabular.csv"</span>, DataFrame)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Transformación de datos</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>df_clean <span class="op">=</span> <span class="pp">@chain</span> df <span class="cf">begin</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@transform</span>(</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>        <span class="op">:</span>income_per_age <span class="op">=</span> <span class="op">:</span>income <span class="op">./</span> <span class="op">:</span>age,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>        <span class="op">:</span>high_credit <span class="op">=</span> <span class="op">:</span>credit_score <span class="op">.&gt;</span> <span class="fl">700</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@rsubset</span>(!<span class="fu">ismissing</span>(<span class="op">:</span>income))</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>df_clean.target <span class="op">=</span> <span class="fu">coerce</span>(df_clean.target, Multiclass)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>df_clean.education <span class="op">=</span> <span class="fu">coerce</span>(df_clean.education, Multiclass)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>y, X <span class="op">=</span> <span class="fu">unpack</span>(df_clean, <span class="op">==</span>(<span class="op">:</span>target))</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>(Xtrain, Xtest), (ytrain, ytest) <span class="op">=</span> <span class="fu">partition</span>((X, y), <span class="fl">0.8</span>, shuffle<span class="op">=</span><span class="cn">true</span>, rng<span class="op">=</span><span class="fl">42</span>)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Definición e ingeniería del Pipeline MLJ</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>RegresionLogistica <span class="op">=</span> <span class="pp">@load</span> LogisticClassifier pkg<span class="op">=</span>MLJLinearModels verbosity<span class="op">=</span><span class="fl">0</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>pipe <span class="op">=</span> <span class="fu">ContinuousEncoder</span>(drop_last<span class="op">=</span><span class="cn">true</span>) <span class="op">|&gt;</span> <span class="fu">Standardizer</span>() <span class="op">|&gt;</span> <span class="fu">RegresionLogistica</span>(lambda<span class="op">=</span><span class="fl">1.0</span>)</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>mach <span class="op">=</span> <span class="fu">machine</span>(pipe, Xtrain, ytrain)</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="fu">fit!</span>(mach, verbosity<span class="op">=</span><span class="fl">0</span>)</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>ŷ <span class="op">=</span> <span class="fu">predict_mode</span>(mach, Xtest)</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>acc <span class="op">=</span> <span class="fu">accuracy</span>(ŷ, ytest)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
+<section id="código-equivalente-en-python" class="level2" data-number="A.3">
+<h2 data-number="A.3" class="anchored" data-anchor-id="código-equivalente-en-python"><span class="header-section-number">A.3</span> 3. Código Equivalente en Python</h2>
+<p>En Python empleamos <code>pandas</code> y <code>scikit-learn</code> (<code>Pipeline</code> + <code>ColumnTransformer</code>).</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler, OneHotEncoder</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.impute <span class="im">import</span> SimpleImputer</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.compose <span class="im">import</span> ColumnTransformer</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> Pipeline</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LogisticRegression</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> accuracy_score</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">"data/benchmark_tabular.csv"</span>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"income_per_age"</span>] <span class="op">=</span> df[<span class="st">"income"</span>] <span class="op">/</span> df[<span class="st">"age"</span>]</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"high_credit"</span>] <span class="op">=</span> df[<span class="st">"credit_score"</span>] <span class="op">&gt;</span> <span class="dv">700</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>df_clean <span class="op">=</span> df.dropna(subset<span class="op">=</span>[<span class="st">"income"</span>]).copy()</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> df_clean[[<span class="st">"age"</span>, <span class="st">"income"</span>, <span class="st">"credit_score"</span>, <span class="st">"debt_ratio"</span>, <span class="st">"education"</span>, <span class="st">"income_per_age"</span>, <span class="st">"high_credit"</span>]]</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> df_clean[<span class="st">"target"</span>]</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>X_train, X_test, y_train, y_test <span class="op">=</span> train_test_split(X, y, test_size<span class="op">=</span><span class="fl">0.2</span>, random_state<span class="op">=</span><span class="dv">42</span>, stratify<span class="op">=</span>y)</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>num_cols <span class="op">=</span> [<span class="st">"age"</span>, <span class="st">"income"</span>, <span class="st">"credit_score"</span>, <span class="st">"debt_ratio"</span>, <span class="st">"income_per_age"</span>]</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>cat_cols <span class="op">=</span> [<span class="st">"education"</span>]</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>preprocessor <span class="op">=</span> ColumnTransformer(</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    transformers<span class="op">=</span>[</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>        (<span class="st">"num"</span>, Pipeline([(<span class="st">"imputer"</span>, SimpleImputer(strategy<span class="op">=</span><span class="st">"mean"</span>)), (<span class="st">"scaler"</span>, StandardScaler())]), num_cols),</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>        (<span class="st">"cat"</span>, OneHotEncoder(drop<span class="op">=</span><span class="st">"first"</span>, handle_unknown<span class="op">=</span><span class="st">"ignore"</span>), cat_cols),</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>    remainder<span class="op">=</span><span class="st">"passthrough"</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>pipeline <span class="op">=</span> Pipeline([</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"preprocessor"</span>, preprocessor),</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"classifier"</span>, LogisticRegression(max_iter<span class="op">=</span><span class="dv">1000</span>, random_state<span class="op">=</span><span class="dv">42</span>))</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>pipeline.fit(X_train, y_train)</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> pipeline.predict(X_test)</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>acc <span class="op">=</span> accuracy_score(y_test, y_pred)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="descargas" class="level2" data-number="4.2">
-<h2 data-number="4.2" class="anchored" data-anchor-id="descargas"><span class="header-section-number">4.2</span> Descargas</h2>
-<p>Existe otro módulo que nos vendrá muy bien a la hora de descargarnos ficheros.</p>
-<div id="18" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Downloads</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Podremos indicarle a la función <code>Downloads.download()</code> la dirección desde la que descargar nuestro conjunto de datos.</p>
-<div id="20" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/IraitzM/ciencia-datos-julia/refs/heads/main/parts/firststeps/ejemplo.txt"</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>fichero_proyecto <span class="op">=</span> <span class="bu">Downloads</span>.<span class="fu">download</span>(url) <span class="co"># creamos un fichero temporal</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>"/tmp/jl_u00GeD/ejemplo.txt"</code></pre>
-</div>
-</div>
-<p>Y con funciones como <code>readlines</code> leer su contenido.</p>
-<div id="22" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">readlines</span>(fichero_proyecto)</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>1-element Vector{String}:
- "Hola desde un fichero!"</code></pre>
-</div>
-</div>
-<p>Vemos que devuelve una estructura de <a href="https://docs.julialang.org/en/v1/base/arrays/#Base.Vector">Vector</a> con cadenas de texto (<a href="https://docs.julialang.org/en/v1/base/strings/#Base.string">String</a>) con el contenido del fichero.</p>
+<section id="resultados-comparativos-y-escalabilidad" class="level2" data-number="A.4">
+<h2 data-number="A.4" class="anchored" data-anchor-id="resultados-comparativos-y-escalabilidad"><span class="header-section-number">A.4</span> 4. Resultados Comparativos y Escalabilidad</h2>
+<p>Una vez aislado el tiempo de compilación JIT inicial (<em>Warm-up</em>), se analizó el comportamiento de ambos lenguajes al escalar el volumen del conjunto de datos desde <span class="math inline">\(100.000\)</span> hasta <span class="math inline">\(2.000.000\)</span> de filas:</p>
+<section id="tiempo-de-preprocesado-e-ingeniería-de-características" class="level3" data-number="A.4.1">
+<h3 data-number="A.4.1" class="anchored" data-anchor-id="tiempo-de-preprocesado-e-ingeniería-de-características"><span class="header-section-number">A.4.1</span> Tiempo de Preprocesado e Ingeniería de Características</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Tamaño (<span class="math inline">\(N\)</span>)</th>
+<th style="text-align: left;">Julia (<code>DataFrames.jl</code> / <code>MLJ</code>)</th>
+<th style="text-align: left;">Python (<code>pandas</code> / <code>scikit-learn</code>)</th>
+<th style="text-align: left;">Diferencia / Ventaja</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>100.000 filas</strong></td>
+<td style="text-align: left;"><strong>17.64 ms</strong></td>
+<td style="text-align: left;">490.09 ms</td>
+<td style="text-align: left;"><strong>Julia ~27.7x más rápido</strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>500.000 filas</strong></td>
+<td style="text-align: left;"><strong>76.12 ms</strong></td>
+<td style="text-align: left;">2.35 s</td>
+<td style="text-align: left;"><strong>Julia ~30.9x más rápido</strong></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>1.000.000 filas</strong></td>
+<td style="text-align: left;"><strong>372.91 ms</strong></td>
+<td style="text-align: left;">4.70 s</td>
+<td style="text-align: left;"><strong>Julia ~12.6x más rápido</strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>2.000.000 filas</strong></td>
+<td style="text-align: left;"><strong>558.33 ms</strong> (0.55 s)</td>
+<td style="text-align: left;">9.37 s</td>
+<td style="text-align: left;"><strong>Julia ~16.7x más rápido</strong></td>
+</tr>
+</tbody>
+</table>
 </section>
-<section id="aleatorios" class="level2" data-number="4.3">
-<h2 data-number="4.3" class="anchored" data-anchor-id="aleatorios"><span class="header-section-number">4.3</span> Aleatorios</h2>
-<p>Trabajar con números aleatorios es habitual en ciencia de datos, y para ello podemos recurrir al módulo <code>Random</code></p>
-<div id="24" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Random</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="bu">Random</span>.<span class="fu">seed!</span>(<span class="fl">1234</span>)</span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="bu">Random</span>.<span class="fu">randn</span>()</span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>-0.3597289068234817</code></pre>
-</div>
-</div>
+<section id="tiempo-de-entrenamiento-del-modelo-fit" class="level3" data-number="A.4.2">
+<h3 data-number="A.4.2" class="anchored" data-anchor-id="tiempo-de-entrenamiento-del-modelo-fit"><span class="header-section-number">A.4.2</span> Tiempo de Entrenamiento del Modelo (Fit)</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Tamaño (<span class="math inline">\(N\)</span>)</th>
+<th style="text-align: left;">Julia (<code>MLJLinearModels</code>)</th>
+<th style="text-align: left;">Python (<code>scikit-learn</code>)</th>
+<th style="text-align: left;">Diferencia / Ventaja</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>100.000 filas</strong></td>
+<td style="text-align: left;"><strong>0.080 s</strong></td>
+<td style="text-align: left;">0.118 s</td>
+<td style="text-align: left;">Julia ~1.5x más rápido</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>500.000 filas</strong></td>
+<td style="text-align: left;">0.428 s</td>
+<td style="text-align: left;"><strong>0.408 s</strong></td>
+<td style="text-align: left;">Prácticamente idénticos</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>1.000.000 filas</strong></td>
+<td style="text-align: left;"><strong>0.774 s</strong></td>
+<td style="text-align: left;">0.829 s</td>
+<td style="text-align: left;">Julia ~1.07x más rápido</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>2.000.000 filas</strong></td>
+<td style="text-align: left;"><strong>1.082 s</strong></td>
+<td style="text-align: left;">1.522 s</td>
+<td style="text-align: left;"><strong>Julia ~1.41x más rápido</strong></td>
+</tr>
+</tbody>
+</table>
 </section>
-<section id="paquetes-habituales" class="level2" data-number="4.4">
-<h2 data-number="4.4" class="anchored" data-anchor-id="paquetes-habituales"><span class="header-section-number">4.4</span> Paquetes habituales</h2>
-<p>En el caso de tratarse de módulos no disponibles como parte de la librería standard, deberemos recurrir al gestor de paquetes e instalarlas.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Pkg;</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">add</span>(<span class="st">"Libreria"</span>) <span class="co"># sin el sufijo .jl</span></span></code></pre></div><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Tal y como veíamos en la <a href="../../intro.html#crear-un-proyecto">introducción</a> estos paquetes serán añadidos a los dos ficheros clave que nos permiten reproducir nuestro entorno en otra máquina.</p>
-<p>Las librerías que emplearemos en líneas generales son:</p>
+<section id="resumen-global-a-2.000.000-de-filas" class="level3" data-number="A.4.3">
+<h3 data-number="A.4.3" class="anchored" data-anchor-id="resumen-global-a-2.000.000-de-filas"><span class="header-section-number">A.4.3</span> Resumen Global a 2.000.000 de Filas</h3>
 <ul>
-<li><strong>Manipulación de datos</strong>: <a href="https://dataframes.juliadata.org/stable/">DataFrames.jl</a> y <a href="https://juliadata.org/DataFramesMeta.jl/stable/">DataFramesMeta.jl</a></li>
-<li><strong>Visualización</strong>: <a href="https://docs.juliaplots.org/stable/">Plots.jl</a></li>
+<li><strong>Tiempo Total de Pipeline en Caliente</strong>: Julia completa el preprocesado y entrenamiento en <strong>1.64 segundos</strong>, mientras que Python requiere <strong>10.89 segundos</strong> (<strong>Julia ~6.6x más rápido globalmente</strong>).</li>
+<li><strong>Arranque Frío vs.&nbsp;Caliente</strong>: Python mantiene la ventaja en scripts de un solo uso por tiempo de carga de módulos (0.9s vs 2.9s + JIT). Sin embargo, en entonos de servidor, APIs o pipelines iterativos (<em>Warm Execution</em>), Julia supera drásticamente a Python a medida que escala el volumen de datos.</li>
 </ul>
-<p>Todos estos paquetes y más están disponibles en https://juliapackages.com/.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Conclusión de Escalabilidad
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A medida que el volumen de datos crece hacia millones de filas, la ventaja de velocidad de Julia se multiplica (alcanzando velocidades <strong>hasta 30 veces superiores en manipulación de datos</strong>), ya que las transformaciones se ejecutan mediante código vectorial nativo optimizado con SIMD y multihilo en lugar de pasar por bucles interpretados de Python.</p>
+</div>
+</div>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -913,13 +1047,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../../parts/firststeps/flujos.html" class="pagination-link" aria-label="Flujos en Julia">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Flujos en Julia</span></span>
+      <a href="../../references.html" class="pagination-link" aria-label="Referencias">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Referencias</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../parts/firststeps/sistemaficheros.html" class="pagination-link" aria-label="Sistema de ficheros">
-        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Sistema de ficheros</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../../parts/apendices/apendice_b_deeplearning.html" class="pagination-link" aria-label="Apéndice B: Deep Learning Iterativo (Julia vs. Python)">
+        <span class="nav-page-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Apéndice B: Deep Learning Iterativo (Julia vs.&nbsp;Python)</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

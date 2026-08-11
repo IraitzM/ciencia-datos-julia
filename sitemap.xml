@@ -2,66 +2,74 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://iraitzm.github.io/ciencia-datos-julia/index.html</loc>
-    <lastmod>2026-08-09T16:43:08.164Z</lastmod>
+    <lastmod>2026-08-11T16:54:29.256Z</lastmod>
   </url>
   <url>
     <loc>https://iraitzm.github.io/ciencia-datos-julia/intro.html</loc>
-    <lastmod>2026-08-09T16:43:08.164Z</lastmod>
+    <lastmod>2026-08-11T16:54:29.256Z</lastmod>
   </url>
   <url>
     <loc>https://iraitzm.github.io/ciencia-datos-julia/parts/firststeps/basics.html</loc>
-    <lastmod>2026-08-09T16:43:08.166Z</lastmod>
+    <lastmod>2026-08-11T16:54:29.257Z</lastmod>
   </url>
   <url>
     <loc>https://iraitzm.github.io/ciencia-datos-julia/parts/firststeps/flujos.html</loc>
-    <lastmod>2026-08-09T16:43:08.166Z</lastmod>
+    <lastmod>2026-08-11T16:54:29.257Z</lastmod>
   </url>
   <url>
     <loc>https://iraitzm.github.io/ciencia-datos-julia/parts/firststeps/librerias.html</loc>
-    <lastmod>2026-08-09T16:43:08.166Z</lastmod>
+    <lastmod>2026-08-11T16:54:29.257Z</lastmod>
   </url>
   <url>
     <loc>https://iraitzm.github.io/ciencia-datos-julia/parts/firststeps/sistemaficheros.html</loc>
-    <lastmod>2026-08-09T16:43:08.166Z</lastmod>
+    <lastmod>2026-08-11T16:54:29.257Z</lastmod>
   </url>
   <url>
     <loc>https://iraitzm.github.io/ciencia-datos-julia/parts/dataframes/basics.html</loc>
-    <lastmod>2026-08-09T16:43:08.166Z</lastmod>
+    <lastmod>2026-08-11T16:54:29.257Z</lastmod>
   </url>
   <url>
     <loc>https://iraitzm.github.io/ciencia-datos-julia/parts/dataframes/summary.html</loc>
-    <lastmod>2026-08-09T16:43:08.166Z</lastmod>
+    <lastmod>2026-08-11T16:54:29.257Z</lastmod>
   </url>
   <url>
     <loc>https://iraitzm.github.io/ciencia-datos-julia/parts/dataframes/exploratory.html</loc>
-    <lastmod>2026-08-09T16:43:08.166Z</lastmod>
+    <lastmod>2026-08-11T16:54:29.257Z</lastmod>
   </url>
   <url>
     <loc>https://iraitzm.github.io/ciencia-datos-julia/parts/preparacion/particion.html</loc>
-    <lastmod>2026-08-09T16:43:08.166Z</lastmod>
+    <lastmod>2026-08-11T16:54:29.257Z</lastmod>
   </url>
   <url>
     <loc>https://iraitzm.github.io/ciencia-datos-julia/parts/preparacion/codificacion.html</loc>
-    <lastmod>2026-08-09T16:43:08.166Z</lastmod>
+    <lastmod>2026-08-11T16:54:29.257Z</lastmod>
   </url>
   <url>
     <loc>https://iraitzm.github.io/ciencia-datos-julia/parts/preparacion/pipelines.html</loc>
-    <lastmod>2026-08-09T16:43:08.166Z</lastmod>
+    <lastmod>2026-08-11T16:54:29.257Z</lastmod>
   </url>
   <url>
     <loc>https://iraitzm.github.io/ciencia-datos-julia/parts/produccion/despliegue.html</loc>
-    <lastmod>2026-08-09T16:43:08.166Z</lastmod>
+    <lastmod>2026-08-11T16:54:29.257Z</lastmod>
   </url>
   <url>
     <loc>https://iraitzm.github.io/ciencia-datos-julia/parts/produccion/monitorizacion.html</loc>
-    <lastmod>2026-08-09T16:43:08.167Z</lastmod>
+    <lastmod>2026-08-11T16:54:29.258Z</lastmod>
   </url>
   <url>
     <loc>https://iraitzm.github.io/ciencia-datos-julia/parts/produccion/mlops.html</loc>
-    <lastmod>2026-08-09T16:43:08.167Z</lastmod>
+    <lastmod>2026-08-11T16:54:29.258Z</lastmod>
   </url>
   <url>
     <loc>https://iraitzm.github.io/ciencia-datos-julia/references.html</loc>
-    <lastmod>2026-08-09T16:43:08.167Z</lastmod>
+    <lastmod>2026-08-11T16:54:29.258Z</lastmod>
+  </url>
+  <url>
+    <loc>https://iraitzm.github.io/ciencia-datos-julia/parts/apendices/apendice_a_tabular.html</loc>
+    <lastmod>2026-08-11T16:54:29.257Z</lastmod>
+  </url>
+  <url>
+    <loc>https://iraitzm.github.io/ciencia-datos-julia/parts/apendices/apendice_b_deeplearning.html</loc>
+    <lastmod>2026-08-11T16:54:29.257Z</lastmod>
   </url>
 </urlset>

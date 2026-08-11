@@ -779,7 +779,7 @@
     "href": "parts/produccion/mlops.html#una-ficha-del-modelo",
     "title": "14  El ciclo de vida completo",
     "section": "14.2 Una ficha del modelo",
-    "text": "14.2 Una ficha del modelo\nLa forma más barata de empezar a ser trazable es que cada modelo entrenado escriba, junto a sus parámetros, un fichero con las circunstancias en las que nació. No requiere ninguna infraestructura y responde a la mayoría de las preguntas incómodas.\n\n\nReconstruimos y entrenamos el pipeline\nusing CSV, DataFrames, MLJ, Statistics, CategoricalArrays, MLJLinearModels\n\nconst SEMILLA = 1234\n\ndf = CSV.read(joinpath(data_path, \"titanic.csv\"), DataFrame)\nselect!(df, Not([:PassengerId, :Name, :Ticket, :Cabin, :Embarked]))\ndf.Survived = coerce(df.Survived, Multiclass)\n\ny, X = unpack(df, ==(:Survived))\nX = coerce(X, :Pclass =&gt; OrderedFactor, :Sex =&gt; Multiclass)\nlevels!(X.Pclass, [3, 2, 1])\n\n(Xtrain, Xtest), (ytrain, ytest) = partition(\n    (X, y), 0.7, multi = true, shuffle = true, stratify = y, rng = SEMILLA\n)\n\nRegresionLogistica = @load LogisticClassifier pkg=MLJLinearModels verbosity=0\npipe = FillImputer() |&gt; Standardizer() |&gt; ContinuousEncoder() |&gt; RegresionLogistica()\n\nmach = machine(pipe, Xtrain, ytrain)\nfit!(mach, verbosity = 0)\n\nacierto = accuracy(predict_mode(mach, Xtest), ytest)\n\n\n\nPrecompiling packages...\n   1835.9 ms  ✓ QuartoNotebookWorkerTablesExt (serial)\n  1 dependency successfully precompiled in 2 seconds\nPrecompiling packages...\n    900.0 ms  ✓ QuartoNotebookWorkerLaTeXStringsExt (serial)\n  1 dependency successfully precompiled in 1 seconds\nPrecompiling packages...\n   2057.8 ms  ✓ QuartoNotebookWorkerJSONExt (serial)\n  1 dependency successfully precompiled in 2 seconds\n\n\n\n\n0.7798507462686567\n\n\nRecogemos el estado del entorno de forma programática, sin escribirlo a mano en ningún sitio donde pueda quedarse obsoleto.\n\nusing Pkg, Dates, JSON\n\nfunction commit_actual()\n    try\n        return strip(read(`git rev-parse --short HEAD`, String))\n    catch\n        return \"desconocido\"\n    end\nend\n\nfunction ficha_modelo(mach, metricas; semilla)\n    dependencias = Dict(\n        v.name =&gt; string(v.version)\n        for (_, v) in Pkg.dependencies()\n        if v.is_direct_dep && v.version !== nothing\n    )\n\n    Dict(\n        \"creado\"       =&gt; string(now()),\n        \"julia\"        =&gt; string(VERSION),\n        \"commit\"       =&gt; commit_actual(),\n        \"semilla\"      =&gt; semilla,\n        \"n_train\"      =&gt; nrow(Xtrain),\n        \"n_test\"       =&gt; nrow(Xtest),\n        \"variables\"    =&gt; names(Xtrain),\n        \"metricas\"     =&gt; metricas,\n        \"dependencias\" =&gt; dependencias,\n    )\nend\n\nficha = ficha_modelo(mach, Dict(\"accuracy\" =&gt; round(acierto, digits = 4)); semilla = SEMILLA)\n\nprintln(\"julia    : \", ficha[\"julia\"])\nprintln(\"commit   : \", ficha[\"commit\"])\nprintln(\"semilla  : \", ficha[\"semilla\"])\nprintln(\"métricas : \", ficha[\"metricas\"])\nprintln(\"paquetes : \", length(ficha[\"dependencias\"]), \" dependencias directas registradas\")\n\njulia    : 1.12.6\ncommit   : 1bca237\nsemilla  : 1234\nmétricas : Dict(\"accuracy\" =&gt; 0.7799)\npaquetes : 19 dependencias directas registradas\n\n\nY la guardamos junto al modelo, en el mismo directorio y con el mismo destino.\n\ndirectorio = mktempdir()\n\nMLJ.save(joinpath(directorio, \"modelo.jls\"), mach)\nopen(joinpath(directorio, \"modelo.json\"), \"w\") do io\n    JSON.print(io, ficha, 2)\nend\n\nreaddir(directorio)\n\n2-element Vector{String}:\n \"modelo.jls\"\n \"modelo.json\"\n\n\nDos ficheros. Con ellos, dentro de seis meses, se puede saber qué versión de Julia y de MLJ produjeron ese modelo, con qué commit del código, con qué semilla y con qué resultado. Es poquísimo esfuerzo para la cantidad de discusiones que ahorra.\n\n\n\n\n\n\nTipFichas de modelo como documento público\n\n\n\n\n\nEsta idea tiene una versión más ambiciosa, las model cards, que además de los metadatos técnicos documentan para qué está pensado el modelo, para qué no, sobre qué población se entrenó y qué sesgos conocidos tiene.\nEn nuestro ejemplo sería honesto anotar que el modelo se entrena sobre 891 pasajeros de un naufragio de 1912 y que no debería usarse para nada que no sea aprender a modelar.",
+    "text": "14.2 Una ficha del modelo\nLa forma más barata de empezar a ser trazable es que cada modelo entrenado escriba, junto a sus parámetros, un fichero con las circunstancias en las que nació. No requiere ninguna infraestructura y responde a la mayoría de las preguntas incómodas.\n\n\nReconstruimos y entrenamos el pipeline\nusing CSV, DataFrames, MLJ, Statistics, CategoricalArrays, MLJLinearModels\n\nconst SEMILLA = 1234\n\ndf = CSV.read(joinpath(data_path, \"titanic.csv\"), DataFrame)\nselect!(df, Not([:PassengerId, :Name, :Ticket, :Cabin, :Embarked]))\ndf.Survived = coerce(df.Survived, Multiclass)\n\ny, X = unpack(df, ==(:Survived))\nX = coerce(X, :Pclass =&gt; OrderedFactor, :Sex =&gt; Multiclass)\nlevels!(X.Pclass, [3, 2, 1])\n\n(Xtrain, Xtest), (ytrain, ytest) = partition(\n    (X, y), 0.7, multi = true, shuffle = true, stratify = y, rng = SEMILLA\n)\n\nRegresionLogistica = @load LogisticClassifier pkg=MLJLinearModels verbosity=0\npipe = FillImputer() |&gt; Standardizer() |&gt; ContinuousEncoder() |&gt; RegresionLogistica()\n\nmach = machine(pipe, Xtrain, ytrain)\nfit!(mach, verbosity = 0)\n\nacierto = accuracy(predict_mode(mach, Xtest), ytest)\n\n\n0.7798507462686567\n\n\nRecogemos el estado del entorno de forma programática, sin escribirlo a mano en ningún sitio donde pueda quedarse obsoleto.\n\nusing Pkg, Dates, JSON\n\nfunction commit_actual()\n    try\n        return strip(read(`git rev-parse --short HEAD`, String))\n    catch\n        return \"desconocido\"\n    end\nend\n\nfunction ficha_modelo(mach, metricas; semilla)\n    dependencias = Dict(\n        v.name =&gt; string(v.version)\n        for (_, v) in Pkg.dependencies()\n        if v.is_direct_dep && v.version !== nothing\n    )\n\n    Dict(\n        \"creado\"       =&gt; string(now()),\n        \"julia\"        =&gt; string(VERSION),\n        \"commit\"       =&gt; commit_actual(),\n        \"semilla\"      =&gt; semilla,\n        \"n_train\"      =&gt; nrow(Xtrain),\n        \"n_test\"       =&gt; nrow(Xtest),\n        \"variables\"    =&gt; names(Xtrain),\n        \"metricas\"     =&gt; metricas,\n        \"dependencias\" =&gt; dependencias,\n    )\nend\n\nficha = ficha_modelo(mach, Dict(\"accuracy\" =&gt; round(acierto, digits = 4)); semilla = SEMILLA)\n\nprintln(\"julia    : \", ficha[\"julia\"])\nprintln(\"commit   : \", ficha[\"commit\"])\nprintln(\"semilla  : \", ficha[\"semilla\"])\nprintln(\"métricas : \", ficha[\"metricas\"])\nprintln(\"paquetes : \", length(ficha[\"dependencias\"]), \" dependencias directas registradas\")\n\njulia    : 1.12.6\ncommit   : 9b987ae\nsemilla  : 1234\nmétricas : Dict(\"accuracy\" =&gt; 0.7799)\npaquetes : 19 dependencias directas registradas\n\n\nY la guardamos junto al modelo, en el mismo directorio y con el mismo destino.\n\ndirectorio = mktempdir()\n\nMLJ.save(joinpath(directorio, \"modelo.jls\"), mach)\nopen(joinpath(directorio, \"modelo.json\"), \"w\") do io\n    JSON.print(io, ficha, 2)\nend\n\nreaddir(directorio)\n\n2-element Vector{String}:\n \"modelo.jls\"\n \"modelo.json\"\n\n\nDos ficheros. Con ellos, dentro de seis meses, se puede saber qué versión de Julia y de MLJ produjeron ese modelo, con qué commit del código, con qué semilla y con qué resultado. Es poquísimo esfuerzo para la cantidad de discusiones que ahorra.\n\n\n\n\n\n\nTipFichas de modelo como documento público\n\n\n\n\n\nEsta idea tiene una versión más ambiciosa, las model cards, que además de los metadatos técnicos documentan para qué está pensado el modelo, para qué no, sobre qué población se entrenó y qué sesgos conocidos tiene.\nEn nuestro ejemplo sería honesto anotar que el modelo se entrena sobre 891 pasajeros de un naufragio de 1912 y que no debería usarse para nada que no sea aprender a modelar.",
     "crumbs": [
       "Puesta en producción",
       "<span class='chapter-number'>14</span>  <span class='chapter-title'>El ciclo de vida completo</span>"
@@ -826,6 +826,138 @@
     "text": "Bezanson, Jeff, Alan Edelman, Stefan Karpinski, and Viral B Shah. 2017.\n“Julia: A Fresh Approach to Numerical Computing.” SIAM\nReview 59 (1): 65–98.\n\n\nLattner, Chris, and Vikram Adve. 2004. “LLVM: A Compilation\nFramework for Lifelong Program Analysis & Transformation.”\nInternational Symposium on Code Generation and Optimization, 2004.\nCGO 2004., 75–86. https://llvm.org/pubs/2004-01-30-CGO-LLVM.pdf.\n\n\nStoropoli, Jose, Rik Huijzer, and Lazaro Alonso. 2021. Julia Data\nScience. https://juliadatascience.io.",
     "crumbs": [
       "Referencias"
+    ]
+  },
+  {
+    "objectID": "parts/apendices/apendice_a_tabular.html",
+    "href": "parts/apendices/apendice_a_tabular.html",
+    "title": "Apéndice A — Apéndice A: Comparativa Tabular (Julia vs. Python)",
+    "section": "",
+    "text": "A.1 1. Diseño del Benchmark\nEn este apéndice comparamos el desempeño, tiempo de ejecución, sobrecarga de primera ejecución (Time To First Execution o TTFX) y consumo de memoria entre los entornos de Julia y Python al ejecutar un pipeline completo de ciencia de datos sobre datos tabulares.\nEl pipeline implementado en ambos lenguajes ejecuta los siguientes pasos sobre una muestra sintética representativa (\\(N = 100.000\\) filas):",
+    "crumbs": [
+      "Appendices",
+      "<span class='chapter-number'>A</span>  <span class='chapter-title'>Apéndice A: Comparativa Tabular (Julia vs. Python)</span>"
+    ]
+  },
+  {
+    "objectID": "parts/apendices/apendice_a_tabular.html#diseño-del-benchmark",
+    "href": "parts/apendices/apendice_a_tabular.html#diseño-del-benchmark",
+    "title": "Apéndice A — Apéndice A: Comparativa Tabular (Julia vs. Python)",
+    "section": "",
+    "text": "Ingesta y Transformación: Carga desde CSV e ingeniería de características (cálculo de ratios de ingresos por edad y filtrado condicional).\nPreprocesado y Split: Imputación de faltantes, estandarización de variables numéricas y codificación One-Hot de variables categóricas, dividiendo el conjunto en entrenamiento (\\(80\\%\\)) y test (\\(20\\%\\)).\nAjuste del Modelo: Entrenamiento de una Regresión Logística regularizada (MLJLinearModels.jl en Julia y scikit-learn en Python).\nEvaluación: Predicción sobre test y cálculo de la precisión (Accuracy).",
+    "crumbs": [
+      "Appendices",
+      "<span class='chapter-number'>A</span>  <span class='chapter-title'>Apéndice A: Comparativa Tabular (Julia vs. Python)</span>"
+    ]
+  },
+  {
+    "objectID": "parts/apendices/apendice_a_tabular.html#código-del-benchmark-en-julia",
+    "href": "parts/apendices/apendice_a_tabular.html#código-del-benchmark-en-julia",
+    "title": "Apéndice A — Apéndice A: Comparativa Tabular (Julia vs. Python)",
+    "section": "A.2 2. Código del Benchmark en Julia",
+    "text": "A.2 2. Código del Benchmark en Julia\nEn Julia utilizamos la infraestructura de MLJ.jl, DataFrames.jl y DataFramesMeta.jl.\n\nusing CSV, DataFrames, DataFramesMeta, MLJ, MLJLinearModels, JSON\n\n# Carga de datos\ndf = CSV.read(\"data/benchmark_tabular.csv\", DataFrame)\n\n# Transformación de datos\ndf_clean = @chain df begin\n    @transform(\n        :income_per_age = :income ./ :age,\n        :high_credit = :credit_score .&gt; 700\n    )\n    @rsubset(!ismissing(:income))\nend\n\ndf_clean.target = coerce(df_clean.target, Multiclass)\ndf_clean.education = coerce(df_clean.education, Multiclass)\n\ny, X = unpack(df_clean, ==(:target))\n(Xtrain, Xtest), (ytrain, ytest) = partition((X, y), 0.8, shuffle=true, rng=42)\n\n# Definición e ingeniería del Pipeline MLJ\nRegresionLogistica = @load LogisticClassifier pkg=MLJLinearModels verbosity=0\npipe = ContinuousEncoder(drop_last=true) |&gt; Standardizer() |&gt; RegresionLogistica(lambda=1.0)\n\nmach = machine(pipe, Xtrain, ytrain)\nfit!(mach, verbosity=0)\n\nŷ = predict_mode(mach, Xtest)\nacc = accuracy(ŷ, ytest)",
+    "crumbs": [
+      "Appendices",
+      "<span class='chapter-number'>A</span>  <span class='chapter-title'>Apéndice A: Comparativa Tabular (Julia vs. Python)</span>"
+    ]
+  },
+  {
+    "objectID": "parts/apendices/apendice_a_tabular.html#código-equivalente-en-python",
+    "href": "parts/apendices/apendice_a_tabular.html#código-equivalente-en-python",
+    "title": "Apéndice A — Apéndice A: Comparativa Tabular (Julia vs. Python)",
+    "section": "A.3 3. Código Equivalente en Python",
+    "text": "A.3 3. Código Equivalente en Python\nEn Python empleamos pandas y scikit-learn (Pipeline + ColumnTransformer).\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler, OneHotEncoder\nfrom sklearn.impute import SimpleImputer\nfrom sklearn.compose import ColumnTransformer\nfrom sklearn.pipeline import Pipeline\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.metrics import accuracy_score\n\ndf = pd.read_csv(\"data/benchmark_tabular.csv\")\n\ndf[\"income_per_age\"] = df[\"income\"] / df[\"age\"]\ndf[\"high_credit\"] = df[\"credit_score\"] &gt; 700\ndf_clean = df.dropna(subset=[\"income\"]).copy()\n\nX = df_clean[[\"age\", \"income\", \"credit_score\", \"debt_ratio\", \"education\", \"income_per_age\", \"high_credit\"]]\ny = df_clean[\"target\"]\n\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)\n\nnum_cols = [\"age\", \"income\", \"credit_score\", \"debt_ratio\", \"income_per_age\"]\ncat_cols = [\"education\"]\n\npreprocessor = ColumnTransformer(\n    transformers=[\n        (\"num\", Pipeline([(\"imputer\", SimpleImputer(strategy=\"mean\")), (\"scaler\", StandardScaler())]), num_cols),\n        (\"cat\", OneHotEncoder(drop=\"first\", handle_unknown=\"ignore\"), cat_cols),\n    ],\n    remainder=\"passthrough\"\n)\n\npipeline = Pipeline([\n    (\"preprocessor\", preprocessor),\n    (\"classifier\", LogisticRegression(max_iter=1000, random_state=42))\n])\n\npipeline.fit(X_train, y_train)\ny_pred = pipeline.predict(X_test)\nacc = accuracy_score(y_test, y_pred)",
+    "crumbs": [
+      "Appendices",
+      "<span class='chapter-number'>A</span>  <span class='chapter-title'>Apéndice A: Comparativa Tabular (Julia vs. Python)</span>"
+    ]
+  },
+  {
+    "objectID": "parts/apendices/apendice_a_tabular.html#resultados-comparativos-y-escalabilidad",
+    "href": "parts/apendices/apendice_a_tabular.html#resultados-comparativos-y-escalabilidad",
+    "title": "Apéndice A — Apéndice A: Comparativa Tabular (Julia vs. Python)",
+    "section": "A.4 4. Resultados Comparativos y Escalabilidad",
+    "text": "A.4 4. Resultados Comparativos y Escalabilidad\nUna vez aislado el tiempo de compilación JIT inicial (Warm-up), se analizó el comportamiento de ambos lenguajes al escalar el volumen del conjunto de datos desde \\(100.000\\) hasta \\(2.000.000\\) de filas:\n\nA.4.1 Tiempo de Preprocesado e Ingeniería de Características\n\n\n\n\n\n\n\n\n\nTamaño (\\(N\\))\nJulia (DataFrames.jl / MLJ)\nPython (pandas / scikit-learn)\nDiferencia / Ventaja\n\n\n\n\n100.000 filas\n17.64 ms\n490.09 ms\nJulia ~27.7x más rápido\n\n\n500.000 filas\n76.12 ms\n2.35 s\nJulia ~30.9x más rápido\n\n\n1.000.000 filas\n372.91 ms\n4.70 s\nJulia ~12.6x más rápido\n\n\n2.000.000 filas\n558.33 ms (0.55 s)\n9.37 s\nJulia ~16.7x más rápido\n\n\n\n\n\nA.4.2 Tiempo de Entrenamiento del Modelo (Fit)\n\n\n\n\n\n\n\n\n\nTamaño (\\(N\\))\nJulia (MLJLinearModels)\nPython (scikit-learn)\nDiferencia / Ventaja\n\n\n\n\n100.000 filas\n0.080 s\n0.118 s\nJulia ~1.5x más rápido\n\n\n500.000 filas\n0.428 s\n0.408 s\nPrácticamente idénticos\n\n\n1.000.000 filas\n0.774 s\n0.829 s\nJulia ~1.07x más rápido\n\n\n2.000.000 filas\n1.082 s\n1.522 s\nJulia ~1.41x más rápido\n\n\n\n\n\nA.4.3 Resumen Global a 2.000.000 de Filas\n\nTiempo Total de Pipeline en Caliente: Julia completa el preprocesado y entrenamiento en 1.64 segundos, mientras que Python requiere 10.89 segundos (Julia ~6.6x más rápido globalmente).\nArranque Frío vs. Caliente: Python mantiene la ventaja en scripts de un solo uso por tiempo de carga de módulos (0.9s vs 2.9s + JIT). Sin embargo, en entonos de servidor, APIs o pipelines iterativos (Warm Execution), Julia supera drásticamente a Python a medida que escala el volumen de datos.\n\n\n\n\n\n\n\nTipConclusión de Escalabilidad\n\n\n\nA medida que el volumen de datos crece hacia millones de filas, la ventaja de velocidad de Julia se multiplica (alcanzando velocidades hasta 30 veces superiores en manipulación de datos), ya que las transformaciones se ejecutan mediante código vectorial nativo optimizado con SIMD y multihilo en lugar de pasar por bucles interpretados de Python.",
+    "crumbs": [
+      "Appendices",
+      "<span class='chapter-number'>A</span>  <span class='chapter-title'>Apéndice A: Comparativa Tabular (Julia vs. Python)</span>"
+    ]
+  },
+  {
+    "objectID": "parts/apendices/apendice_b_deeplearning.html",
+    "href": "parts/apendices/apendice_b_deeplearning.html",
+    "title": "Apéndice B — Apéndice B: Deep Learning Iterativo (Julia vs. Python)",
+    "section": "",
+    "text": "B.1 1. Diseño del Experimento\nEn este apéndice comparamos el desempeño de Julia (Flux.jl + Zygote.jl) frente a Python (PyTorch) en un pipeline de optimización iterativa mediante redes neuronales (deep learning). A diferencia del Apéndice A —donde ambos lenguajes delegaban gran parte del cómputo en backends C/C++ (LightGBM, NumPy)—, aquí el código de usuario controla el bucle de entrenamiento completo, incluyendo la diferenciación automática (AD) y las actualizaciones de parámetros.\nEste es precisamente el escenario donde la diferencia de rendimiento entre lenguajes se manifiesta con mayor claridad.",
+    "crumbs": [
+      "Appendices",
+      "<span class='chapter-number'>B</span>  <span class='chapter-title'>Apéndice B: Deep Learning Iterativo (Julia vs. Python)</span>"
+    ]
+  },
+  {
+    "objectID": "parts/apendices/apendice_b_deeplearning.html#diseño-del-experimento",
+    "href": "parts/apendices/apendice_b_deeplearning.html#diseño-del-experimento",
+    "title": "Apéndice B — Apéndice B: Deep Learning Iterativo (Julia vs. Python)",
+    "section": "",
+    "text": "B.1.1 Problema\nSe entrena una red neuronal MLP de 3 capas sobre una función sintética no lineal:\n\\[y = \\sin(x_1) + x_2^2 + \\varepsilon, \\quad \\varepsilon \\sim \\mathcal{N}(0, 0.1)\\]\ndonde \\(\\mathbf{X} \\in \\mathbb{R}^{10 \\times N}\\) con \\(N \\in \\{100.000,\\ 500.000,\\ 1.000.000\\}\\).\n\n\nB.1.2 Arquitectura del Modelo (Idéntica en Ambos Lenguajes)\n\n\n\nCapa\nEntrada → Salida\nActivación\n\n\n\n\nDense 1\n10 → 64\nrelu\n\n\nDense 2\n64 → 32\nrelu\n\n\nDense 3\n32 → 1\nlineal\n\n\n\n\nOptimizador: Adam (\\(\\alpha = 0.001\\))\nFunción de Pérdida: MSE (Error Cuadrático Medio)\nBatch Size: 512\nÉpocas Máximas: 50\nUmbral de Convergencia: \\(\\text{MSE} \\leq 0.15\\)\n\n\n\nB.1.3 Metodología de Medición\nPara aislar correctamente la compilación JIT de Julia del tiempo de ejecución real, ambos scripts realizan un Warm-Up previo con 50 muestras antes de lanzar los benchmarks.\nLas métricas registradas para cada tamaño de dataset son:\n\nTiempo por Época (epoch_time_ms): Media del tiempo por iteración completa (forward + backward + update) en épocas calientes.\nÉpoca de Convergencia (convergence_epoch): Primera época en que \\(\\text{MSE} \\leq 0.15\\).\nTiempo hasta Convergencia (convergence_time_s): Suma de tiempos de época hasta alcanzar el umbral.\nLoss Final (final_loss): Valor MSE al final de las 50 épocas.\nMemoria por Época (alloc_per_epoch_mb): Memoria alocada en el ciclo de gradientes.",
+    "crumbs": [
+      "Appendices",
+      "<span class='chapter-number'>B</span>  <span class='chapter-title'>Apéndice B: Deep Learning Iterativo (Julia vs. Python)</span>"
+    ]
+  },
+  {
+    "objectID": "parts/apendices/apendice_b_deeplearning.html#código-del-benchmark-en-julia-flux.jl",
+    "href": "parts/apendices/apendice_b_deeplearning.html#código-del-benchmark-en-julia-flux.jl",
+    "title": "Apéndice B — Apéndice B: Deep Learning Iterativo (Julia vs. Python)",
+    "section": "B.2 2. Código del Benchmark en Julia (Flux.jl)",
+    "text": "B.2 2. Código del Benchmark en Julia (Flux.jl)\n\nusing Flux, Zygote, Random, Statistics\n\n# Generador de datos sintéticos\nfunction generate_regression_data(n_rows; n_features=10, seed=42)\n    rng = MersenneTwister(seed)\n    X = randn(rng, Float32, n_features, n_rows)\n    y = sin.(X[1:1,:]) .+ X[2:2,:].^2 .+ 0.1f0 .* randn(rng, Float32, 1, n_rows)\n    return X, y\nend\n\n# Definición del modelo MLP\nmodel = Chain(\n    Dense(10 =&gt; 64, relu),\n    Dense(64 =&gt; 32, relu),\n    Dense(32 =&gt; 1)\n)\n\nloss_fn(m, X, y) = Flux.mse(m(X), y)\nopt = Flux.setup(Adam(1e-3), model)\nloader = Flux.DataLoader((X, y), batchsize=512, shuffle=true)\n\n# Bucle de entrenamiento\nfor epoch in 1:50\n    for (Xb, yb) in loader\n        grads = gradient(m -&gt; loss_fn(m, Xb, yb), model)\n        Flux.update!(opt, model, grads[1])\n    end\nend",
+    "crumbs": [
+      "Appendices",
+      "<span class='chapter-number'>B</span>  <span class='chapter-title'>Apéndice B: Deep Learning Iterativo (Julia vs. Python)</span>"
+    ]
+  },
+  {
+    "objectID": "parts/apendices/apendice_b_deeplearning.html#código-equivalente-en-python-pytorch",
+    "href": "parts/apendices/apendice_b_deeplearning.html#código-equivalente-en-python-pytorch",
+    "title": "Apéndice B — Apéndice B: Deep Learning Iterativo (Julia vs. Python)",
+    "section": "B.3 3. Código Equivalente en Python (PyTorch)",
+    "text": "B.3 3. Código Equivalente en Python (PyTorch)\nimport torch, torch.nn as nn\nfrom torch.utils.data import DataLoader, TensorDataset\n\nclass MLP(nn.Module):\n    def __init__(self):\n        super().__init__()\n        self.net = nn.Sequential(\n            nn.Linear(10, 64), nn.ReLU(),\n            nn.Linear(64, 32), nn.ReLU(),\n            nn.Linear(32, 1)\n        )\n    def forward(self, x):\n        return self.net(x)\n\nmodel     = MLP()\noptimizer = torch.optim.Adam(model.parameters(), lr=1e-3)\nloss_fn   = nn.MSELoss()\nloader    = DataLoader(TensorDataset(X_t, y_t), batch_size=512, shuffle=True)\n\nfor epoch in range(50):\n    for Xb, yb in loader:\n        optimizer.zero_grad()\n        loss_fn(model(Xb), yb).backward()\n        optimizer.step()",
+    "crumbs": [
+      "Appendices",
+      "<span class='chapter-number'>B</span>  <span class='chapter-title'>Apéndice B: Deep Learning Iterativo (Julia vs. Python)</span>"
+    ]
+  },
+  {
+    "objectID": "parts/apendices/apendice_b_deeplearning.html#resultados-escalabilidad-y-convergencia",
+    "href": "parts/apendices/apendice_b_deeplearning.html#resultados-escalabilidad-y-convergencia",
+    "title": "Apéndice B — Apéndice B: Deep Learning Iterativo (Julia vs. Python)",
+    "section": "B.4 4. Resultados: Escalabilidad y Convergencia",
+    "text": "B.4 4. Resultados: Escalabilidad y Convergencia\nUna vez ejecutados los scripts benchmark_dl_julia.jl y benchmark_dl_python.py, los resultados completos son los siguientes.\n\nB.4.1 Tiempo por Época en Caliente\n\n\n\n\n\n\n\n\n\nTamaño (\\(N\\))\nJulia (Flux.jl)\nPython (PyTorch)\nVentaja\n\n\n\n\n100.000 filas\n158.41 ms\n2675.86 ms (2.68 s)\nJulia ~16.9x más rápido\n\n\n500.000 filas\n755.80 ms\n12541.49 ms (12.54 s)\nJulia ~16.6x más rápido\n\n\n1.000.000 filas\n1693.82 ms (1.69 s)\n23026.86 ms (23.03 s)\nJulia ~13.6x más rápido\n\n\n\n\n\nB.4.2 Convergencia: Épocas y Tiempo hasta MSE ≤ 0.15\n\n\n\n\n\n\n\n\n\n\n\nTamaño (\\(N\\))\nJulia – Épocas\nJulia – Tiempo\nPython – Épocas\nPython – Tiempo\nVentaja (tiempo)\n\n\n\n\n100.000 filas\n2\n1.48 s\n2\n4.72 s\nJulia ~3.2x\n\n\n500.000 filas\n1\n1.01 s\n1\n12.81 s\nJulia ~12.7x\n\n\n1.000.000 filas\n1\n0.98 s\n1\n24.49 s\nJulia ~25.1x\n\n\n\n\n\nB.4.3 Loss Final y Memoria por Época\n\n\n\n\n\n\n\n\n\n\nTamaño (\\(N\\))\nJulia – Loss Final\nPython – Loss Final\nJulia – Memoria\nPython – Memoria\n\n\n\n\n100.000 filas\n0.01119\n0.01049\n134.16 MB\n4.21 MB\n\n\n500.000 filas\n0.01029\n0.01043\n670.63 MB\n20.30 MB\n\n\n1.000.000 filas\n0.01055\n0.01024\n1341.26 MB (1.34 GB)\n40.31 MB\n\n\n\n\n\n\n\n\n\nPrecauciónNota metodológica sobre la memoria\n\n\n\nLas cifras de memoria no son directamente comparables: Julia registra con @allocated todas las reservas del heap de Julia dentro del bucle de gradientes, mientras que tracemalloc en Python solo rastrea objetos de nivel Python y no contabiliza las alocaciones internas de tensores en C++. Además, tracemalloc añade sobrecarga a las mediciones de tiempo de Python (~1.5–2x); aun descontándola, la ventaja de Julia por época seguiría siendo del orden de ~6x–10x.",
+    "crumbs": [
+      "Appendices",
+      "<span class='chapter-number'>B</span>  <span class='chapter-title'>Apéndice B: Deep Learning Iterativo (Julia vs. Python)</span>"
+    ]
+  },
+  {
+    "objectID": "parts/apendices/apendice_b_deeplearning.html#análisis-comparativo",
+    "href": "parts/apendices/apendice_b_deeplearning.html#análisis-comparativo",
+    "title": "Apéndice B — Apéndice B: Deep Learning Iterativo (Julia vs. Python)",
+    "section": "B.5 5. Análisis Comparativo",
+    "text": "B.5 5. Análisis Comparativo\n\nB.5.1 ¿Por qué PyTorch usa C++ pero Julia compila código nativo?\n\n\n\n\n\n\n\n\nAspecto\nPython (PyTorch)\nJulia (Flux.jl)\n\n\n\n\nMotor de AD\nC++ (Autograd)\nZygote.jl (Julia nativo)\n\n\nBucle de Entrenamiento\nPython (lento) + C++ ops\nJulia compilado JIT\n\n\nAlocaciones en Loop\nTensores PyTorch administrados\nControl fino con .= y @views\n\n\nParalelismo\nOpenMP/BLAS via C\nSIMD nativo + Threads.@threads\n\n\nSobrecarga en Batch Pequeño\nAlta (Python GIL + llamadas C)\nBaja (bucle Julia nativo)\n\n\n\nLa diferencia clave: en PyTorch, el bucle for epoch in range(N_EPOCHS) se ejecuta en Python interpretado, y solo las operaciones tensoriales delegan a C++. En Julia, todo el bucle, incluyendo el backprop de Zygote, se compila a código máquina nativo.\nLos números lo confirman: dividiendo el tiempo por época entre los \\(N/512\\) batches correspondientes, Julia opera a ~0.8 ms por batch de forma estable en los tres tamaños, mientras que Python paga ~12–14 ms por batch. El cuello de botella de PyTorch no es el cómputo tensorial (C++), sino la sobrecarga del bucle interpretado, el autograd y el DataLoader en cada paso de optimización.",
+    "crumbs": [
+      "Appendices",
+      "<span class='chapter-number'>B</span>  <span class='chapter-title'>Apéndice B: Deep Learning Iterativo (Julia vs. Python)</span>"
+    ]
+  },
+  {
+    "objectID": "parts/apendices/apendice_b_deeplearning.html#conclusiones",
+    "href": "parts/apendices/apendice_b_deeplearning.html#conclusiones",
+    "title": "Apéndice B — Apéndice B: Deep Learning Iterativo (Julia vs. Python)",
+    "section": "B.6 6. Conclusiones",
+    "text": "B.6 6. Conclusiones\n\nVelocidad por iteración: Julia es ~13.6x–16.9x más rápido por época, y la ventaja se mantiene estable al escalar de 100.000 a 1.000.000 de filas. Ambos lenguajes escalan de forma aproximadamente lineal con \\(N\\), pero Python arrastra un coste fijo por batch muy superior.\nConvergencia idéntica, wall-clock distinto: ambos alcanzan el umbral \\(\\text{MSE} \\leq 0.15\\) en las mismas épocas (1–2) y terminan con un loss final prácticamente idéntico (~0.010–0.011). La diferencia es puramente de tiempo de ejecución: a 1.000.000 de filas, Julia converge en 0.98 s frente a 24.49 s de Python (~25x).\nImplicación práctica: en bucles de entrenamiento controlados por el usuario (investigación, hyperparameter tuning, entrenamiento iterativo), el coste por paso se multiplica por miles de iteraciones; ahí es donde el código nativo compilado de Julia marca la mayor diferencia.\n\n\n\n\n\n\n\nTipConclusión del Benchmark\n\n\n\nCuando el bucle de entrenamiento vive en el lenguaje de usuario, Julia (Flux.jl + Zygote.jl) es ~14x–17x más rápido por época que Python (PyTorch) alcanzando exactamente la misma calidad de modelo (MSE final ~0.010). A diferencia del Apéndice A —donde los backends C/C++ igualaban parcialmente el terreno—, el control fino del bucle de optimización es el escenario donde el diseño compilado-JIT de Julia brilla con mayor claridad.",
+    "crumbs": [
+      "Appendices",
+      "<span class='chapter-number'>B</span>  <span class='chapter-title'>Apéndice B: Deep Learning Iterativo (Julia vs. Python)</span>"
     ]
   }
 ]
