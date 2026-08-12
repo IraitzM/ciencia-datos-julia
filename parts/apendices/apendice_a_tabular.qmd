@@ -1,5 +1,6 @@
 ---
-title: "Apéndice A: Comparativa Tabular (Julia vs. Python)"
+title: "Comparativa Tabular (Julia vs. Python)"
+appendix: false
 format:
   html:
     code-fold: false

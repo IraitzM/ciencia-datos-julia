@@ -1,5 +1,6 @@
 ---
-title: "Apéndice B: Deep Learning Iterativo (Julia vs. Python)"
+title: "Deep Learning Iterativo (Julia vs. Python)"
+appendix: false
 format:
   html:
     code-fold: false
